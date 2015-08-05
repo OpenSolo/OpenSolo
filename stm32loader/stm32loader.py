@@ -90,23 +90,41 @@ class CommandInterface:
                     # Unknown responce
                     raise CmdException("Unknown response. "+info+": "+hex(ask))
 
+    def setPin(self, pin, value):
+        try:
+            exp_fd = open("/sys/class/gpio/export", "w")
+            exp_fd.write(str(pin))
+            exp_fd.close()
+        except IOError:
+            pass
+            #print "Pin",pin," already exported"
+
+        dir_fd = open("/sys/class/gpio/gpio"+str(pin)+"/direction","w")
+        dir_fd.write("out")
+        dir_fd.close()
+
+        val_fd = open("/sys/class/gpio/gpio"+str(pin)+"/value","w")
+        val_fd.write(str(value))
+        dir_fd.close()
 
     def reset(self):
-        self.sp.setDTR(0)
+        self.setPin(46, 1)
         time.sleep(0.1)
-        self.sp.setDTR(1)
+        self.setPin(46, 0)
         time.sleep(0.5)
 
     def initChip(self):
         # Set boot
-        self.sp.setRTS(0)
+        self.setPin(45, 1)
         self.reset()
+        self.sp.flushInput()
+        self.sp.flushOutput()
 
         self.sp.write("\x7F")       # Syncro
         return self._wait_for_ask("Syncro")
 
     def releaseChip(self):
-        self.sp.setRTS(1)
+        self.setPin(45,0)
         self.reset()
 
     def cmdGeneric(self, cmd):
@@ -217,10 +235,14 @@ class CommandInterface:
                 self.sp.write(chr(0x00))
             else:
                 # Sectors erase
-                self.sp.write(chr((len(sectors)-1) & 0xFF))
-                crc = 0xFF
+                crc = 0x0
+
+                sec_len = (len(sectors)-1) & 0xff
+                crc ^= sec_len
+                self.sp.write(chr(sec_len))
+
                 for c in sectors:
-                    crc = crc ^ c
+                    crc ^= c
                     self.sp.write(chr(c))
                 self.sp.write(chr(crc))
             self._wait_for_ask("0x43 erasing failed")
@@ -280,9 +302,16 @@ class CommandInterface:
     def cmdReadoutUnprotect(self):
         if self.cmdGeneric(0x92):
             mdebug(10, "*** Readout Unprotect command")
-            self._wait_for_ask("0x92 readout unprotect failed")
+            # first (N)ACK is already read as part of cmdGeneric()
             self._wait_for_ask("0x92 readout unprotect 2 failed")
             mdebug(10, "    Read Unprotect done")
+            # there does not appear to be a way to be notified when the
+            # mass erase is complete... boo. hopefully this will be rare, i guess.
+            time.sleep(20)
+
+            # following readout unprotect, the system resets, so we must init once again.
+            self.initChip()
+
         else:
             raise CmdException("Readout unprotect (0x92) failed")
 
@@ -294,7 +323,7 @@ class CommandInterface:
         if usepbar:
             widgets = ['Reading: ', Percentage(),', ', ETA(), ' ', Bar()]
             pbar = ProgressBar(widgets=widgets,maxval=lng, term_width=79).start()
-        
+
         while lng > 256:
             if usepbar:
                 pbar.update(pbar.maxval-lng)
@@ -316,7 +345,7 @@ class CommandInterface:
         if usepbar:
             widgets = ['Writing: ', Percentage(),' ', ETA(), ' ', Bar()]
             pbar = ProgressBar(widgets=widgets, maxval=lng, term_width=79).start()
-        
+
         offs = 0
         while lng > 256:
             if usepbar:
@@ -362,7 +391,7 @@ def usage():
 
 
 if __name__ == "__main__":
-    
+
     # Import Psyco if available
     try:
         import psyco
@@ -385,7 +414,7 @@ if __name__ == "__main__":
 # http://www.python.org/doc/2.5.2/lib/module-getopt.html
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hqVewvrp:b:a:l:g:")
+        opts, args = getopt.getopt(sys.argv[1:], "hqVewvrs:p:b:a:l:g:")
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -404,6 +433,8 @@ if __name__ == "__main__":
             sys.exit(0)
         elif o == '-e':
             conf['erase'] = 1
+        elif o == '-s':
+            conf['erase-sectors'] = a
         elif o == '-w':
             conf['write'] = 1
         elif o == '-v':
@@ -446,8 +477,21 @@ if __name__ == "__main__":
         if (conf['write'] or conf['verify']):
             data = map(lambda c: ord(c), file(args[0], 'rb').read())
 
-        if conf['erase']:
-            cmd.cmdEraseMemory()
+        try:
+            if conf['erase']:
+                cmd.cmdEraseMemory()
+            elif 'erase-sectors' in conf:
+                # cmdEraseMemory() accepts a list of sectors,
+                # we treat the arg as a sector count, at offset 0
+                sectors = range(int(conf['erase-sectors']))
+                cmd.cmdEraseMemory(sectors)
+
+        except CmdException:
+            # assumption: erase failed due to readout protection.
+            # this was observed once as a process problem in production,
+            # there may be other reasons for this failure in the future.
+            mdebug(0, "EraseMemory failed, disabling readout protection")
+            cmd.cmdReadoutUnprotect()
 
         if conf['write']:
             cmd.writeMemory(conf['address'], data)
@@ -459,7 +503,10 @@ if __name__ == "__main__":
             else:
                 print "Verification FAILED"
                 print str(len(data)) + ' vs ' + str(len(verify))
-                for i in xrange(0, len(data)):
+                imax = len(data)
+                if imax > 100:
+                    imax = 100
+                for i in xrange(0, imax):
                     if data[i] != verify[i]:
                         print hex(i) + ': ' + hex(data[i]) + ' vs ' + hex(verify[i])
 
