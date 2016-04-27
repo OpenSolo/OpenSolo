@@ -25,6 +25,7 @@
 import sys, getopt
 import serial
 import time
+import os
 
 try:
     from progressbar import *
@@ -121,6 +122,14 @@ class CommandInterface:
         self.sp.flushOutput()
 
         self.sp.write("\x7F")       # Syncro
+
+        # imperfect error simulation
+        err_file = "/tmp/stm32_fail_init"
+        if os.path.isfile(err_file):
+            os.remove(err_file)
+            mdebug(0, "simulating error")
+            raise CmdException("simulation error")
+
         return self._wait_for_ask("Syncro")
 
     def releaseChip(self):
@@ -224,6 +233,13 @@ class CommandInterface:
 
 
     def cmdEraseMemory(self, sectors = None):
+        # imperfect error simulation
+        err_file = "/tmp/stm32_fail_erase"
+        if os.path.isfile(err_file):
+            os.remove(err_file)
+            mdebug(0, "simulating error")
+            raise CmdException("simulation error")
+
         if self.extended_erase:
             return cmd.cmdExtendedEraseMemory()
 
@@ -366,12 +382,12 @@ class CommandInterface:
 
 
 
-	def __init__(self) :
+    def __init__(self) :
         pass
 
 
 def usage():
-    print """Usage: %s [-hqVewvr] [-l length] [-p port] [-b baud] [-a addr] [-g addr] [file.bin]
+    print """Usage: %s [-hqVewvru] [-l length] [-p port] [-b baud] [-a addr] [-g addr] [file.bin]
     -h          This help
     -q          Quiet
     -V          Verbose
@@ -384,6 +400,7 @@ def usage():
     -b baud     Baud speed (default: 115200)
     -a addr     Target address
     -g addr     Address to start running at (0x08000000, usually)
+    -u          Unprotect chip if erase fails
 
     ./stm32loader.py -e -w -v example/main.bin
 
@@ -409,12 +426,13 @@ if __name__ == "__main__":
             'verify': 0,
             'read': 0,
             'go_addr':-1,
+            'unprotect': 0,
         }
 
 # http://www.python.org/doc/2.5.2/lib/module-getopt.html
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hqVewvrs:p:b:a:l:g:")
+        opts, args = getopt.getopt(sys.argv[1:], "hqVewuvrs:p:b:a:l:g:")
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -451,6 +469,8 @@ if __name__ == "__main__":
             conf['go_addr'] = eval(a)
         elif o == '-l':
             conf['len'] = eval(a)
+        elif o == '-u':
+            conf['unprotect'] = 1
         else:
             assert False, "unhandled option"
 
@@ -461,8 +481,9 @@ if __name__ == "__main__":
         try:
             cmd.initChip()
         except:
-            print "Can't init. Ensure that BOOT0 is enabled and reset device"
-
+            mdebug(0, "Can't init. Ensure that BOOT0 is enabled and reset device")
+            cmd.releaseChip()
+            sys.exit(1)
 
         bootversion = cmd.cmdGet()
         mdebug(0, "Bootloader version %X" % bootversion)
@@ -487,11 +508,17 @@ if __name__ == "__main__":
                 cmd.cmdEraseMemory(sectors)
 
         except CmdException:
-            # assumption: erase failed due to readout protection.
+            # Erase can fail due to readout protection.
             # this was observed once as a process problem in production,
             # there may be other reasons for this failure in the future.
-            mdebug(0, "EraseMemory failed, disabling readout protection")
-            cmd.cmdReadoutUnprotect()
+            if conf['unprotect']:
+                mdebug(0, "EraseMemory failed, disabling readout protection")
+                cmd.cmdReadoutUnprotect()
+            else:
+                # can't continue on
+                mdebug(0, "EraseMemory failed, quitting")
+                cmd.releaseChip()
+                sys.exit(1)
 
         if conf['write']:
             cmd.writeMemory(conf['address'], data)
