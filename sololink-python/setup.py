@@ -8,7 +8,7 @@ setup(name='sololink',
       version=version,
       description='Python interface for SoloLink',
       long_description='Python interface for SoloLink',
-      url='https://github.com/3drobotics/sololink-python',
+      url='https://github.com/OpenSolo/sololink-python',
       author='3D Robotics',
       install_requires=[
           'posix_ipc',
