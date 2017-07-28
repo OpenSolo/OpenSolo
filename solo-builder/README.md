@@ -83,11 +83,8 @@ TODO: write a script that gets the files off after
 
 ## repos
 
-Private:
+3dr Private:
 
-* https://github.com/3drobotics/3dr-arm-yocto-bsp
-* https://github.com/3drobotics/meta-3dr
-* https://github.com/3drobotics/dronekit-python-solo
 * https://github.com/3drobotics/imx6-uboot
 * https://github.com/3drobotics/imx6-linux
 * https://github.com/3drobotics/mavlink-solo
@@ -101,4 +98,12 @@ Public:
 * https://github.com/3drobotics/MAVProxy
 * https://github.com/3drobotics/stm32loader
 * https://github.com/3drobotics/ardupilot-solo
+
+* https://github.com/OpenSolo/3dr-arm-yocto-bsp
+* https://github.com/OpenSolo/meta-3dr
+* https://github.com/OpenSolo/dronekit-python-solo
+* https://github.com/OpenSolo/sololink-python
+* https://github.com/OpenSolo/solo-builder
+* https://github.com/OpenSolo/3dr-yocto-bsb-base
+
 
