@@ -1,0 +1,17 @@
+ssh/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+instance.json
+inventory
+id_rsa*
+solo-builder.pem
+staging/
+
+.vagrant/
+vagrant_ansible_inventory_default
+
+accessorykit
+packages/
+upload/

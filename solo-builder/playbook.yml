@@ -1,0 +1,59 @@
+- hosts: all
+  tasks:
+    - name: Installs packages
+      sudo: true
+      apt: pkg={{item}} state=installed update_cache=true cache_valid_time=86400
+      with_items:
+        - gawk
+        - wget
+        - git-core
+        - diffstat
+        - unzip
+        - texinfo
+        - gcc-multilib
+        - build-essential
+        - chrpath
+        - socat
+        - libsdl1.2-dev
+        - xterm
+        - curl
+
+    - name: Install jq
+      sudo: true
+      get_url: url=http://stedolan.github.io/jq/download/linux64/jq dest=/usr/local/bin/jq mode=0755
+
+    - name: Install repo
+      sudo: true
+      get_url: url=https://storage.googleapis.com/git-repo-downloads/repo dest=/usr/local/bin/repo mode=0755
+
+    - name: Git configuration
+      copy: src=ansible.gitconfig dest=~/.gitconfig
+
+    - name: ensure github.com is a known host
+      lineinfile:
+        dest: ~/.ssh/known_hosts
+        create: yes
+        state: present
+        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+        regexp: "^github\\.com"
+
+    - name: ensure bitbucket.org is a known host
+      lineinfile:
+        dest: ~/.ssh/known_hosts
+        create: yes
+        state: present
+        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
+        regexp: "^bitbucket\\.org"
+
+    - name: create build dir
+      sudo: true
+      # option to override build_dir_owner (currently used by vagrant)
+      file: path=/solo-build state=directory mode=0755 owner={{build_dir_owner | default('ubuntu')}}
+
+    - name: repo init
+      shell: repo init -u git@github.com:3drobotics/3dr-arm-yocto-bsp.git -b sololink_v2.0.0-5
+      args:
+        chdir: /solo-build
+        creates: /solo-build/build
+
+    - copy: src=~/.ssh/github_token dest=~/.ssh/github_token mode=0455
