@@ -1,0 +1,38 @@
+From 90d0d3014ec113a6f36e567d7564f39cc4c5e135 Mon Sep 17 00:00:00 2001
+From: Allan Matthew <amatthew@3dr.com>
+Date: Tue, 27 Oct 2015 15:47:04 -0700
+Subject: [PATCH] reinit
+
+---
+ backport-include/linux/completion.h | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/backport-include/linux/completion.h b/backport-include/linux/completion.h
+index 477530d..ba7eddc 100644
+--- a/backport-include/linux/completion.h
++++ b/backport-include/linux/completion.h
+@@ -3,19 +3,8 @@
+ #include_next <linux/completion.h>
+ #include <linux/version.h>
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0)
+-/**
+- * reinit_completion - reinitialize a completion structure
+- * @x:  pointer to completion structure that is to be reinitialized
+- *
+- * This inline function should be used to reinitialize a completion structure so it can
+- * be reused. This is especially important after complete_all() is used.
+- */
+-#define reinit_completion LINUX_BACKPORT(reinit_completion)
+-static inline void reinit_completion(struct completion *x)
+-{
+-	x->done = 0;
+-}
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
++#define reinit_completion(x) INIT_COMPLETION(*(x))
+ #endif /* LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0) */
+ 
+ #endif /* __BACKPORT_COMPLETION_H */
+-- 
+2.1.2
+

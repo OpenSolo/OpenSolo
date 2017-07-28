@@ -1,0 +1,13 @@
+--- a/Makefile.real
++++ b/Makefile.real
+@@ -24,8 +24,8 @@ listnewconfig oldaskconfig oldconfig \
+ silentoldconfig olddefconfig oldnoconfig \
+ allnoconfig allyesconfig allmodconfig \
+ alldefconfig randconfig:
+-	@$(MAKE) -C kconf conf
+-	@./kconf/conf --$@ Kconfig
++	#@$(MAKE) -C kconf conf
++	#@./kconf/conf --$@ Kconfig
+ 
+ .PHONY: usedefconfig
+ usedefconfig:

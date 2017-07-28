@@ -1,0 +1,13 @@
+--- a/dmesg.sh	2015-05-14 13:44:29.649021344 -0700
++++ b/dmesg.sh	2015-05-14 13:43:48.005021912 -0700
+@@ -8,8 +8,8 @@
+ ### END INIT INFO
+ 
+ if [ -f /var/log/dmesg ]; then
+-	if [ -f /usr/sbin/logrotate ]; then
+-		logrotate -f /etc/logrotate-dmesg.conf
++	if [ -f /usr/sbin/logrotate -a -f /var/log/dmesg ]; then
++		logrotate -f /etc/logrotate-dmesg.conf -s /dev/null
+ 	else
+ 		mv -f /var/log/dmesg /var/log/dmesg.old
+ 	fi

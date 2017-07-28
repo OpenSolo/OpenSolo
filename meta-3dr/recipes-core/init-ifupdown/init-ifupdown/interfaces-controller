@@ -1,0 +1,24 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+ 
+# The loopback interface
+
+auto lo
+iface lo inet loopback
+
+# Wireless interfaces
+
+iface wlan0 inet dhcp
+	wireless_mode managed
+	wireless_essid any
+	wpa-driver nl80211 
+	wpa-conf /etc/wpa_supplicant.conf
+	pre-up sleep 1; # workaround for race; sometimes phy0 is not yet there
+	pre-up iw phy0 set distance 1800
+
+iface wlan0-ap inet static
+	address 10.1.1.1
+	netmask 255.255.255.0
+	pre-up sleep 1; # workaround for race; sometimes phy0 is not yet there
+	pre-up iw phy0 set distance 1800
+	post-up iptables -t nat -A POSTROUTING -j MASQUERADE
+	post-up echo 1 > /proc/sys/net/ipv4/ip_forward

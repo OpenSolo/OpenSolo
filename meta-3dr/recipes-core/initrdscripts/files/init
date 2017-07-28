@@ -1,0 +1,375 @@
+#!/bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+ROOT_MOUNT="/rootfs/"
+
+# Copied from initramfs-framework. The core of this script probably should be
+# turned into initramfs-framework modules to reduce duplication.
+udev_daemon() {
+	OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+
+	for o in $OPTIONS; do
+		if [ -x "$o" ]; then
+			echo $o
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+_UDEV_DAEMON=`udev_daemon`
+
+early_setup() {
+    mkdir -p /proc
+    mkdir -p /sys
+    mount -t proc proc /proc
+    mount -t sysfs sysfs /sys
+    mount -t devtmpfs none /dev
+#    mknod -m 600 /dev/initctl p
+
+    # support modular kernel
+    modprobe isofs 2> /dev/null
+
+    mkdir -p /run
+    mkdir -p /var/run
+
+    #$_UDEV_DAEMON --daemon
+    #udevadm trigger --action=add
+}
+
+read_args() {
+    [ -z "$CMDLINE" ] && CMDLINE=`cat /proc/cmdline`
+    for arg in $CMDLINE; do
+        optarg=`expr "x$arg" : 'x[^=]*=\(.*\)'`
+        case $arg in
+            root=*)
+                ROOT_DEVICE=$optarg ;;
+            factoryreset=*)
+                FORCE_FACTORY_RESET=$optarg;;
+        esac
+    done
+}
+
+boot_live_root() {
+    # Watches the udev event queue, and exits if all current events are handled
+    #udevadm settle --timeout=3 --quiet
+    #killall "${_UDEV_DAEMON##*/}" 2>/dev/null
+
+    mount -n --move /proc ${ROOT_MOUNT}/proc
+    mount -n --move /sys ${ROOT_MOUNT}/sys
+    mount -n --move /dev ${ROOT_MOUNT}/dev
+
+    echo "Switching root"
+    cd $ROOT_MOUNT
+    exec switch_root -c /dev/console $ROOT_MOUNT /sbin/init
+}
+
+fatal() {
+    echo $1 >$CONSOLE
+    echo >$CONSOLE
+    exec sh
+}
+
+create_partitions()
+{
+    echo "Creating partitions"
+    parted -s -- /dev/mmcblk0 unit MB mkpart primary fat32 100 200
+    parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 200 300
+    parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 300 -1
+    
+    echo "Formatting LATEST"
+    mkfs.vfat /dev/mmcblk0p2 -n LATEST
+    echo "Formatting RWFS"
+    mkfs.ext3 /dev/mmcblk0p3 -L RWFS -q
+    echo "Formatting LOG"
+    mkfs.ext3 /dev/mmcblk0p4 -L LOG -q
+}
+
+remove_partitions()
+{
+    parted -s -- /dev/mmcblk0 rm 2
+    parted -s -- /dev/mmcblk0 rm 3
+    parted -s -- /dev/mmcblk0 rm 4
+}
+
+setScreenUpdating() {
+    #Set up the Artoo serial port, send a slip-encoded message
+    #indicating that we've started the update.
+    stty -F /dev/ttymxc1 115200 cs8 -cstopb -parity -crtscts
+    echo -en "\xC0\x12\x00\xC0" > /dev/ttymxc1
+}
+
+setLedUpdating() {
+    #Blink the LED crazy fast
+    echo timer >> /sys/class/leds/user2/trigger
+    echo 50 >> /sys/class/leds/user2/delay_on
+    echo 50 >> /sys/class/leds/user2/delay_off
+}
+
+setLedDone() {
+    echo none >> /sys/class/leds/user2/trigger
+}
+
+checkRwfs() {
+    fsck.ext3 -y /dev/mmcblk0p3
+    if [ $? -ge 4 ]; then
+        echo "Error detected on RWFS partition"
+        setLedUpdating
+        umount /dev/mmcblk0p3
+        mkfs.ext3 /dev/mmcblk0p3 -L RWFS -q
+        setLedDone
+    fi
+}
+
+checkLog() {
+    fsck.ext3 -y /dev/mmcblk0p4
+    if [ $? -ge 4 ]; then
+        echo "Error detected on LOG partition, repartitioning"
+        setLedUpdating
+        umount /dev/mmcblk0p4
+        parted -s -- /dev/mmcblk0 rm 4
+        parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 300 -1
+        mkfs.ext3 /dev/mmcblk0p4 -L LOG -q
+        setLedDone
+        # this should not trigger an "update done" screen
+        mkdir -f /mnt/log/updates
+        mount /dev/mmcblk0p4 /mnt/log
+        mkdir /mnt/log/updates
+        touch /mnt/log/updates/READY
+        umount /mnt/log
+    fi
+}
+
+mount_and_boot() {
+    mkdir $ROOT_MOUNT
+    mknod /dev/loop0 b 7 0 2>/dev/null
+    mkdir -p /mnt/ro_rootfs
+    mkdir -p /mnt/rw_rootfs
+    mkdir -p /mnt/boot
+    
+    #Check the boot partitions
+    fsck.vfat -y /dev/mmcblk0p1
+    if [ $? -ge 4 ]; then
+        echo "Error detected on GOLDEN partition"
+    fi
+    fsck.vfat -y /dev/mmcblk0p2
+    if [ $? -ge 4 ]; then
+        echo "Error detected on LATEST partition"
+    fi
+
+    #Mount the boot partition
+    echo "Using $ROOT_DEVICE as the boot partition"
+    mount -o ro $ROOT_DEVICE /mnt/boot
+
+    #Mount the read-only squashfs partition
+    mount -o ro /mnt/boot/*.squashfs /mnt/ro_rootfs
+    
+    #Check the rw partition
+    checkRwfs
+
+    #mount the read-write partition
+    mount /dev/mmcblk0p3 /mnt/rw_rootfs
+
+    #Mount the aufs union partition
+    mount -t aufs -o br=/mnt/rw_rootfs:/mnt/ro_rootfs none $ROOT_MOUNT
+
+    #Move all those mount points
+    mkdir -p $ROOT_MOUNT/mnt/rootfs.ro $ROOT_MOUNT/mnt/rootfs.rw $ROOT_MOUNT/mnt/boot
+    mount --move /mnt/boot $ROOT_MOUNT/mnt/boot
+    mount --move /mnt/ro_rootfs $ROOT_MOUNT/mnt/rootfs.ro
+    mount --move /mnt/rw_rootfs $ROOT_MOUNT/mnt/rootfs.rw
+
+    # boot the image
+    boot_live_root
+}
+
+factory_reset() {
+
+    setScreenUpdating
+    setLedUpdating
+    
+    #delete partions 2-4,
+    #Recreate new partitions
+    remove_partitions
+    create_partitions
+
+    #Reflash u-boot if its file exists
+    mkdir -p /mnt/golden
+    mount /dev/mmcblk0p1 /mnt/golden
+    if [ -e /mnt/golden/u-boot.imx ]; then
+        dd if=/mnt/golden/u-boot.imx of=/dev/mmcblk0 bs=512 seek=2
+    fi
+
+    setLedDone
+
+    umount /mnt/golden
+    sync
+    /sbin/shutdown -r -n now
+}
+
+echo "******************** INITRD ********************"
+early_setup
+read_args
+[ -z "$CONSOLE" ] && CONSOLE="/dev/console"
+
+#if there is no LATEST partition, assume that we need to create
+#the RWFS and LOG partitions as well
+if [ ! -e /dev/mmcblk0p2 ]; then
+    echo "No LATEST partition, creating partition scheme"
+    #Set the LED to let the user know its formatting
+    setScreenUpdating
+    setLedUpdating
+
+    create_partitions
+
+    setLedDone
+
+else
+    #If there was a factory reset request from u-boot, handle it here
+    echo "Factory reset: " $FORCE_FACTORY_RESET
+    if [ $FORCE_FACTORY_RESET == 1 ]; then
+        echo "Factory reset from GPIO request"
+        factory_reset
+    fi
+
+    checkLog
+
+    echo "Checking for an update..."
+    #See if there is an update file we should be using
+    mkdir /mnt/log
+    mount /dev/mmcblk0p4 /mnt/log
+    if [ -e /mnt/log/updates/UPDATE ]; then
+        echo "Update requested checking for update file"
+
+        rm -f /mnt/log/updates/READY
+        sync
+        setScreenUpdating
+        setLedUpdating
+
+        for file in $(find /mnt/log/updates/ -type f -name "*.tar.gz" | sort); do
+            echo "Found file $file".
+            latestFile=$file
+        done
+
+        #Is there an update file?
+        if [ -z $latestFile ]; then
+            echo "No update tarball, restarting"
+            rm /mnt/log/updates/UPDATE
+            echo "No update tarball" >> /mnt/log/updates/UPDATEFAILED
+
+            setLedDone
+
+            sync
+            /sbin/shutdown -r -n now
+        fi
+
+        #Check the MD5sum of the update tarball
+        if [ ! -e ${latestFile}.md5 ]; then
+            echo "No MD5 file for update tarball, removing and restarting"
+            rm $latestFile
+            rm /mnt/log/updates/UPDATE
+            echo "MD5 Missing" >> /mnt/log/updates/UPDATEFAILED
+
+            setLedDone
+
+            sync
+            /sbin/shutdown -r -n now
+        fi
+
+        cd /mnt/log/updates
+        md5res=`md5sum -c ${latestFile}.md5 | awk '{print $2}'`
+        if [ $md5res == 'OK' ]; then
+            echo "MD5 OK, proceeding"
+        else
+            echo "MD5 failure, removing file and rebooting"
+            rm $latestFile
+            rm ${latestFile}.md5
+            rm /mnt/log/updates/UPDATE
+            echo "MD5 Failed" >> /mnt/log/updates/UPDATEFAILED
+
+            setLedDone
+
+            sync
+            /sbin/shutdown -r -n now
+        fi
+        cd ~/
+
+        #Mount the LATEST partition and overwrite everything in it
+        echo "Formatting LATEST"
+        mkfs.vfat /dev/mmcblk0p2 -n LATEST
+        echo "Updating LATEST with $latestFile"
+        mkdir /mnt/latest
+        mount /dev/mmcblk0p2 /mnt/latest
+        tar -xf $latestFile -C /mnt/latest/
+
+        #if there is a u-boot.imx, flash it to the SD card
+        if [ -e /mnt/latest/u-boot.imx ]; then
+            dd if=/mnt/latest/u-boot.imx of=/dev/mmcblk0 bs=512 seek=2
+        fi
+
+        #We're all done here
+        rm /mnt/log/updates/UPDATE
+
+        # Check and see if theres a settings reset also requested
+        if [ -e /mnt/log/updates/RESETSETTINGS ]; then
+            echo "Settings reset also requested."
+            #Unmount active partitions, delete partions 3-4,
+            #Recreate new partitions 3 and 4
+            umount /mnt/log /mnt/latest
+
+            parted -s -- /dev/mmcblk0 rm 3
+            parted -s -- /dev/mmcblk0 rm 4
+
+            parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 200 300
+            parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 300 -1
+
+            mkfs.ext3 /dev/mmcblk0p3 -L RWFS -q
+            mkfs.ext3 /dev/mmcblk0p4 -L LOG -q
+        fi
+
+        echo "Done updating, restarting"
+
+        setLedDone
+
+        sync
+        /sbin/shutdown -r -n now
+
+    elif [ -e /mnt/log/updates/FACTORYRESET ]; then
+        echo "Factory reset requested."
+        umount /mnt/log
+        factory_reset
+
+    elif [ -e /mnt/log/updates/RESETSETTINGS ]; then
+        echo "Settings reset requested."
+        
+        #Set the LED to let the user know its formatting
+        setScreenUpdating
+        setLedUpdating
+        
+        #Unmount active partitions, delete partions 3-4,
+        #Recreate new partitions 3 and 4
+        umount /mnt/log
+
+        parted -s -- /dev/mmcblk0 rm 3
+        parted -s -- /dev/mmcblk0 rm 4
+
+        parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 200 300
+        parted -s -- /dev/mmcblk0 unit MB mkpart primary ext2 300 -1
+        
+        mkfs.ext3 /dev/mmcblk0p3 -L RWFS -q
+        mkfs.ext3 /dev/mmcblk0p4 -L LOG -q
+
+        setLedDone
+
+        sync
+        /sbin/shutdown -r -n now
+    else
+        echo "No update available, booting."
+    fi
+    umount /mnt/log
+fi
+
+#Boot the squashfs
+mount_and_boot
