@@ -71,5 +71,6 @@ The following layers are included on this release:
 
  * meta-3dr: 3DR kernel and support recipes
    Path: sources/meta-3dr
-   Project: https://github.com/3drobotics/meta-3dr
-   GIT: git@github.com:3drobotics/meta-3dr.git
+   Project: https://github.com/OpenSolo/meta-3dr
+   GIT: git@github.com:OpenSolo/meta-3dr.git
+
