@@ -1,0 +1,44 @@
+[shotManager]
+A=2, -1
+B=1, -1
+GoProEnabled=1
+
+
+[loggers]
+keys=shot,root
+
+[handlers]
+keys=sysLog2Handler,consoleHandler
+
+[formatters]
+keys=syslogFormatter,simpleFormatter
+
+[logger_shot]
+level=INFO
+handlers=sysLog2Handler
+qualname=shot
+propagate=0
+
+[handler_sysLog2Handler]
+class=handlers.SysLogHandler
+level=DEBUG
+formatter=syslogFormatter
+args=("/dev/log", handlers.SysLogHandler.LOG_LOCAL2)
+
+[formatter_syslogFormatter]
+format=%(name)s: %(message)s
+datefmt=
+
+[logger_root]
+level=INFO
+handlers=consoleHandler
+
+[handler_consoleHandler]
+class=StreamHandler
+level=ERROR
+formatter=simpleFormatter
+args=(sys.stdout,)
+
+[formatter_simpleFormatter]
+format=%(asctime)s %(name)-4s %(levelname)-8s %(message)s
+datefmt=

@@ -1,0 +1,10 @@
+mav.parm
+mav.tlog
+mav.tlog.raw
+mav.parm
+*.pyc
+env
+mavlink-solo
+shotmanager.back
+shotManager_version.py
+.idea

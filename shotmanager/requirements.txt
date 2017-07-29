@@ -1,0 +1,8 @@
+posix_ipc
+nose
+mock
+numpy
+enum34
+dronekit>=2.0.0
+dronekit-solo
+-e git+ssh://git@github.com/3drobotics/sololink-python.git#egg=sololink

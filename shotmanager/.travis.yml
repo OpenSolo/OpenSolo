@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+# command to install dependencies
+install:
+- pip install -r requirements.txt
+# explicitly overwrite the mavlink that was installed earlier since that will be the wrong public version
+- git clone ssh://git@github.com/3drobotics/mavlink-solo
+- cd mavlink-solo/pymavlink
+- python setup.py install
+- cd ../..
+sudo : true
+# command to run tests
+script: sudo cp config/shotmanager.orig /etc/shotmanager.conf && nosetests Test/
