@@ -1,0 +1,14 @@
+The following files were removed from this directory for licensing reasons:
+
+Copenhagen_Light.otf
+HelveticaNeue.dfont
+HelveticaNeueLTPro-Lt.otf
+HelveticaNeueLTPro-Roman.otf
+HelveticaNeueMedium.ttf
+
+.dfont files are sometimes an archive of several different variants of .ttf files
+
+by default, PIL just uses the first, and doesn't provide a way to specify which one to use.
+http://fondu.sourceforge.net/ is a tool that extracts each of them into individual .ttf files (install on OS X via `brew install fondu`).
+
+This was used to generate HelveticaNeueMedium.ttf from HelveticaNeue.dfont

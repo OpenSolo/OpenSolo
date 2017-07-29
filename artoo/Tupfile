@@ -1,0 +1,97 @@
+
+PROJECT  := artoo
+
+### uncomment to enable semihosting for debug
+### disabled by default
+# SEMIHOSTING := yes
+
+###############################################################################
+# executables
+
+PREFIX  := arm-none-eabi
+
+CC      := $(PREFIX)-gcc
+CXX     := $(PREFIX)-g++
+LD      := $(PREFIX)-gcc
+AR      := $(PREFIX)-ar
+AS      := $(PREFIX)-as
+OBJCOPY := $(PREFIX)-objcopy
+OBJDUMP := $(PREFIX)-objdump
+
+###############################################################################
+# C flags
+
+CFLAGS  += -Wextra -Wshadow -Wimplicit-function-declaration
+CFLAGS  += -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS  += -fno-common -ffunction-sections -fdata-sections -ffast-math
+
+###############################################################################
+# C++ flags
+
+CXXFLAGS  += -std=c++11
+CXXFLAGS  += -Wextra -Wshadow -Wredundant-decls  -Weffc++
+CXXFLAGS  += -fno-common -ffunction-sections -fdata-sections -ffast-math
+CXXFLAGS  += -fno-exceptions -fno-threadsafe-statics -fno-rtti
+
+###############################################################################
+# C & C++ preprocessor common flags
+
+CPPFLAGS  += -Os -ggdb
+CPPFLAGS  += -Wall -Werror -Wundef
+CPPFLAGS  += -DMAVLINK_COMM_NUM_BUFFERS=1
+ifeq ($(SEMIHOSTING),yes)
+CPPFLAGS  += -DSEMIHOSTING
+endif
+
+
+###############################################################################
+# Linker flags
+
+LDSCRIPT := src/ldscript.ld
+LIB_DIR  := .
+
+LDFLAGS += --static --specs=nano.specs -nostartfiles -u _printf_float
+ifeq ($(SEMIHOSTING),yes)
+LDFLAGS  += --specs=rdimon.specs
+LIBS += -lrdimon
+else
+LIBS += -lnosys
+endif
+LDFLAGS += -L$(LIB_DIR)
+LDFLAGS += -T$(LDSCRIPT)
+LDFLAGS += -Wl,-Map=$(PROJECT).map,--cref,--gc-sections,-u,IVT
+
+###############################################################################
+# arch flags
+
+ARCH_FLAGS  = -mthumb -mcpu=cortex-m3 -msoft-float
+
+###############################################################################
+# Used libraries
+
+LDLIBS  += -Wl,--start-group -lc -lm -lgcc $(LIBS) -Wl,--end-group
+
+###############################################################################
+# Tasks
+
+OBJDIR := obj
+CPPSRCS := src/*.cpp src/stm32/*.cpp
+
+# generate resources
+: |> python tools/assetgen.py resources/assets.cfg src |> src/resources-gen.cpp src/resources-gen.h
+
+# compile all cpp files
+: foreach $(CPPSRCS) | src/resources-gen.h |> $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(ARCH_FLAGS) -c %f -o %o |> $(OBJDIR)/%B.o
+
+# generate version string as well via tup trickery
+# we pass source to GCC via stdin, then add the object file to our list of .o's to link
+GIT_TAG := vers=`git describe --tags`
+VERSION_SRC := "#include \"src/version.h\"\nconst char* Version::str() {return \"$vers\";}"
+COMPILE_VERSION := $(GIT_TAG); echo $(VERSION_SRC) | $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(ARCH_FLAGS) -x c++ -c - -o $(OBJDIR)/version.o
+
+# link binary
+: $(OBJDIR)/*.o |> $(COMPILE_VERSION); $(LD) $(LDFLAGS) $(ARCH_FLAGS) %f $(LDLIBS) -o %o |> $(PROJECT).elf $(OBJDIR)/version.o | $(PROJECT).map
+
+# create related binary formats
+: $(PROJECT).elf |> $(OBJCOPY) -O ihex %f %o |> $(PROJECT).hex
+: $(PROJECT).elf |> $(OBJCOPY) -O binary %f %o |> $(PROJECT).bin

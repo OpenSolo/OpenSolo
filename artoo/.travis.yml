@@ -1,0 +1,37 @@
+
+# build script for https://travis-ci.org
+
+language: cpp
+
+before_script:
+  - sudo add-apt-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main' -y
+  - sudo add-apt-repository 'ppa:terry.guo/gcc-arm-embedded' -y
+  - sudo apt-get update -q
+  - sudo apt-get install tup gcc-arm-none-eabi
+  - sudo pip install pillow
+
+# try to clone enough revisions to see the last tag
+# so `git describe` can generate a version string
+git:
+  depth: 500
+
+script:
+  - tup generate build-once.sh
+  - ./build-once.sh
+  - ./scripts/versioned-binaries.sh
+
+deploy:
+  provider: releases
+  api_key:
+    secure: redacted
+  file_glob: true
+  file:
+    - "bins/artoo_*.elf"
+    - "bins/artoo_*.bin"
+    - "bins/artoo_*.hex"
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: 3drobotics/artoo
+
+
