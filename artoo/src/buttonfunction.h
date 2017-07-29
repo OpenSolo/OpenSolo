@@ -8,7 +8,7 @@
 
 class ButtonFunction {
 public:
-    // in sync with github.com/3drobotics/SoloLink/blob/master/app/shots/shots.py
+    // in sync with github.com/OpenSolo/sololink/blob/master/app/shots/shots.py
     enum ShotID {
         ShotNone            = -1,
         ShotSelfie          = 0,
