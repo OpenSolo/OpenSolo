@@ -1,0 +1,3 @@
+#! /bin/sh
+echo "100" > /proc/sys/net/unix/max_dgram_qlen
+echo "max_dgram_qlen=`cat /proc/sys/net/unix/max_dgram_qlen`"

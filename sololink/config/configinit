@@ -1,0 +1,285 @@
+#!/bin/bash
+
+# SoloLink Configuration file validate/restore
+#
+# Called at init time before any config files are used via an entry in
+# /etc/rcS.d.
+
+cd /etc
+
+verbose=false
+
+# arguments
+# -v verbose
+until [ -z "$1" ]; do
+  case $1 in
+    -v) verbose=true;;
+  esac
+  shift
+done
+
+dmsg() {
+  if ${verbose}; then echo "$@"; fi
+}
+
+# Test mode: Ubuntu md5sum is a bit different from busybox md5sum
+# /usr/bin/md5sum is a symlink if it points to busybox
+if [ -h `which md5sum` ]; then
+  # assume busybox
+  # not test mode
+  MD5SUM="md5sum -cs"
+  ETC="/etc"
+  ROFS="/mnt/rootfs.ro"
+  kmsg() {
+    echo "$@" > /dev/kmsg
+  }
+else
+  # assume not busybox; correct for ubuntu but not tested on os-x
+  # test mode
+  MD5SUM="md5sum -c --status"
+  ETC="./etc"
+  ROFS="./rootfs.ro"
+  kmsg() {
+    echo "$@"
+  }
+fi
+
+kmsg -n "Checking SoloLink configuration... "
+dmsg ""
+
+config_names="hostapd wpa_supplicant sololink shotmanager"
+
+# For each file "file" in ${config_names}:
+#
+# A new FS contains only "file.orig"
+#
+# First boot:
+#   1. file.conf does not exist
+#   2. file.back does not exist
+#   3. copy file.orig to file.base (used for upgrade merge)
+#   4. copy file.orig to file.conf
+#   5. create file.conf.md5
+#
+# Subsequent boots:
+#   1. file.conf exists
+#   2. file.conf.md5 is good
+#
+# Program modification of a config file (not in this script):
+#   1. copy file.conf to file.back
+#   2. create file.back.md5
+#   3. modify file.conf
+#   4. create file.conf.md5
+#
+# Manual modification of a config file (e.g. via console or ssh):
+#   1. edit file.conf
+#   2. md5sum <full-path-to-file.conf> > <full-path-to-file.conf.md5>
+#
+# During the modification process, a shutdown can result in any of the
+# following (numbers match completion of steps above):
+#   1. file.conf valid, file.back invalid (file.conf is used)
+#   2. file.conf valid, file.back valid (file.conf used)
+#   3. file.conf invalid, file.back valid (file.conf rollback)
+#   4. file.conf valid, file.back valid (file.conf used)
+#
+# Example recovery:
+#   1. file.conf exists
+#   2. file.conf.md5 is not good
+#   3. file.back exists
+#   4. file.back.md5 is good
+#   5. copy file.back to file.conf
+#   6. create file.conf.md5
+#
+# Example upgrade:
+#   1. file.conf exists
+#   2. file.conf.md5 is good
+#   3. file.orig.md5 exists
+#   4. file.orig.md5 is not good (because file.orig changed)
+#   5. patch = file.base -> file.conf; previous changes (e.g. setting ssid)
+#   6. apply patch to new file.orig, creating file.conf
+#   7. create file.conf.md5
+#   8. create file.orig.md5
+#   9. copy file.orig to file.base
+#  10. create file.base.md5
+#
+# Example upgrade (merge fails):
+#   1. file.conf exists
+#   2. file.conf.md5 is good
+#   3. file.orig.md5 exists
+#   4. file.orig.md5 is not good (because file.orig changed)
+#   5. file.base is not good (does not exist)
+#   6. copy file.orig to file.conf
+#   7. create file.conf.md5
+#   8. create file.orig.md5
+#   9. copy file.orig to file.base
+#  10. create file.base.md5
+
+# Return true if file exists, md5 exists, and the md5 is correct
+valid() {
+  [ -f ${1} ] && [ -f ${1}.md5 ] && ${MD5SUM} ${1}.md5
+}
+
+# Return true if orig.md5 does not exist, or it exists but is not correct
+upgraded() {
+  [ ! -f ${1}.orig.md5 ] || ! ${MD5SUM} ${1}.orig.md5
+}
+
+# Create backup of .conf
+do_backup() {
+  dmsg "backup ${1}.conf -> ${1}.back"
+  cp ${1}.conf ${1}.back
+  md5sum `realpath ${1}.back` > ${1}.back.md5
+}
+
+# Restore one file to another, i.e. .back or .orig to .conf
+do_restore() {
+  dmsg "copy ${1} -> ${2}"
+  cp ${1} ${2}
+  md5sum `realpath ${2}` > ${2}.md5
+}
+
+# Note that the busybox 'patch' we are using is relatively limited:
+#   patch [-p NUM] [-i DIFF] [-R] [-N]
+#           -p NUM  Strip NUM leading components from file names
+#           -i DIFF Read DIFF instead of stdin
+#           -R      Reverse patch
+#           -N      Ignore already applied patches
+#
+# Busybox patch's return status is not documented. GNU patch's return is this:
+#   patch's exit status is 0 if all hunks are applied successfully, 1 if some
+#   hunks cannot be applied or there were  merge  conflicts, and 2 if there is
+#   more serious trouble.
+# We assume here it is zero on success, nonzero on any failure.
+do_patch() {
+  #dmsg "patch ${1}.conf"
+  patch ${1}.conf < ${1}.patch
+  # patch's return code is this function's return code
+}
+
+# Merge changes.
+#
+# config.base is a copy of the previous config.orig (before this update)
+# config.conf is that, plus any changes the user has made
+# config.orig is the _new_ config for this update
+#
+# 1. config.base -> config.conf is what has changed from the previous
+#    config.orig to the previous config.conf. Create a patch from that.
+#
+# 2. Attempt to apply the patch to the _new_ config.orig.
+#
+#    a. If the patch applies cleanly, the new config.conf is the new
+#       config.orig plus patch.
+#
+#    b. If the patch does not apply cleanly, the new config.conf is just
+#       copied from the new config.orig (changes are lost).
+#
+# Argument is the config file name root, e.g. "hostapd" means we are working
+# with hostapd.base, hostapd.conf, and hostapd.orig.
+#
+do_merge() {
+  dmsg "merge ${1}"
+
+  # config.conf is known to be valid at this point
+
+  if valid ${1}.base; then
+    # config.base is valid; try to merge changes into new config
+
+    # config.patch is the user's changes in the pre-upgrade system
+    diff -au ${1}.base ${1}.conf > ${1}.patch
+
+    # start with upgraded config.conf...
+    do_backup ${1}
+    cp ${1}.orig ${1}.conf
+
+    # apply user's changes
+    if ! do_patch ${1}; then
+      # some hunks failed - partial patching seems confusing, so revert it all
+      dmsg "patch ${1}.conf failed"
+      dmsg "copy ${1}.orig -> ${1}.conf"
+      cp ${1}.orig ${1}.conf
+    fi
+
+    # .conf is good now, either updated or just copied
+    md5sum `realpath ${1}.conf` > ${1}.conf.md5
+    rm -f ${1}.patch ${1}.back* ${1}.conf.orig
+
+  else
+    # config.base is not valid, can't merge
+    dmsg "${1}.base not valid; can't merge"
+    dmsg "copy ${1}.orig -> ${1}.conf"
+    cp ${1}.orig ${1}.conf
+    md5sum `realpath ${1}.conf` > ${1}.conf.md5
+  fi
+
+  # this is how we detect when the next upgrade happens
+  md5sum `realpath ${1}.orig` > ${1}.orig.md5
+
+  # new config.base will be used in the next upgrade
+  cp ${1}.orig ${1}.base
+  md5sum `realpath ${1}.base` > ${1}.base.md5
+}
+
+# Loop over all config files, validating and perhaps restoring each one
+for config_name in ${config_names}; do
+  config=${ETC}/${config_name}
+
+  # skip any that are not in the read-only FS (e.g. shotmanager on controller)
+  if [ ! -f ${ROFS}/etc/${config_name}.orig ]; then
+    continue
+  fi
+
+  dmsg ""
+  dmsg "${config_name}... "
+
+  if valid ${config}.conf; then
+    dmsg "${config}.conf is valid"
+
+    if upgraded ${config}; then
+      kmsg -n "merging ${config}... "
+      dmsg ""
+      # typical just after an upgrade if .orig file changes
+      do_merge ${config}
+    else
+      # typical startup
+      dmsg "done"
+    fi
+
+  elif valid ${config}.back; then
+    dmsg "${config}.back is valid"
+
+    # previous shutdown corrupted the .conf file
+    kmsg -n "restoring ${config}.conf... "
+    dmsg ""
+    do_restore ${config}.back ${config}.conf
+    if upgraded ${config}; then
+      kmsg -n "merging ${config}... "
+      dmsg ""
+      # edge case: previous shutdown prepared update and corrupted .conf file
+      do_merge ${config}
+    else
+      dmsg "done"
+    fi
+
+  else
+    dmsg "neither ${config}.conf nor ${config}.back is valid"
+
+    # typical on first boot
+    kmsg -n "initializing ${config}.conf... "
+    dmsg ""
+    if [ ! -f ${config}.orig ]; then
+      kmsg -n "${config}.orig not found; retrieving from ${ROFS}/etc/${config_name}.orig... "
+      dmsg ""
+      cp ${ROFS}/etc/${config_name}.orig ${config}.orig
+    fi
+    dmsg "copy ${config}.orig -> ${config}.base"
+    cp ${config}.orig ${config}.base
+    md5sum `realpath ${config}.base` > ${config}.base.md5
+    do_restore ${config}.orig ${config}.conf
+    md5sum `realpath ${config}.orig` > ${config}.orig.md5
+    dmsg "done"
+
+  fi
+
+done
+
+dmsg ""
+kmsg "OK"

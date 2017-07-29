@@ -1,0 +1,27 @@
+#!/bin/bash
+
+ssh_args="-o StrictHostKeyChecking=no -i ./updater_id_rsa"
+
+
+solo_ip=10.1.1.10
+
+echo -n "Unpairing Solo..."
+while ! ping -c1 -W1 $solo_ip &> /dev/null; do echo -n "."; done
+
+sh-keygen -R $solo_ip &> /dev/null
+
+ssh $ssh_args root@$solo_ip 'cp /mnt/rootfs.ro/etc/wpa_supplicant.orig /etc/wpa_supplicant.conf; md5sum /etc/wpa_supplicant.conf > /etc/wpa_supplicant.conf.md5; sync; reboot'
+
+echo "OK"
+
+
+artoo_ip=10.1.1.1
+
+echo -n "Unpairing Artoo..."
+while ! ping -c1 -W1 $artoo_ip &> /dev/null; do echo -n "."; done
+
+sh-keygen -R $artoo_ip &> /dev/null
+
+ssh $ssh_args root@$artoo_ip 'rm -f /log/3dr-pairing.conf; sync; reboot'
+
+echo "OK"

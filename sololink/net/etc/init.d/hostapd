@@ -1,0 +1,84 @@
+#!/bin/sh
+DAEMON=/usr/sbin/hostapd
+NAME=hostapd
+DESC="HOSTAP Daemon"
+HOSTAPD_CONF="/etc/hostapd.conf"
+HOSTAPD_BACK="/etc/hostapd.back"
+ARGS="/etc/hostapd.conf -B"
+SOLO_CONF="/etc/sololink.conf"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+# Return true if parameter ($2) in config file ($1) is "True"
+isEnabled() {
+    grep -i -q "[[:space:]]*$2[[:space:]]*=[[:space:]]*True" $1
+}
+
+# Return true if the SSID in hostapd.conf is still the default
+isDefault() {
+    grep -i -q "^ssid=SoloLink_Default" $1
+}
+
+#Return the country code we should be using
+getCountryCode() {
+    mkdir -p /tmp/bootmnt
+    mount /dev/mmcblk0p1 /tmp/bootmnt -o ro
+    if [ ! -e /tmp/bootmnt/.reg ]; then
+        echo "US"
+    else
+        cat /tmp/bootmnt/.reg
+    fi
+    umount /tmp/bootmnt
+    rm -rf /tmp/bootmnt
+}
+
+case "$1" in
+    start)
+	# If the 3dr config file does not exist, or if it does and ApEnable
+	# is True, start hostapd
+	if [ ! -f $SOLO_CONF ] || isEnabled $SOLO_CONF ApEnable; then
+	    echo -n "Starting $DESC: "
+	    # back up hostapd.conf
+	    cp ${HOSTAPD_CONF} ${HOSTAPD_BACK}
+	    md5sum ${HOSTAPD_BACK} > ${HOSTAPD_BACK}.md5
+	    sync
+	    # Unique-ize the SSID if it has not been done
+	    if isDefault ${HOSTAPD_CONF}; then
+		# update SSID
+		/usr/bin/hostapdconfig.py --ssid SoloLink_ --ssidmac wlan0-ap
+		# initialize regulatory domain
+		/usr/bin/hostapdconfig.py --country `getCountryCode`
+	    fi
+	    # set channel to that of wlan0 if it is associated
+	    /usr/bin/hostapdconfig.py --channel wlan0
+	    md5sum ${HOSTAPD_CONF} > ${HOSTAPD_CONF}.md5
+	    sync
+	    rm ${HOSTAPD_BACK} ${HOSTAPD_BACK}.md5
+	    sync
+	    start-stop-daemon -S -x $DAEMON -- $ARGS
+	    echo "$NAME."
+	fi
+	;;
+    stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon -K -x $DAEMON
+	echo "$NAME."
+	;;
+    restart)
+	$0 stop
+	$0 start
+	;;
+    reload)
+	echo -n "Reloading $DESC: "
+	killall -HUP $(basename ${DAEMON})
+	echo "$NAME."
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+	;;
+esac
+
+exit 0

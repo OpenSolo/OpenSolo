@@ -1,0 +1,22 @@
+#!/bin/bash
+# Helper script for scp'ing onto solo and artoo
+#
+# Syntax: 3dcp [ artoo | solo ] localfile remotepath
+# Note: Use absolute paths for sololink location
+#
+# Example usage: 
+#	3dcp artoo test.py /home/root
+#	3dcp solo update.tar.gz /log/updates
+##################################################
+
+CUR_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+USERNAME="root"
+TARGET="10.1.1.1"
+
+if [ "$1" == "solo" ]
+then
+	TARGET="10.1.1.10"
+fi
+
+scp -i $CUR_SCRIPT_DIR/updater/updater_id_rsa $2 $USERNAME@$TARGET:$3

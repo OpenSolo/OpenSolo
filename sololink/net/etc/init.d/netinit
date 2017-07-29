@@ -1,0 +1,25 @@
+#!/bin/sh
+
+NAME=wlan0-ap
+DESC="AP Interface"
+SOLO_CONF="/etc/sololink.conf"
+
+# Return true if parameter ($2) in config file ($1) is "True"
+isEnabled() {
+    grep -i -q "[[:space:]]*$2[[:space:]]*=[[:space:]]*True" $1
+}
+
+# wlan0 exists only if the PCIe phy initialized
+# wlan0-ap never exists at this point (this is where we create it)
+if [ -e /sys/class/net/wlan0 ]; then
+    # If the 3dr config file does not exist, or if it does and ApEnable is True,
+    # set up the wlan0-ap interface
+    if [ ! -f $SOLO_CONF ] || isEnabled $SOLO_CONF ApEnable; then
+        echo -n "Initializing $DESC: "
+        iw phy phy0 interface add $NAME type __ap
+        ip link set dev $NAME address `/usr/bin/getmaclocal.py wlan0`
+        echo "$NAME."
+    fi
+else
+    echo "wlan0 does not exist"
+fi

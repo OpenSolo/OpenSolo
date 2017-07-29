@@ -1,0 +1,1289 @@
+#!/bin/bash
+
+# set SOLOLINK_CONFIG_TEST for testing (don't shutdown etc.)
+# set ROOT if config files are in a test directory (not at /)
+# set TESTHOSTNAME and it will be used instead of the real host name
+
+prog_name="sololink_config"
+
+# We allow the version of this file to deviate from that of SoloLink. It may
+# make sense in some cases to download a new version of this script to bring
+# it up to date, then do other operations that might require the latest
+# version.
+sololink_config_version="0.0.1"
+
+logger -p local1.info -- $0 $*
+
+if [ -h `which md5sum` ]; then
+  # assume busybox
+  MD5SUM="md5sum -s"
+else
+  # assume not busybox; correct for ubuntu but not tested on os-x
+  MD5SUM="md5sum --status"
+fi
+
+
+usage() {
+echo "
+Usage: ${prog_name} OPTION [OPTION_ARG]
+
+Options:
+    --get-wifi-ssid
+        print wifi SSID
+    --set-wifi-ssid SSID [--force]
+    --get-wifi-password
+        print wifi password
+    --set-wifi-password PASSWORD
+    --get-wifi-channel
+        print wifi channel
+    --set-wifi-channel CHANNEL
+    --get-wifi-country
+        print wifi country (regulatory domain)
+    --set-wifi-country COUNTRY
+        set wifi country (regulatory domain)
+    --get-wifi-power
+    --set-wifi-power POWER
+    --reset-wifi-settings
+        controller: revert to default SSID (on next boot)
+        solo: forget SSID (unpair)
+    --restart-video
+        solo: Restart the video pipeline
+    --get-ui-mode
+        print tx mode, "1" or "2"
+    --set-ui-mode MODE
+        change tx mode, MODE = 1 or 2
+    --get-ui-units
+        print display units, "metric" or "imperial"
+    --set-ui-units UNITS
+        change display units, UNITS = "metric" or "imperial"
+    --get-ui-sweep
+        print camera tilt sweep times, minimum then maximum (seconds)
+    --set-ui-sweep MIN MAX
+        change camera tilt sweep time limits, MIN and MAX in seconds
+    --factory-reset
+        do a factory reset
+    --settings-reset
+        do a settings reset
+    --make-golden
+        make 'latest' the new 'golden'
+    --update-prepare artoo|pixhawk|sololink
+    --update-apply artoo|pixhawk|sololink [--force] [--reset]
+    --get-image
+        prints 'golden' or 'latest'
+    --get-pairing
+        controller: prints MAC of paired solo
+        solo: prints SSID of paired controller
+    --set-pairing [PEER]
+    --get-config VARNAME
+        print value of VARNAME in sololink.conf
+    --set-config VARNAME VALUE
+        set VARNAME in sololink.conf to VALUE
+    --get-status
+        get overall system status
+    --get-version [artoo|pixhawk|sololink|golden]
+    --restart [video|sololink|system]
+    --reboot
+    --pass
+        prints nothing, exit status 0
+    --fail
+        prints nothing, exit status 1
+
+Exit status:
+    0 if command succeeded
+    1 if command failed
+
+Script version ${sololink_config_version}
+"
+exit 1
+}
+
+
+# shutdown (unless testing)
+shutdown_now() {
+  if [ -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    shutdown -r now
+  fi
+}
+
+
+# get current runlevel
+get_runlevel() {
+  rl=`runlevel`
+  for w in ${rl}; do
+    a=${w}
+  done
+  echo ${a}
+}
+
+
+# backup_config [path/basename]
+# e.g. backup_config /etc/hostapd
+backup_config() {
+  cp ${1}.conf ${1}.back
+  md5sum ${1}.back > ${1}.back.md5
+  sync
+}
+
+
+# md5sum_config [path/basename]
+# e.g. md5sum_config /etc/hostapd
+md5sum_config() {
+  md5sum ${1}.conf > ${1}.conf.md5
+  sync
+  rm -f ${1}.back ${1}.back.md5
+}
+
+
+# return number of files in a directory matching a glob pattern
+# count_files (DIR) (PATTERN)
+count_files() {
+  if [ ! -d ${1} ]; then
+    echo "0"
+  else
+    find ${1} -name ${2} | wc -l
+  fi
+}
+
+
+# set network in wpa_supplicant
+# set_wpa_supplicant_network (SSID) (PASSWORD)
+set_wpa_supplicant_network() {
+  backup_config ${ROOT}/etc/wpa_supplicant
+  cp ${ROOT}/mnt/rootfs.ro/etc/wpa_supplicant.orig ${ROOT}/etc/wpa_supplicant.conf
+  echo >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "network={" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	ssid=\"${1}\"" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	psk=\"${2}\"" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	proto=RSN" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	key_mgmt=WPA-PSK" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	pairwise=CCMP" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "	auth_alg=OPEN" >> ${ROOT}/etc/wpa_supplicant.conf
+  echo "}" >> ${ROOT}/etc/wpa_supplicant.conf
+  md5sum_config ${ROOT}/etc/wpa_supplicant
+}
+
+
+# return 0 (true) if wpa_supplicant.conf has an ssid= setting
+# return nonzero (false) otherwise
+wpa_supp_has_ssid() {
+  grep -q ssid= ${ROOT}/etc/wpa_supplicant.conf
+}
+
+
+# return 0 (true) if wpa_supplicant.conf has a psk= setting
+# return nonzero (false) otherwise
+wpa_supp_has_psk() {
+  grep -q psk= ${ROOT}/etc/wpa_supplicant.conf
+}
+
+
+reset_wifi_settings() {
+  if [ ${is_solo} ]; then
+    backup_config ${ROOT}/etc/wpa_supplicant
+    cp ${ROOT}/mnt/rootfs.ro/etc/wpa_supplicant.orig ${ROOT}/etc/wpa_supplicant.conf
+    md5sum_config ${ROOT}/etc/wpa_supplicant
+  else
+    backup_config ${ROOT}/etc/hostapd
+    cp ${ROOT}/mnt/rootfs.ro/etc/hostapd.orig ${ROOT}/etc/hostapd.conf
+    md5sum_config ${ROOT}/etc/hostapd
+  fi
+  return 0
+}
+
+
+get_wifi_password() {
+  if [ ${is_solo} ]; then
+    # is there one?
+    if ! wpa_supp_has_psk; then
+      echo "wifi network not set"
+      return 1
+    fi
+    password=`grep psk= ${ROOT}/etc/wpa_supplicant.conf | head -n 1 | \
+              sed "s/.*psk=\"\(.\+\)\"/\1/g"`
+  else
+    # there is always one in hostapd
+    password=`grep ^wpa_passphrase= ${ROOT}/etc/hostapd.conf | head -n 1 | \
+              sed "s/^wpa_passphrase=\(.\+\)\$/\1/g"`
+  fi
+  echo "${password}"
+  return 0
+}
+
+
+set_wifi_password() {
+  # password must be 8..63 characters
+  pwlen=${#1}
+  if [ ${pwlen} -lt 8 -o ${pwlen} -gt 63 ]; then
+    echo "password must be 8..63 characters"
+    return 1
+  fi
+  if [ ${is_solo} ]; then
+    # is there one already?
+    if ! wpa_supp_has_psk; then
+      # make a default network and set password
+      set_wpa_supplicant_network "SoloLink_Default" "${1}"
+    else
+      backup_config ${ROOT}/etc/wpa_supplicant
+      sed -i "s/psk=\".\+\"/psk=\"${1}\"/g" ${ROOT}/etc/wpa_supplicant.conf
+      md5sum_config ${ROOT}/etc/wpa_supplicant
+    fi
+  else
+    backup_config ${ROOT}/etc/hostapd
+    sed -i "s/^wpa_passphrase=.\+\$/wpa_passphrase=${1}/g" ${ROOT}/etc/hostapd.conf
+    md5sum_config ${ROOT}/etc/hostapd
+  fi
+  get_wifi_password
+}
+
+
+get_wifi_ssid_wpa_supplicant() {
+  echo `grep ssid= ${ROOT}/etc/wpa_supplicant.conf | head -n 1 | \
+        sed "s/.*ssid=\"\(.\+\)\"/\1/g"`
+}
+
+
+get_wifi_ssid_hostapd() {
+  echo `grep ^ssid= ${ROOT}/etc/hostapd.conf | head -n 1 | \
+        sed "s/^ssid=\(.\+\)\$/\1/g"`
+}
+
+
+get_wifi_ssid() {
+  if [ ${is_solo} ]; then
+    # is there one?
+    if ! wpa_supp_has_ssid; then
+      echo "wifi network not set"
+      return 1
+    fi
+    ssid=`get_wifi_ssid_wpa_supplicant`
+  else
+    ssid=`get_wifi_ssid_hostapd`
+  fi
+  echo "${ssid}"
+  return 0
+}
+
+
+validate_wifi_ssid() {
+  # ssid must start with "SoloLink_" and be no more than 32 characters total
+  ssidlen=${#1}
+  if [ ${ssidlen} -lt 9 -o ${ssidlen} -gt 32 -o \
+       "`expr substr "${1}" 1 9`" != "SoloLink_" ]; then
+    echo "ssid must start with \"SoloLink_\" and be no more that 32 characters long"
+    return 1
+  fi
+  return 0
+}
+
+
+set_wifi_ssid_wpa_supplicant() {
+  backup_config ${ROOT}/etc/wpa_supplicant
+  sed -i "s/ssid=\".\+\"/ssid=\"${1}\"/g" ${ROOT}/etc/wpa_supplicant.conf
+  md5sum_config ${ROOT}/etc/wpa_supplicant
+  return 0
+}
+
+
+set_wifi_ssid_hostapd() {
+  backup_config ${ROOT}/etc/hostapd
+  sed -i "s/^ssid=.\+\$/ssid=${1}/g" ${ROOT}/etc/hostapd.conf
+  md5sum_config ${ROOT}/etc/hostapd
+  return 0
+}
+
+
+set_wifi_ssid() {
+  if ! validate_wifi_ssid "${1}"; then
+    return 1
+  fi
+  if [ ${is_solo} ]; then
+    # is there one already?
+    if ! wpa_supp_has_ssid; then
+      # make a default network and set ssid
+      set_wpa_supplicant_network "${1}" "sololink"
+    else
+      set_wifi_ssid_wpa_supplicant "${1}"
+    fi
+  else
+    set_wifi_ssid_hostapd "${1}"
+  fi
+  get_wifi_ssid
+}
+
+get_wifi_channel() {
+  if [ ${is_solo} ]; then
+      echo "wifi channel not accessible on solo"
+    return 1
+  fi
+  channel=`iw wlan0-ap info | grep channel | awk '{print $2}'`
+  echo "${channel}"
+  return 0
+}
+
+set_wifi_channel() {
+  # validate that the channel is between 1 and 11
+  desiredChannel="${1}"
+  if [[ $desiredChannel =~ ^-?[0-9]+$ ]]; then
+    if [[ "$desiredChannel" -lt 1 || "$desiredChannel" -gt 11 ]]; then
+      echo "error: wifi channel must be between 1 and 11"
+      return 1
+    fi
+  else 
+    echo "error: attempting to set wifi channel to non-integer"
+    return 1
+  fi
+
+  baseFreq=2412
+  channelMult=`expr $desiredChannel - 1`
+  freqAdd=`expr $channelMult \* 5`
+  freq=`expr $baseFreq + $freqAdd`
+  echo "$desiredChannel"
+  hostapd_cli chan_switch 20 ${freq} ht
+  return 0
+}
+
+get_wifi_country() {
+  if [ ${is_solo} ]; then
+    echo "wifi country can only be retrieved on controller"
+    return 1
+  fi
+  country=`grep ^country_code= ${ROOT}/etc/hostapd.conf | head -n 1 | \
+           sed "s/^country_code=\(.\+\)\$/\1/g"`
+  echo "${country}"
+  return 0
+}
+
+country_list="AD,AE,AF,AI,AL,AM,AN,AR,AT,AU,AW,AZ,BA,BB,BD,BE,BF,BG,BH,BL,BN,BO,BR,BT,BY,BZ,CA,CF,CH,CI,CL,CN,CO,CR,CY,CZ,DE,DK,DM,DO,DZ,EC,EE,EG,ES,FI,FM,FR,GE,GB,GD,GH,GR,GL,GT,GU,GY,HN,HK,HR,HT,HU,ID,IE,IL,IN,IS,IR,IT,JM,JP,JO,KE,KH,KN,KP,KR,KW,KZ,LB,LC,LI,LK,LS,LT,LU,LV,MC,MA,MD,ME,MF,MO,MH,MK,MR,MT,MY,MX,NL,NO,NP,NZ,OM,PA,PE,PG,PH,PK,PL,PM,PT,PR,PW,QA,RO,RS,RU,RW,SA,SE,SG,SI,SK,SN,SV,SY,TC,TD,TG,TW,TH,TT,TN,TR,UA,US,UY,UZ,VC,VE,VN,VU,WF,YE,ZA,ZW"
+
+set_wifi_country() {
+  if [ ${is_solo} ]; then
+    echo "wifi country can only be set on controller"
+    return 1
+  fi
+  # country is two uppercase characters
+  if [[ ! ${1} =~ ^[A-Z]{2}$ ]]; then
+    echo "country must be 2 uppercase characters"
+    return 1
+  fi
+  if [[ ! ${country_list} =~ ${1} ]]; then
+    echo "country is not in the list of valid country codes"
+    return 1
+  fi
+  backup_config ${ROOT}/etc/hostapd
+  sed -i "s/^country_code=.\+\$/country_code=${1}/g" ${ROOT}/etc/hostapd.conf
+  md5sum_config ${ROOT}/etc/hostapd
+  return 0
+}
+
+get_wifi_power() {
+  if [ -z /sys/kernel/debug/ieee80211/phy0/power ]; then
+    echo "error: unable to read power level"
+    return 1
+  fi
+
+  power=`cat /sys/kernel/debug/ieee80211/phy0/power`
+  if [ $power -gt 27 ]; then power=27; fi
+  echo "$power"
+  return 0
+}
+
+set_wifi_power() {
+  desiredPower="${1}"
+  if [[ $desiredPower =~ ^-?[0-9]+$ ]]; then
+    if [[ "$desiredPower" -lt 0 || "$desiredPower" -gt 27 ]]; then
+      echo "error: wifi power level must be between 0 and 27"
+      return 1
+    fi
+  else
+    echo "error: attempting to set wifi power to non-integer"
+    return 1
+  fi
+
+  echo "$desiredPower"
+  iw phy0 set txpower fixed $((desiredPower*100))
+  return 0
+}
+
+# Video pipeline modification parameters
+restart_video() {
+  if [ ${is_controller} ]; then
+    echo "video can only be restarted on solo"
+    return 1
+  fi
+
+  killall vidlaunch
+  echo "restarted video"
+  return 0
+}
+
+# ui_mode is the transmitter mode (1 or 2)
+#
+# Persisted in the STM32 flash as a "stick mapping", where the stick mapping
+# corresponds to a mode 1 or mode 2 layout. ui_mode is set using a python
+# program that writes a stick mapping. This script translates the '1' or '2'
+# requested mode to a config file, then gives that config file to the python
+# program. To set the mode, the python program writes the stick mapping to
+# the STM32. To read the mode, the python reads the current stick mapping from
+# the STM32 and compares it to a specified config file, so to read the mode,
+# we are asking the python program if the current mode matches the mode 1
+# config file, and if not, if it matches the mode 2 config file.
+
+ui_mode_prog="config_stick_axes.py"
+
+# arg is normally mode1, mode2, or default
+ui_mode_config_file() {
+  echo "/firmware/cfg/stick-cfg-evt-${1}.cfg"
+}
+
+get_ui_mode() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only get mode on controller"
+    return 1
+  fi
+  # is it still defaults?
+  cf=`ui_mode_config_file default`
+  if [ `${ui_mode_prog} get ${cf}` == "true" ]; then
+    # default is mode 2 (artoo firmware)
+    echo "2"
+    return 0
+  fi
+  # is it mode 1?
+  cf=`ui_mode_config_file mode1`
+  if [ `${ui_mode_prog} get ${cf}` == "true" ]; then
+    echo "1"
+    return 0
+  fi
+  # is it mode 2?
+  cf=`ui_mode_config_file mode2`
+  if [ `${ui_mode_prog} get ${cf}` == "true" ]; then
+    echo "2"
+    return 0
+  fi
+  # neither 1 nor 2!
+  echo "mode unknown"
+  return 0
+}
+
+set_ui_mode() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only set mode on controller"
+    return 1
+  fi
+  # argument required
+  if [ -z "${1}" ]; then
+    echo "sololink_config --set-ui-mode [1|2]"
+    return 1
+  fi
+  # argument must be 1 or 2
+  if [ "${1}" != "1" -a "${1}" != "2" ]; then
+    echo "sololink_config --set-ui-mode [1|2]"
+    return 1
+  fi
+  # send to STM32
+  ${ui_mode_prog} set `ui_mode_config_file mode${1}`
+  # echo new mode to stdout
+  echo "${1}"
+  return 0
+}
+
+# ui_units is "metric" or "imperial"
+#
+# Not persisted in the STM32, and can't be read back, so the last known
+# setting is saved in sololink.conf. ui_units is set in the STM32 on each
+# boot.
+
+get_ui_units() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only set units on controller"
+    return 1
+  fi
+  # get it from config file
+  if grep -q uiUnits= ${ROOT}/etc/sololink.conf; then
+    echo "`grep uiUnits= ${ROOT}/etc/sololink.conf | head -n 1 | \
+              sed "s/.*uiUnits\s*=\(.\+\)/\1/g"`"
+  else
+    # no setting; default is metric
+    echo "metric"
+  fi
+  return 0
+}
+
+set_ui_units() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only set units on controller"
+    return 1
+  fi
+  # argument required
+  if [ -z "${1}" ]; then
+    echo "sololink_config --set-ui-units [metric|imperial]"
+    return 1
+  fi
+  # argument must be metric or imperial
+  if [ "${1}" != "metric" -a "${1}" != "imperial" ]; then
+    echo "sololink_config --set-ui-units [metric|imperial]"
+    return 1
+  fi
+  # do it
+  backup_config ${ROOT}/etc/sololink
+  if grep -q uiUnits= ${ROOT}/etc/sololink.conf; then
+    # change existing setting
+    sed -i "s/uiUnits\s*=.\+/uiUnits=${1}/g" ${ROOT}/etc/sololink.conf
+  else
+    # append as new setting
+    echo >> ${ROOT}/etc/sololink.conf
+    echo "uiUnits=${1}" >> ${ROOT}/etc/sololink.conf
+  fi
+  md5sum_config ${ROOT}/etc/sololink
+  # action!
+  set_ui_units_prog="set_telem_units.py"
+  set_ui_units_args="${1}"
+  if which ${set_ui_units_prog} &> /dev/null; then
+    ${set_ui_units_prog} ${set_ui_units_args}
+  fi
+  # echo new units to stdout
+  echo "${1}"
+  return 0
+}
+
+# ui_sweep is the min/max range for the camera tilt sweep dial
+#
+# Persisted in the STM32. A python program reads it from or writes it to the
+# STM32 on request.
+
+get_ui_sweep() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only get sweep on controller"
+    return 1
+  fi
+  # fetch from STM32 - prints "min max" to stdout
+  config_sweep_time.py
+  return 0
+}
+
+set_ui_sweep() {
+  # meaningful only on controller
+  if [ ${is_solo} ]; then
+    echo "can only set sweep on controller"
+    return 1
+  fi
+  # two arguments required: min max
+  if [ -z "${1}" -o -z "${2}" ]; then
+    echo "sololink_config --set-ui-sweep <min> <max>"
+    return 1
+  fi
+  # not done: check that arguments are integers
+  # send to STM32 - this echoes new setting to stdout
+  config_sweep_time.py ${1} ${2}
+  return 0
+}
+
+factory_reset() {
+  rm -rf ${ROOT}/log/updates
+  mkdir -p ${ROOT}/log/updates
+  touch ${ROOT}/log/updates/FACTORYRESET
+  if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+    ${ROOT}/usr/bin/updater_msg.py start
+  fi
+  shutdown_now
+  return 0
+}
+
+
+settings_reset() {
+  rm -rf ${ROOT}/log/updates
+  mkdir -p ${ROOT}/log/updates
+  touch ${ROOT}/log/updates/RESETSETTINGS
+  if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+    ${ROOT}/usr/bin/updater_msg.py start
+  fi
+  shutdown_now
+  return 0
+}
+
+
+make_golden() {
+  if [ ! -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    echo "no test mode for make_golden"
+    return 1
+  fi
+  image=`get_image`
+  if [ ${image} == "golden" ]; then
+    echo "already running golden"
+    return 1
+  elif [ ${image} != "latest" ]; then
+    echo "${image}"
+    return 1
+  fi
+  umount /dev/mmcblk0p1 &> /dev/null
+  mkfs.vfat /dev/mmcblk0p1 -n GOLDEN &> /dev/null
+  mkdir -p ${ROOT}/tmp/golden
+  mount /dev/mmcblk0p1 ${ROOT}/tmp/golden
+  cp -r /mnt/boot/* ${ROOT}/tmp/golden
+  umount ${ROOT}/tmp/golden
+  return 0
+}
+
+
+update_prepare() {
+  case "${1}" in
+    "artoo" )
+      if [ ${is_solo} ]; then
+        echo "solo can't update artoo"
+        return 1
+      fi
+      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      mkdir -p ${ROOT}/firmware
+      ;;
+    "pixhawk" )
+      if [ ! ${is_solo} ]; then
+        echo "controller can't update pixhawk"
+        return 1
+      fi
+      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      mkdir -p ${ROOT}/firmware
+      ;;
+    "sololink" )
+      rm -rf ${ROOT}/log/updates
+      mkdir -p ${ROOT}/log/updates
+      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      mkdir -p ${ROOT}/firmware
+      ;;
+    * )
+      echo "--update-prepare [artoo|pixhawk|sololink]"
+      return 1
+      ;;
+  esac
+  return 0
+}
+
+
+update_apply_artoo() {
+  # check update file unless --force was given
+  #if [ "${1}_" != "--force_" ]; then
+    # sanity-check whatever is in /firmware/artoo_*.bin
+  #fi
+  if [ -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+      ${ROOT}/usr/bin/updater_msg.py start
+    fi
+    r=`get_runlevel`
+    if [ "${r}_" != "2_" ]; then
+        init 2
+        sleep 3
+    fi
+    checkArtooAndUpdate.py
+    if [ "${r}_" != "2_" ]; then
+        init 3
+    fi
+    if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+      ${ROOT}/usr/bin/updater_msg.py success
+    fi
+  fi
+  return 0
+}
+
+
+update_apply_pixhawk() {
+  # check update file unless --force was given
+  #if [ "${1}_" != "--force_" ]; then
+    # sanity-check whatever is in /firmware/*.px4
+  #fi
+  if [ -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+      ${ROOT}/usr/bin/updater_msg.py start
+    fi
+    r=`get_runlevel`
+    if [ "${r}_" != "2_" ]; then
+        init 2
+        sleep 3
+    fi
+    pixhawk.py -i
+    if [ "${r}_" != "2_" ]; then
+        init 3
+    fi
+    if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+      ${ROOT}/usr/bin/updater_msg.py success
+    fi
+  fi
+  return 0
+}
+
+
+update_apply_sololink() {
+  # check update file unless --force was given
+  if [ "${1}_" != "--force_" ]; then
+    # must be only one update file, and must match either
+    # *controller*.tar.gz or *solo*.tar.gz
+    if [ ${is_solo} ]; then
+      file_infix="solo"
+    else
+      file_infix="controller"
+    fi
+    n=`count_files "${ROOT}/log/updates" "*${file_infix}*.tar.gz"`
+    if [ ${n} -ne 1 ]; then
+      echo "must be exactly one update file (found ${n})"
+      return 1
+    fi
+    n=`count_files "${ROOT}/log/updates" "*${file_infix}*.tar.gz.md5"`
+    if [ ${n} -ne 1 ]; then
+      echo "must be exactly one md5 file (found ${n})"
+      return 1
+    fi
+    # check md5
+    pushd ${ROOT}/log/updates &> /dev/null
+    if ! ${MD5SUM} -c *${file_infix}*.tar.gz.md5; then
+      echo "md5 error"
+      return 1
+    fi
+    popd &> /dev/null
+  fi
+
+  # nasty cleanup
+  rm -f \
+    ${ROOT}/mnt/rootfs.rw/etc/inittab \
+    ${ROOT}/mnt/rootfs.rw/*VERSION* \
+    ${ROOT}/log/updates/FACTORYRESET \
+    ${ROOT}/log/updates/RESETSETTINGS
+  touch ${ROOT}/log/updates/UPDATE
+  if [ "${1}_" == "--reset_" ] || [ "${2}_" == "--reset_" ]; then
+    touch ${ROOT}/log/updates/RESETSETTINGS
+  fi
+  if [ -x ${ROOT}/usr/bin/updater_msg.py ]; then
+    ${ROOT}/usr/bin/updater_msg.py start
+  fi
+  shutdown_now
+}
+
+
+update_apply() {
+  case "${1}" in
+    "artoo" )
+      if [ ${is_solo} ]; then
+        echo "solo can't update artoo"
+        return 1
+      fi
+      update_apply_artoo ${2}
+      ;;
+    "pixhawk" )
+      if [ ! ${is_solo} ]; then
+        echo "controller can't update pixhawk"
+        return 1
+      fi
+      update_apply_artoo ${2}
+      ;;
+    "sololink" )
+      update_apply_sololink ${2} ${3}
+      ;;
+    * )
+      echo "--update-apply [artoo|pixhawk|sololink] [--force] [--reset]"
+      return 1
+      ;;
+  esac
+  return $?
+}
+
+
+# Get running image.
+# Prints either "golden" or "latest".
+get_image() {
+  if [ ! -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    echo "no test mode for get_image"
+    return 1
+  fi
+  boot_dev=`grep 'boot' /proc/mounts | awk '{print $1}'`
+  # boot_dev should be either:
+  #   /dev/mmcblk0p1 when running golden, or
+  #   /dev/mmcblk0p2 when running latest
+  if [ ${boot_dev} == "/dev/mmcblk0p1" ]; then
+    echo "golden"
+    return 0
+  elif [ ${boot_dev} == "/dev/mmcblk0p2" ]; then
+    echo "latest"
+    return 0
+  else
+    echo "can't determine boot image"
+    return 1
+  fi
+}
+
+
+# Examples of valid MACs:
+# 00:1f:09:04:00:22 (lower case hex)
+# 00:1F:09:04:00:22 (upper case hex)
+# 00-1F-09-04-00-22 (dash separators)
+# 001f09040022 (no separators)
+validate_mac() {
+  # convert hex to lower case, strip separators
+  mac=`echo "${1}" | tr A-Z a-z | tr -d :-`
+  maclen=${#mac}
+  if [ ${maclen} -ne 12 ]; then
+    echo "mac address invalid"
+    return 1
+  fi
+  # put back the colons
+  mac="${mac:0:2}:${mac:2:2}:${mac:4:2}:${mac:6:2}:${mac:8:2}:${mac:10:2}"
+  echo "${mac}"
+  return 0
+}
+
+
+# set_pairing_conf (MAC) [NAME]
+# MAC required
+# NAME is optional, defaults to "Solo"
+# (controller only)
+set_pairing_conf() {
+  mac=`validate_mac "${1}"`
+  if [ $? -ne 0 ]; then
+    return 1
+  fi
+  if [ ! -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    # might not exist in test directory structure
+    mkdir -p ${ROOT}/log
+  fi
+  echo "[${mac}]" > ${ROOT}/log/3dr-pairing.conf
+  if [ -z "${2}" ]; then
+    echo "name = Solo" >> ${ROOT}/log/3dr-pairing.conf
+  else
+    echo "name = ${2}" >> ${ROOT}/log/3dr-pairing.conf
+  fi
+  return 0
+}
+
+
+get_pairing() {
+  if [ ${is_solo} ]; then
+    if wpa_supp_has_ssid; then
+      pardner=`get_wifi_ssid_wpa_supplicant`
+    else
+      echo "not paired"
+      return 1
+    fi
+  else
+    if [ -f ${ROOT}/log/3dr-pairing.conf ]; then
+      pardner=`head -n 1 ${ROOT}/log/3dr-pairing.conf`
+      pardner=${pardner:1:17}
+    else
+      echo "not paired"
+      return 1
+    fi
+  fi
+  echo ${pardner}
+  return 0
+}
+
+
+set_pairing() {
+  if [ ${is_solo} ]; then
+    if [ -z "${1}" ]; then
+      cp ${ROOT}/mnt/rootfs.ro/etc/wpa_supplicant.orig ${ROOT}/etc/wpa_supplicant.conf
+      md5sum_config ${ROOT}/etc/wpa_supplicant
+      echo "not paired"
+      return 0
+    else
+      set_wifi_ssid "${1}"
+    fi
+  else
+    if [ -z "${1}" ]; then
+      rm -f ${ROOT}/log/3dr-pairing.conf
+      echo "not paired"
+      return 0
+    else
+      set_pairing_conf "${1}"
+    fi
+  fi
+  get_pairing
+}
+
+
+get_config() {
+  if grep -q "${1}" ${ROOT}/etc/sololink.conf; then
+    echo "`grep ${1} ${ROOT}/etc/sololink.conf | head -n 1 | \
+              sed "s/[ \t]*${1}[ \t]*=[ \t]*\(.\+\)/\1/g"`"
+    return 0
+  else
+    echo "${1} not set"
+    return 1
+  fi
+}
+
+
+# set_config NAME VALUE [--add]
+set_config() {
+  backup_config ${ROOT}/etc/sololink
+  if grep -q "${1}" ${ROOT}/etc/sololink.conf; then
+    # change existing setting
+    sed -i "s/[ \t]*${1}[ \t]*=.\+/${1}=${2}/g" ${ROOT}/etc/sololink.conf
+  elif [ "${3}_" == "--add_" ]; then
+    # append as new setting
+    echo >> ${ROOT}/etc/sololink.conf
+    echo "${1}=${2}" >> ${ROOT}/etc/sololink.conf
+  fi
+  md5sum_config ${ROOT}/etc/sololink
+  get_config "${1}"
+  return $?
+}
+
+
+# return success (0) if there is an invalid sticks message in 3dr-stm32.log
+# after the most recent startup message
+#
+# Note that doing a stick cal will restart the stm32 in the current log;
+# that is why we look for the error message _after_ the most recent startup
+get_invalid_sticks() {
+  msg_start="main: starting"
+  msg_error="stm32: received invalid stick inputs message"
+  log=/log/3dr-stm32.log
+  # line number of most recent startup
+  line=`grep -n "${msg_start}" ${log} | tail -1 | sed 's/\([0-9]\+\).*/\1/g'`
+  # search file after that
+  if tail +${line} ${log} | grep -q "${msg_error}"; then
+      echo "`tail +${line} ${log} | grep -o \"${msg_error}\"`"
+      # found error, return success
+      return 0
+  else
+      # did not find error, return failure
+      return 1
+  fi
+}
+
+
+# get_status - get overall system status
+#
+# return status == 0
+# stdout == "ok"
+#
+# return status != 0
+# stdout == "error messages, one per line"
+#
+# The intent is that this can be augmented to look for problems other than
+# "invalid sticks" if we need to.
+get_status() {
+  status=0
+  errmsg="ok"
+  if msg=`get_invalid_sticks`; then
+    status=1
+    errmsg="${msg}"
+  fi
+  echo "${errmsg}"
+  return ${status}
+}
+
+
+get_version_golden() {
+  if [ ! -z "${SOLOLINK_CONFIG_TEST}" ]; then
+    echo "no test mode for get_version_golden"
+    return 1
+  fi
+  image=`get_image`
+  case "${image}" in
+    "golden" )
+      # running golden
+      version_file=${ROOT}/VERSION
+      ;;
+    "latest" )
+      # running latest
+      mkdir -p ${ROOT}/mnt/golden
+      mount /dev/mmcblk0p1 ${ROOT}/mnt/golden
+      mkdir -p ${ROOT}/mnt/golden-squashfs
+      mount /mnt/golden/*.squashfs /mnt/golden-squashfs
+      version_file=${ROOT}/mnt/golden-squashfs/VERSION
+      ;;
+    * )
+      echo "${image}"
+      return 1
+      ;;
+  esac
+
+  if [ ! -f ${version_file} ]; then
+    echo "unavailable"
+    return 1
+  fi
+
+  head -n 1 ${version_file}
+
+  if [ "${image}" == "latest" ]; then
+    umount ${ROOT}/mnt/golden-squashfs
+    rmdir ${ROOT}/mnt/golden-squashfs
+    umount ${ROOT}/mnt/golden
+    rmdir ${ROOT}/mnt/golden
+  fi
+
+  return 0
+}
+
+
+# Get a version number from a file, or "unknown" if the file does not exist
+# No trailing newline.
+get_file_version() {
+  if [ -f "$1" ]; then
+    head -n 1 $1 | awk '{printf($1)}'
+  else
+    echo -n "unknown"
+  fi
+}
+
+
+# Get all versions; returns three lines:
+# script_version
+# loc_sololink_version loc_firmware_version
+# rem_sololink_version rem_firmware_version
+get_version_all() {
+  echo "${sololink_config_version}"
+  echo -n "`get_file_version ${ROOT}/VERSION` "
+  if [ ${is_controller} ]; then
+    echo `get_file_version ${ROOT}/STM_VERSION`
+  else
+    echo `get_file_version ${ROOT}/PIX_VERSION`
+  fi
+  echo -n "`get_file_version ${ROOT}/tmp/PEER_SL_VERSION` "
+  echo `get_file_version ${ROOT}/tmp/PEER_FW_VERSION`
+  return 0
+}
+
+
+# get_version [artoo|pixhawk|sololink|golden|all]
+get_version() {
+  if [ -z "${1}" ]; then
+    echo "${sololink_config_version}"
+  else
+    case "${1}" in
+      "artoo" )
+        if [ ! ${is_controller} ]; then
+          echo "only controller can return artoo's version"
+          return 1
+        fi
+        version_file=${ROOT}/STM_VERSION
+        ;;
+      "pixhawk" )
+        if [ ! ${is_solo} ]; then
+          echo "only solo can return pixhawk's version"
+          return 1
+        fi
+        version_file=${ROOT}/PIX_VERSION
+        ;;
+      "sololink" )
+        version_file=${ROOT}/VERSION
+        ;;
+      "golden" )
+        get_version_golden
+        return $?
+        ;;
+      "all" )
+        get_version_all
+        return $?
+        ;;
+      * )
+        echo "--get-version [artoo|pixhawk|sololink|golden|all]"
+        return 1
+        ;;
+    esac
+    if [ ! -f ${version_file} ]; then
+      echo "unavailable"
+      return 1
+    fi
+    head -n 1 ${version_file}
+  fi
+  return 0
+}
+
+
+restart_sololink() {
+  init 2
+  sleep 3
+  init 3
+  return 0
+}
+
+
+do_restart() {
+  case "${1}" in
+    "video" )
+      restart_video
+      return $?
+      ;;
+    "system" )
+      shutdown_now
+      return 0
+      ;;
+    "sololink" )
+      restart_sololink
+      return $?
+      ;;
+    * )
+      echo "--restart [video|sololink|system]"
+      return 1
+      ;;
+  esac
+}
+
+
+# solo or controller?
+if [ "_${HOSTNAME}" == "_3dr_solo" ]; then
+  is_solo=1
+elif [ "_${HOSTNAME}" == "_3dr_controller" ]; then
+  is_controller=1
+elif [ "_${TESTHOSTNAME}" == "_3dr_solo" ]; then
+  is_solo=1
+elif [ "_${TESTHOSTNAME}" == "_3dr_controller" ]; then
+  is_controller=1
+else
+  echo "hostname is not 3dr_solo or 3dr_controller; can't continue"
+  exit 1
+fi
+
+if [ -z "${1}" ]; then usage; fi
+
+case "${1}" in
+  "--get-wifi-ssid" )
+    shift
+    get_wifi_ssid
+    ;;
+  "--set-wifi-ssid" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    set_wifi_ssid "${1}"
+    ;;
+  "--get-wifi-password" )
+    shift
+    get_wifi_password
+    ;;
+  "--set-wifi-password" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    set_wifi_password "${1}"
+    ;;
+  "--get-wifi-channel" )
+    shift
+    get_wifi_channel
+    ;;
+  "--set-wifi-channel" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    set_wifi_channel "${1}"
+    ;;
+  "--get-wifi-country" )
+    shift
+    get_wifi_country
+    ;;
+  "--set-wifi-country" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    set_wifi_country "${1}"
+    ;;
+  "--get-wifi-power" )
+    shift
+    get_wifi_power
+    ;;
+  "--set-wifi-power" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    set_wifi_power "${1}"
+    ;;
+  "--reset-wifi-settings" )
+    shift
+    reset_wifi_settings
+    ;;
+  "--restart-video" )
+    shift
+    restart_video
+    ;;
+  "--get-ui-mode" )
+    shift
+    get_ui_mode
+    ;;
+  "--set-ui-mode" )
+    shift
+    set_ui_mode "${1}"
+    ;;
+  "--get-ui-units" )
+    shift
+    get_ui_units
+    ;;
+  "--set-ui-units" )
+    shift
+    set_ui_units "${1}"
+    ;;
+  "--get-ui-sweep" )
+    shift
+    get_ui_sweep
+    ;;
+  "--set-ui-sweep" )
+    shift
+    set_ui_sweep "${1}" "${2}"
+    ;;
+  "--factory-reset" )
+    factory_reset
+    ;;
+  "--settings-reset" )
+    settings_reset
+    ;;
+  "--make-golden" )
+    make_golden
+    ;;
+  "--update-prepare" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    update_prepare "${1}"
+    ;;
+  "--update-apply" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    update_apply "${1}" "${2}" "${3}"
+    ;;
+  "--get-image" )
+    shift
+    get_image
+    ;;
+  "--get-pairing" )
+    shift
+    get_pairing
+    ;;
+  "--set-pairing" )
+    shift
+    # ${1} optional; empty means unpair
+    set_pairing "${1}"
+    ;;
+  "--get-config" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    get_config "${1}"
+    ;;
+  "--set-config" )
+    shift
+    if [ -z "${1}" ] || [ -z "${2}" ]; then usage; fi
+    set_config $@
+    ;;
+  "--get-status" )
+    get_status
+    ;;
+  "--get-version" )
+    shift
+    # ${1} optional; empty means get script version
+    get_version "${1}"
+    ;;
+  "--reboot" )
+    shutdown_now
+    ;;
+  "--restart" )
+    shift
+    if [ -z "${1}" ]; then usage; fi
+    do_restart "${1}"
+    ;;
+  "--pass" )
+    shift
+    true
+    ;;
+  "--fail" )
+    shift
+    false
+    ;;
+  * )
+    usage
+esac
+
+exit $?

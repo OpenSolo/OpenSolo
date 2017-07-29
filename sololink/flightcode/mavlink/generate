@@ -1,0 +1,31 @@
+#!/bin/bash
+
+usage() {
+  echo "usage: generate <path/to/mavlink>"
+  exit 1
+}
+
+if [ -z "${1}" ]; then
+  echo "argument expected"
+  usage
+fi
+
+if [ ! -d "${1}/message_definitions" ]; then
+  echo "${1}/message_definitions not found"
+  usage
+fi
+
+outdir=`pwd`/c_library
+
+pushd ${1}
+
+python -m pymavlink.tools.mavgen --lang C -o ${outdir} \
+    message_definitions/v1.0/ardupilotmega.xml
+
+if which git; then
+  git log --oneline > ${outdir}/.generate
+else
+  echo "git not found" > ${outdir}/.generate
+fi
+
+popd

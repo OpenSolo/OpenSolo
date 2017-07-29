@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Uncomment one of these
+#machineList="imx6solo_3dr_artoo imx6solo_3dr imx6solo_3dr_analogtvin imx6solo_3dr_1080p"
+machineList="imx6solo_3dr_artoo imx6solo_3dr_1080p"
+
+if [ -z "${1}" ]; then
+  bspBranch=imx-3.10.17-1.0.0_ga
+  dateStr=`date +%Y%m%d_%H%M`
+  buildName=sololink_$dateStr
+else
+  bspBranch=${1}
+  buildName=${1}
+  #buildName=sololink_v${1}
+fi
+
+buildRoot=.
+
+mkdir $buildRoot/$buildName
+pushd $buildRoot/$buildName
+
+set -x
+
+(
+
+echo "`date`: ${buildName}: start"
+
+repo init -u git@github.com:3drobotics/3dr-arm-yocto-bsp.git -b ${bspBranch}
+repo sync
+
+export EULA=1
+source ./setup-environment build
+
+if true; then
+
+# increase number of threads
+cpu_count=`grep -c ^processor /proc/cpuinfo`
+new_count=$(($cpu_count * 4))
+echo "setting to ${new_count} threads"
+sed -i "s/^BB_NUMBER_THREADS = '[0-9]\+'/BB_NUMBER_THREADS = '${new_count}'/" conf/local.conf
+sed -i "s/^PARALLEL_MAKE = '-j [0-9]\+'/PARALLEL_MAKE = '-j ${new_count}'/" conf/local.conf
+
+fi
+
+if false; then
+
+# use local sources
+cat >> conf/local.conf <<END_LOCAL_CONF
+
+SOURCE_MIRROR_URL ?= "file:///home/$USER/sources/"
+INHERIT += "own-mirrors"
+BB_GENERATE_MIRROR_TARBALLS = "1"
+END_LOCAL_CONF
+
+fi
+
+for machineName in $machineList; do
+
+  echo "`date`: ${machineName}: start"
+
+  sed -i "s/^MACHINE ??= .*/MACHINE ??= '$machineName'/" conf/local.conf
+
+  if [ "$machineName" = "imx6solo_3dr_artoo" ]; then
+    bitbake 3dr-controller
+  elif [ "$machineName" == "imx6solo_3dr_1080p" ]; then
+    bitbake 3dr-solo
+  elif [ "$machineName" == "imx6solo_3dr" ]; then
+    bitbake 3dr-solo
+  else
+    echo "Unknown machine ${machineName}!"
+  fi
+
+  echo "`date`: ${machineName}: done"
+
+done # for machineName
+
+echo "`date`: ${buildName}: done"
+
+) 2>&1 | tee console.log
+
+set +x
+popd

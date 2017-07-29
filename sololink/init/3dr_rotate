@@ -1,0 +1,41 @@
+#!/bin/sh
+
+echo "rotating 3dr logs"
+
+if [ -f /usr/sbin/logrotate ]; then
+	logrotate -f /etc/logrotate-sololink.conf -s /dev/null
+fi
+
+if [ "`hostname`" == "3dr_solo" ]; then
+
+  # Set links to shotlogs for backwards compatibility (external fetchers).
+  # Use of the three-digit-number names should be considered deprecated.
+  #
+  # shotlog.000.log -> shotlog.log
+  # shotlog.001.log -> shotlog.log.1
+  # shotlog.002.log -> shotlog.log.2
+  # :
+  # shotlog.019.log -> shotlog.log.19
+  #
+  # This should be done after the rotate above, so the files have the names they
+  # will have for this run.
+
+  cd /log
+
+  # on first boot, shotlog.log is not there
+  # (don't know why logrotate is not creating it empty)
+  ln -sf shotlog.log shotlog.000.log
+
+  for n in 1 2 3 4 5 6 7 8 9; do
+    if [ -f shotlog.log.$n ]; then
+      ln -sf shotlog.log.$n shotlog.00$n.log
+    fi
+  done
+
+  for n in 10 11 12 13 14 15 16 17 18 19; do
+    if [ -f shotlog.log.$n ]; then
+      ln -sf shotlog.log.$n shotlog.0$n.log
+    fi
+  done
+
+fi

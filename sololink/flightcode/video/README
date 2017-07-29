@@ -1,0 +1,54 @@
+The Solo video pipeline exists in this folder.  The pipeline works as follows:
+
+     =================
+     |               |
+     |     SOLO      |
+     |               |
+     |    vidout     |
+     =================
+            |
+            |
+            |
+            V
+     =================
+     | app_streamer  |      ==========
+     | |         |   |      |        |
+     | |  ARTOO  >-->|----->| mobile |
+     | |             |      |        |
+     | -> hdmiout    |      ==========
+     =================
+            |
+            | 
+            |
+            V
+     =================
+     |   MONITOR     |
+     =================
+
+vidout:
+vidout is always running on Solo and handles resolution size changes
+automatically.  It always sends rtp-encapsulated h.264 720p video
+to Artoo on port 5550.  Depending on network conditions, it will reduce
+the framerate of the video.  Specifically, if the number of transmit
+retries on Solo eclipses 200, the framerate will be reduced based on the
+following:
+
+30fps -> 24fps -> 15fps -> 10fps -> 5fps
+
+If the link continues to be bad, the framerate is held at 5fps.  Further work
+could reduce the GOP or QUANT to reduce bitrate even further.  Additional
+work should be done to support streaming different resolutions as well.
+
+app_streamer:
+app_streamer on Artoo takes data from port 5550 and passes it to
+both the hdmiout as well as any connected mobile devices.  It sends full
+frames at a time to mobile devices, but passes data byte-by-byte to hdmiout.
+
+hdmiout:
+hdmiout is always running, but waits to detect a connected HDMI cable before
+starting the decoding pipeline.  It puts 720p video out on the HDMI port of Artoo
+using the mfw_isink gstreamer plugin.
+
+cleanlibs.sh:
+cleanlibs is used to remove old Sculpture libraries that are no longer in use.
+This is installed as a startup script, but can probably be removed in the future.

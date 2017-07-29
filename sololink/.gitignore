@@ -1,0 +1,14 @@
+# osx junk
+*.DS_Store
+
+# object files
+*.o
+*.pyc
+
+# pycharm files
+.idea
+
+# logs from sim
+*.tlog
+*.tlog.raw
+*.parm

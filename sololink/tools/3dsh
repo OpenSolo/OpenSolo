@@ -1,0 +1,18 @@
+#!/bin/bash
+# Helper script for ssh'ing into solo and artoo
+# 
+# Syntax: 3dsh [ solo | artoo ]
+# Note: Defaults to artoo without an argument
+###############################################
+
+CUR_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+USERNAME="root"
+TARGET="10.1.1.1"
+
+if [ "$1" == "solo" ]
+then
+	TARGET="10.1.1.10"
+fi
+
+ssh -i $CUR_SCRIPT_DIR/updater/updater_id_rsa $USERNAME@$TARGET

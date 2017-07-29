@@ -1,0 +1,96 @@
+#!/bin/bash
+
+# Conditions:
+# Firmware file: does not exist, exists and is same, exists and is different
+# STM_VERSION: does not exist, exists
+
+# start out with nothing in /firmware,
+# and two versions in /firmware/loaded
+version_1="0.6.14"
+version_2="0.7.3"
+
+find /firmware -name \*.bin
+
+init 2
+sleep 5
+
+# start with version_1 running
+date +%H:%M:%S
+stm32loader.py -wvq -s 127 -b 115200 -p /dev/ttymxc1 /firmware/loaded/artoo_${version_1}.bin
+date +%H:%M:%S
+
+# test: (firmware file, STM_VERSION)
+
+# ***** should not happen
+echo
+echo "TEST: no update, /STM_VERSION does not exist"
+rm /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_1}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+
+# test: (does not exist, exists)
+# ***** common boot case
+echo
+echo "TEST: no update, /STM_VERSION exists"
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_1}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+
+# ***** possible first-boot case
+echo
+echo "TEST: update exists but is same, /STM_VERSION does not exist"
+mv /firmware/loaded/artoo_${version_1}.bin /firmware
+rm /STM_VERSION
+echo "${version_1} in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_1}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+
+# ***** uncommon update case
+echo
+echo "TEST: update exists but is same, /STM_VERSION exists"
+mv /firmware/loaded/artoo_${version_1}.bin /firmware
+echo "${version_1} in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_1}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+
+# ***** possible first-boot case
+echo
+echo "TEST: update exists and is different, /STM_VERSION does not exist"
+mv /firmware/loaded/artoo_${version_2}.bin /firmware
+rm /STM_VERSION
+echo "${version_2} in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_2}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
+
+# ***** common update case
+echo
+echo "TEST: update exists and is different, /STM_VERSION exists"
+mv /firmware/loaded/artoo_${version_1}.bin /firmware
+echo "${version_1} in /firmware:"
+find /firmware -name \*.bin
+checkArtooAndUpdate.py
+echo "/STM_VERSION should be ${version_1}:"
+cat /STM_VERSION
+echo "nothing in /firmware:"
+find /firmware -name \*.bin
