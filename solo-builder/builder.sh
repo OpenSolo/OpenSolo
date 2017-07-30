@@ -10,7 +10,8 @@ fi
 
 echo "Initializing repo with branch $BRANCH"
 
-repo init -u git@github.com:3drobotics/3dr-arm-yocto-bsp.git -b $BRANCH
+#repo init -u https://github.com/OpenSolo/3dr-arm-yocto-bsp.git -b $BRANCH
+repo init -u https://github.com/OpenSolo/3dr-arm-yocto-bsp.git 
 repo sync
 
 export MACHINE=imx6solo_3dr_1080p

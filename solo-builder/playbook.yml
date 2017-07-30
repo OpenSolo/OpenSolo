@@ -56,4 +56,4 @@
         chdir: /solo-build
         creates: /solo-build/build
 
-    - copy: src=~/.ssh/github_token dest=~/.ssh/github_token mode=0455
+    #- copy: src=~/.ssh/github_token dest=~/.ssh/github_token mode=0455
