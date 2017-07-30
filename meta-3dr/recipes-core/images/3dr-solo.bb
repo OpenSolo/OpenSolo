@@ -55,7 +55,6 @@ IMAGE_INSTALL += " \
     rsync \
     compat-wireless-all \
 "
-#    vim \
 
 update_config_files() {
     # update /etc/network/interfaces
