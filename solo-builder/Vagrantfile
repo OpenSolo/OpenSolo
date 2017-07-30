@@ -1,10 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
   config.vm.box_check_update = false
+  
+  config.vm.provision "shell", path: "install-vagrant-deps.sh"
 
   # detect number of cores,
   # http://stackoverflow.com/questions/891537/detect-number-of-cpus-installed
@@ -42,3 +46,5 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "playbook.yml"
   end
 end
+
+
