@@ -50,12 +50,12 @@ IMAGE_INSTALL += " \
     e2fsprogs-e2fsck \
     dosfstools \
     nano \
-#    vim \
     openssh-sftp-server \
     persist-logs \
     rsync \
     compat-wireless-all \
 "
+#    vim \
 
 update_config_files() {
     # update /etc/network/interfaces
