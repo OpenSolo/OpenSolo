@@ -4,7 +4,8 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://README.md;md5=1b7fb31af91cdcda8e83aefb184e69df"
 
 # Pull from specific tag by default
-SRCREV = "v2.2.4"
+#SRCREV = "v2.2.4"
+SRCREV = "master"
 SRC_URI = "git://github.com/OpenSolo/SoloLink/"
 
 # Or, AUTOREV means pull HEAD of the branch in the URI

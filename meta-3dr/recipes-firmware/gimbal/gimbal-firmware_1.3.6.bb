@@ -1,6 +1,6 @@
 SUMMARY = "Axon firmware binary"
 
-LICENSE = "CLOSED"
+LICENSE = "APACHE2.0"
 
 firmwaredir = "/firmware"
 FILES_${PN} += "${firmwaredir}/"
