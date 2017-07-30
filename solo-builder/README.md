@@ -85,8 +85,6 @@ TODO: write a script that gets the files off after
 
 3dr Private:
 
-* https://github.com/3drobotics/imx6-uboot
-* https://github.com/3drobotics/imx6-linux
 * https://github.com/3drobotics/mavlink-solo
 * https://github.com/3drobotics/sculpture_proprietary
 * https://github.com/3drobotics/solo-gimbal
@@ -95,15 +93,24 @@ TODO: write a script that gets the files off after
 
 Public:
 
+* https://github.com/3drobotics/imx6-uboot
+* https://github.com/3drobotics/imx6-linux
 * https://github.com/3drobotics/MAVProxy
 * https://github.com/3drobotics/stm32loader
 * https://github.com/3drobotics/ardupilot-solo
 
+* https://github.com/OpenSolo/ardupilot-solo
+* https://github.com/OpenSolo/sololink
+* https://github.com/OpenSolo/artoo
+* https://github.com/OpenSolo/imx6-uboot
+* https://github.com/OpenSolo/imx6-linux
 * https://github.com/OpenSolo/3dr-arm-yocto-bsp
 * https://github.com/OpenSolo/meta-3dr
 * https://github.com/OpenSolo/dronekit-python-solo
 * https://github.com/OpenSolo/sololink-python
 * https://github.com/OpenSolo/solo-builder
 * https://github.com/OpenSolo/3dr-yocto-bsb-base
+* https://github.com/OpenSolo/stm32loader
+* https://github.com/OpenSolo/MAVProxy
 
 
