@@ -4,7 +4,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING3;md5=4fe869ee987a340198fb0d54c55c47f1"
 
 SRCREV = "54c565ecdfa8e92f803d869013429eb118d37419"
-SRC_URI = "git://git@github.com/OpenSolo/stm32loader.git;protocol=ssh"
+SRC_URI = "git://github.com/OpenSolo/stm32loader/"
 
 S = "${WORKDIR}/git"
 

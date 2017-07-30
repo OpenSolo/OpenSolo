@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://requirements.txt;md5=d2dfbdbc11136d1e2713f4f391c6b9cf
 PV = "2.4.0"
 
 SRCREV = "v2.4.0"
-SRC_URI = "git://git@github.com/dronekit/dronekit-python.git;protocol=ssh"
+SRC_URI = "git://github.com/dronekit/dronekit-python/"
 
 S = "${WORKDIR}/git"
 

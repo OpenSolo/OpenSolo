@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=3c34afdc3adf82d2448f12715a255122"
 PV = "1.4.20-solo"
 
 SRCREV = "sololink_v1.1.17"
-SRC_URI = "git://git@github.com/OpenSolo/MAVProxy.git;protocol=ssh"
+SRC_URI = "git://github.com/OpenSolo/MAVProxy/"
 
 S = "${WORKDIR}/git"
 
