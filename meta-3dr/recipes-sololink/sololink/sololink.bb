@@ -1,7 +1,7 @@
 SUMMARY = "SoloLink software for RC, telemetry and video"
 
-LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://README.md;md5=1b7fb31af91cdcda8e83aefb184e69df"
+LICENSE = "CLOSED"
+#LIC_FILES_CHKSUM = "file://README.md;md5=1b7fb31af91cdcda8e83aefb184e69df"
 
 # Pull from specific tag by default
 #SRCREV = "v2.2.4"

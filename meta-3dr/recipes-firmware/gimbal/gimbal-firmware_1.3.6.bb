@@ -1,6 +1,6 @@
 SUMMARY = "Axon firmware binary"
 
-LICENSE = "APACHE2.0"
+LICENSE = "CLOSED"
 
 firmwaredir = "/firmware"
 FILES_${PN} += "${firmwaredir}/"
@@ -35,6 +35,7 @@ do_fetch () {
     # NB: supply github access token as url param because if we supply it as a header,
     #     once github redirects us to s3, it gets included in that request as well
     #     and amazon complains that 2 forms of auth have been provided and quits.
+    echo 'curl -v -L -H "Accept: application/octet-stream" ${BIN_URL}?access_token=${TOKEN} -o ${WORKDIR}/${FILE_SRC}'
     curl -v -L -H "Accept: application/octet-stream" ${BIN_URL}?access_token=${TOKEN} -o ${WORKDIR}/${FILE_SRC}
 }
 
