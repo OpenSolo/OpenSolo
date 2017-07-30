@@ -30,8 +30,8 @@ The main dependencies of this project are:
 
 * [dronekit-python](https://github.com/dronekit/dronekit-python) - ShotManager uses *DroneKit Python* to implement the movement behavior required by shots. ([Docs here](http://python.dronekit.io/)).
 * [dronekit-python-solo](https://github.com/dronekit/dronekit-python-solo) - An extension for dronekit-python that enables Solo-specific functionality. 
-* [sololink-python](https://github.com/3drobotics/sololink-python) - ShotManager uses this to acquire information about Artoo buttons (A,B,Pause,Fly) and to get and remap RC stick values. This is the Python interface for [SoloLink](https://github.com/3drobotics/SoloLink). 
-* [mavlink-solo](https://github.com/3drobotics/mavlink-solo) - ShotManager uses this C-library to package (and read) MAVLink messages in communications with the Pixhawk and GoPro.
+* [sololink-python](https://github.com/OpenSolo/sololink-python) - ShotManager uses this to acquire information about Artoo buttons (A,B,Pause,Fly) and to get and remap RC stick values. This is the Python interface for [SoloLink](https://github.com/OpenSolo/SoloLink). 
+* [mavlink-solo](https://github.com/OpenSolo/mavlink-solo) - ShotManager uses this C-library to package (and read) MAVLink messages in communications with the Pixhawk and GoPro.
 * [numpy](https://github.com/numpy/numpy) - A popular mathematics library for Python.
 
 The project is a dependency of:
@@ -66,9 +66,9 @@ sudo apt-get install python-scipy python-opencv ccache gawk git python-pip pytho
 sudo pip install pymavlink MAVProxy==1.4.38
 ```
 
-4] Clone [ardupilot-solo](https://github.com/3drobotics/ardupilot-solo) to your home directory.
+4] Clone [ardupilot-solo](https://github.com/OpenSolo/ardupilot-solo) to your home directory.
 ```
-git clone https://github.com/3drobotics/ardupilot-solo.git
+git clone https://github.com/OpenSolo/ardupilot-solo.git
 ```
 
 5] Navigate to the ArduCopter directory.
@@ -129,7 +129,7 @@ source shotman_venv/bin/activate
 2] Install shotmanager dependencies.
 ```
 pip install dronekit dronekit-solo numpy nose mock
-git clone https://github.com/3drobotics/sololink-python.git
+git clone https://github.com/OpenSolo/sololink-python.git
 cd ~/sololink-python
 sudo python setup.py install
 cd ..
