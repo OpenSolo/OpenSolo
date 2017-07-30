@@ -1,4 +1,5 @@
 #!/bin/bash
+cp /vagrant/github_token ~/.ssh/github_token
 
 cd /solo-build
 
@@ -17,5 +18,6 @@ repo sync
 export MACHINE=imx6solo-3dr-1080p
 EULA=1 source ./setup-environment build
 
-MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo
-MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller
+# -k means continue-after-error-for-as-much-as-possible
+MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo -k
+MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller -k
