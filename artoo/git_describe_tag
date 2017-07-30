@@ -1,0 +1,5 @@
+#!/bin/bash
+# this command should really execute:
+#git describe --tags
+# but we don't have any version tags in the repo yet, so lets fake it:
+echo v0.0.1

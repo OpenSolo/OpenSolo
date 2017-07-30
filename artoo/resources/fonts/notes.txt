@@ -12,3 +12,14 @@ by default, PIL just uses the first, and doesn't provide a way to specify which 
 http://fondu.sourceforge.net/ is a tool that extracts each of them into individual .ttf files (install on OS X via `brew install fondu`).
 
 This was used to generate HelveticaNeueMedium.ttf from HelveticaNeue.dfont
+
+Alternatively, 'Roboto' is an Apache Licensed Free Font by google that can be gotten from here:
+https://material.io/guidelines/resources/roboto-noto-fonts.html
+( wget https://storage.googleapis.com/material-design/publish/material_v_11/assets/0B0J8hsRkk91LRjU4U1NSeXdjd1U/RobotoTTF.zip 
+and we might be able to get away with using these instead of helveticaNeue?
+Roboto-Regular arrives in the zip as a .ttf, converting it to .otf is easy with any online tool for this, eg: https://everythingfonts.com/ttf-to-otf
+finally, to use Roboto where the system is expecting helvetica we'll do this: 
+cp Roboto-Regular.otf HelveticaNeueLTPro-Lt.otf
+cp Roboto-Regular.otf HelveticaNeueLTPro-Roman.otf
+cp Roboto-Regular.otf HelveticaNeueMedium.ttf
+cp Roboto-Regular.otf Copenhagen_Light.otf

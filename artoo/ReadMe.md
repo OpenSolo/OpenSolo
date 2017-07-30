@@ -29,6 +29,13 @@ To build with tup, simply invoke it at the root of the project directory:
 
     $ tup
 
+# to build inside vagrant: 
+cd OpenSolo/artoo
+vagrant up
+vagrant ssh
+cd /vagrant
+tup
+
 ### dev environment
 
 I'm primarily using Qt Creator (https://qt-project.org/downloads) for editing, which is tracked in the following project files: artoo.{config, creator, files, includes}

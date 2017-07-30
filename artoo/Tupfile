@@ -85,7 +85,7 @@ CPPSRCS := src/*.cpp src/stm32/*.cpp
 
 # generate version string as well via tup trickery
 # we pass source to GCC via stdin, then add the object file to our list of .o's to link
-GIT_TAG := vers=`git describe --tags`
+GIT_TAG := vers=`./git_describe_tag`
 VERSION_SRC := "#include \"src/version.h\"\nconst char* Version::str() {return \"$vers\";}"
 COMPILE_VERSION := $(GIT_TAG); echo $(VERSION_SRC) | $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(ARCH_FLAGS) -x c++ -c - -o $(OBJDIR)/version.o
 
