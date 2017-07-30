@@ -1,8 +1,8 @@
 SUMMARY = "shotmanager"
 HOMEPAGE = "https://github.com/OpenSolo/shotmanager"
 
-LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://requirements.txt;md5=6bd610df3d427dace1d92a4ae068d87c"
+LICENSE = "CLOSED"
+#LIC_FILES_CHKSUM = "file://requirements.txt;md5=6bd610df3d427dace1d92a4ae068d87c"
 
 #SRCREV = "v2.4.1-1"
 SRCREV = "master"
