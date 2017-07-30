@@ -28,7 +28,7 @@ do_fetch () {
     # https://help.github.com/articles/creating-an-access-token-for-command-line-use/
     TOKEN=$(cat ~/.ssh/github_token)
 
-    SRC_URL="https://api.github.com/repos/3drobotics/${REPO_NAME}/releases/tags/${REPO_TAG}"
+    SRC_URL="https://api.github.com/repos/OpenSolo/${REPO_NAME}/releases/tags/${REPO_TAG}"
 
     BIN_URL=$(curl -s -H "Authorization: token ${TOKEN}" -H "Accept: application/json" ${SRC_URL} | jq -r '.assets[] | select(.name | endswith(".${FILE_EXT}")) | .url')
 
