@@ -51,7 +51,7 @@
       file: path=/solo-build state=directory mode=0755 owner={{build_dir_owner | default('ubuntu')}}
 
     - name: repo init
-      shell: repo init -u git@github.com:3drobotics/3dr-arm-yocto-bsp.git -b sololink_v2.0.0-5
+      shell: repo init -u https://github.com/OpenSolo/3dr-arm-yocto-bsp/
       args:
         chdir: /solo-build
         creates: /solo-build/build
