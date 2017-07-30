@@ -48,7 +48,7 @@ IMAGE_INSTALL += " \
     e2fsprogs-e2fsck \
     dosfstools \
     nano \
-    vim \
+#    vim \
     openssh-sftp-server \
     3dr-splash \
     persist-logs \

@@ -50,7 +50,7 @@ IMAGE_INSTALL += " \
     e2fsprogs-e2fsck \
     dosfstools \
     nano \
-    vim \
+#    vim \
     openssh-sftp-server \
     persist-logs \
     rsync \
