@@ -39,8 +39,8 @@ do_fetch () {
     #echo 'curl -v -L -H "Accept: application/octet-stream" ${BIN_URL}?access_token=${TOKEN} -o ${WORKDIR}/${FILE_SRC}'
     #curl -v -L -H "Accept: application/octet-stream" ${BIN_URL}?access_token=${TOKEN} -o ${WORKDIR}/${FILE_SRC}
 
-    # fake it:
-    touch ${WORKDIR}/${FILE_SRC}
+    # fake it, by copying existing gimbal binary to whatever was asked for:
+    cp /vagrant/gimbal_firmware_1.3.6.ax ${WORKDIR}/${FILE_SRC}
 }
 
 do_install () {
