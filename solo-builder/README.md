@@ -15,20 +15,8 @@ We will remove this warning from the repository when it is no longer required.
 
 Works in [vagrant](http://vagrantup.com), typically useful for local builds.
 First install this plugin:
-
 ```
 $ vagrant plugin install vagrant-guest_ansible
-```
-
-**NOTE:** Make sure you have a file `~/.ssh/github_token` with a Github 
-token for downloading files. This will be copied into your Vagrant image when
-provisioning.
-
-Add the SSH key you have connected to Github to your ssh-agent to be able to
-provision your VM. Then run `vagrant up`:
-
-```
-$ ssh-add ~/.ssh/id_rsa
 $ vagrant up
 ```
 
@@ -41,29 +29,13 @@ To fire off the builder:
 $ vagrant ssh -c /vagrant/builder.sh
 ```
 
-**NOTE:* If you are seeing `jq` failures, you will need to edit each of these files:
-
-```
-nano /solo-build/sources/meta-3dr/recipes-firmware/artoo/artoo-firmware_*.bb
-nano /solo-build/sources/meta-3dr/recipes-firmware/gimbal/gimbal-firmware_*.bb
-nano /solo-build/sources/meta-3dr/recipes-firmware/pixhawk/pixhawk-firmware_*.bb
-```
-
-And replace
-
-```
-    TOKEN=...
-```
-
-with
-
-```
-    TOKEN=$(cat ~/.ssh/github_token)
-```
 
 ## using docker
 
-Works in Docker and boot2docker. Copy `id_rsa` and `solo-builder.pem` to this directory (sorry). Then run
+DOCKER IS UNTESTED OUTSIDE 3DR , USE VAGRANT FOR NOW.
+ 
+Works in Docker and boot2docker. 
+Copy `id_rsa` and `solo-builder.pem` to this directory (sorry). Then run
 
 ```
 docker build -t 3drobotics/solo-builder .

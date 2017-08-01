@@ -1,5 +1,4 @@
 #!/bin/bash
-cp /vagrant/github_token ~/.ssh/github_token
 
 cd /solo-build
 
@@ -21,6 +20,13 @@ EULA=1 source ./setup-environment build
 # -k means continue-after-error-for-as-much-as-possible
 MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo -k
 MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller -k
+
+# other options/examples, how to build just one bit, such as the pixhawk firmware from OpenSolo/meta-3dr/recipes-firmware/pixhawk/pixhawk-firmware_1.3.1.bb :
+# assuming you've run the 'export MACHINE...' and 'source ./setup...' commands first, and are in /solo-build/build/ folder as a result:
+#bitbake -c clean pixhawk-firmware
+#bitbake pixhawk-firmware
+#or verbose:
+#bitbake pixhawk-firmware -v
 
 # tip:
 echo look below for squashfs, uImage, kernel, u-boot, dtb file, initramfs, rootfs.cpio, etc 
