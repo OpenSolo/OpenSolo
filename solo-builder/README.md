@@ -10,8 +10,10 @@ We will remove this warning from the repository when it is no longer required.
 
 
 # solo-builder
+## Quick start guide
+You may find the following "quick start" guide useful.  You can find the [Open Solo Quick Start Guide](http://ardupilot.org/dev/docs/solo-opensolo-quickstart.html) on ardupilot.org.
 
-## using vagrant
+## Using vagrant
 
 Works in [vagrant](http://vagrantup.com), typically useful for local builds.
 First install this plugin:
@@ -30,7 +32,7 @@ $ vagrant ssh -c /vagrant/builder.sh
 ```
 
 
-## using docker
+## Using docker
 
 DOCKER IS UNTESTED OUTSIDE 3DR , USE VAGRANT FOR NOW.
  
@@ -49,11 +51,11 @@ docker run -i 3drobotics/solo-builder su -l ubuntu /solo-build/builder.sh
 
 TODO: write a script that gets the files off after
 
-## using something else
+## Using something else
 
 `playbook.yml` is an ansible file for an Ubuntu 14.04 distro. `builder.sh` is the build script for a user named `ubuntu`. Make it happen!
 
-## repos
+## Repos
 
 3dr Private:
 
