@@ -17,7 +17,7 @@ do_fetch () {
 
     # TODO - smart fetch the correct version of the formware to match the repo-tag requested or something
     # for now, get the LATEST MASTER PX4v2 ( ie pixhawk1 or 2.0(solo) firmware from ArduPilot build system:
-    curl http://firmware.ap.ardupilot.org/Copter/latest/PX4/ArduCopter-v3.px4 -o ${WORKDIR}/${FILE_SRC}
+    curl http://firmware.ap.ardupilot.org/Copter/stable/PX4/ArduCopter-v3.px4 -o ${WORKDIR}/${FILE_SRC}
     # or simply fake it with a zero-length file if the curl fails for some reason..:
     #touch ${WORKDIR}/${FILE_SRC}
 }
