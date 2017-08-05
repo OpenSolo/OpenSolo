@@ -3,7 +3,7 @@ include recipes-core/images/core-image-base.bb
 # created from image_types_fsl; creates additional logging partition
 inherit image_types_3dr
 
-PV = "3.5.5"
+PV = "2.4.2"
 
 do_rootfs[depends] += "virtual/kernel:do_bundle_initramfs"
 
