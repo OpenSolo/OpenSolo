@@ -26,5 +26,3 @@ do_install () {
     install -d ${D}${firmwaredir}
     install -m 0644 ${WORKDIR}/${FILE_SRC} ${D}${firmwaredir}/${FILE_DST}
 }
-
-wget -O ac.px4 http://firmware.ap.ardupilot.org/Copter/stable/PX4/ArduCopter-v3.px4
