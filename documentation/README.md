@@ -15,6 +15,8 @@ If you want to build Open Solo, take a look at solo-builder [here](https://githu
 
 [How to unbrick artoo](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md#bricked-artoo)
 
+[How to customise start/shutdown image](https://github.com/OpenSolo/documentation/blob/master/artoo/customisation/custom-boot-screen.md)
+
 [How to customise strings/text](https://github.com/OpenSolo/documentation/tree/master/artoo) (coming soon!)
 
 ## [Solo](https://github.com/OpenSolo/documentation/tree/master/solo)
