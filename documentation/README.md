@@ -9,11 +9,13 @@ If you want to build Open Solo, take a look at solo-builder [here](https://githu
 
 ## [Artoo (the controller)](https://github.com/OpenSolo/documentation/tree/master/artoo)
 
-[How to build the stm32 firmware](https://github.com/OpenSolo/documentation/tree/master/artoo) (Coming soon...)
+[How to build the stm32 firmware](https://github.com/OpenSolo/documentation/blob/master/artoo/build-artoo-firmware.md)
 
-[How to customise images/icons](https://github.com/OpenSolo/documentation/tree/master/artoo) (Coming soon...)
+[How to customise images/icons](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md)
 
-[How to customise strings/text](https://github.com/OpenSolo/documentation/tree/master/artoo) (Coming soon...)
+[How to unbrick artoo](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md#bricked-artoo)
+
+[How to customise strings/text](https://github.com/OpenSolo/documentation/tree/master/artoo) (coming soon!)
 
 ## [Solo](https://github.com/OpenSolo/documentation/tree/master/solo)
 Nothing yet :(
