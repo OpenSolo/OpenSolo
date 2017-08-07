@@ -1,8 +1,55 @@
 # Flashing custom firmware to artoo
 This guide shows you how to flash a custom firmware onto artoo. Super useful if you've bricked it (see note at end) or have made a custom build. If you haven't already, you should see [building artoo's firmware](https://github.com/OpenSolo/documentation/new/master/artoo/build-artoo-firmware.md).
 
+> Note: this was tested on an artoo flashed with OpenSolo and on an artoo just after a factory reset.  Both appeared to work but ymmv. (your mileage may vary)
+
 ## Let's Start
-Coming shortly...
+First you need to connect to the `SoloLink_xxx` WiFi. Once you're connected you can start running the commands below.
+
+Navigate to the artoo directory:
+```
+cd <open solo directory>/artoo
+```
+Make sure the firmware file has something in it:
+```
+du -h artoo.bin
+```
+Should output something like this:
+> 236K	artoo.bin
+
+The next two steps will require you to enter this password when prompted:
+```
+TjSDBkAu
+```
+Copy the firmware over:
+```
+scp artoo.bin root@10.1.1.1:/home/root/
+```
+SSH into artoo:
+```
+ssh root@10.1.1.1
+```
+Run the flash tool:
+```
+updateArtoo.sh
+```
+Your screen should immediately turn off.  You'll see lots of lines scrolling up the screen like below.  DO NOT interrupt this process.  Wait for it to finish, it will take a minute or two. You'll know when it's done because artoo's screen should turn back on.
+```
+root@3dr_controller:~# updateArtoo.sh 
+Bootloader version 22
+Chip id: 0x414 (STM32 High-density)
+Write 256 bytes at 0x8000000
+Write 256 bytes at 0x8000100
+Write 256 bytes at 0x8000200
+```
+Artoo should reboot.  Well the WiFi stays connected and it's quicker then usual so I doubt it's actually doing a full reboot. If you're running open solo you should now see the new boot up logo and text strings. Do a full reboot for good measure:
+```
+/sbin/shutdown -r now
+```
+
+If you've customised it you'll be greeted with the custom image.  Here's mine ;)
+
+![nyan cat solo start screen](https://github.com/OpenSolo/documentation/raw/master/artoo/nyan-solo.jpg)
 
 ## Bricked artoo?
 If you've soft bricked artoo it's normally pretty easy to fix. This generally happens when a bad `artoo.bin` is genereated by solo-builder then flashed. This method only works if that is what has happened. Also note a factory reset _does not fix this_ as it just reflashes the dodgy `.bin` file again.
@@ -13,5 +60,5 @@ If you want to make sure this is the reason artoo got bricked you can check the 
 #### Download "good" copy of artoo.bin
 > This file is provided for use at your own risk.
 
-This link is a copy of the "good" artoo.bin file I found on my artoo. This may or may not work on your controller but it is worth a try if your builds keep failing to produce a good `artoo.bin`.
-Download "good" [artoo.bin]()
+This link is a copy of the "good" artoo.bin file I built from the artoo source. This may or may not work on your controller but it is worth a try if your builds keep failing to produce a good `artoo.bin`. (and yes it has my nyan cat startup screen ;) )
+Download "good" [artoo.bin](https://github.com/OpenSolo/documentation/raw/master/artoo/artoo.bin)
