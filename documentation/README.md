@@ -11,7 +11,7 @@ If you want to build Open Solo, take a look at solo-builder [here](https://githu
 
 [How to build the stm32 firmware](https://github.com/OpenSolo/documentation/blob/master/artoo/build-artoo-firmware.md)
 
-[How to customise images/icons](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md)
+[How to flash the stm32 firmware](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md)
 
 [How to unbrick artoo](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md#bricked-artoo)
 
