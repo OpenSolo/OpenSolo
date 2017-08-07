@@ -17,3 +17,11 @@ If you want to build Open Solo, take a look at solo-builder [here](https://githu
 
 ## [Solo](https://github.com/OpenSolo/documentation/tree/master/solo)
 Nothing yet :(
+
+## How to get involved
+This documentation is pretty empty right now.  If you know how Solo or Artoo works (or don't know!) and want to get involved pull requests are welcome on this documentation and all of the sub projects. (artoo, solo-builder etc)  Most of the developers are hanging out on [gitter](https://gitter.im/ArduPilot/OpenSolo) and [Facebook](https://www.facebook.com/groups/3DRSOLOModClub/).
+
+## Special Mentions!
+All of this would not be possible without 3DR.  They very generously open sourced most of their internal code and build tools to make this possible. You can see the official 3DR release statement [here](https://3dr.com/blog/announcing-opensolo/) and the ardupilot team's statement [here](https://discuss.ardupilot.org/t/opensolo-initiative-by-the-ardupilot-team).
+
+Special thanks to Buzz and Peter for making this happen, and everyone else who has contributed to make solo even better.
