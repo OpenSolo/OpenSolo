@@ -62,3 +62,6 @@ If you want to make sure this is the reason artoo got bricked you can check the 
 
 This link is a copy of the "good" artoo.bin file I built from the artoo source. This may or may not work on your controller but it is worth a try if your builds keep failing to produce a good `artoo.bin`. (and yes it has my nyan cat startup screen ;) )
 Download "good" [artoo.bin](https://github.com/OpenSolo/documentation/raw/master/artoo/artoo.bin)
+
+#### Flash "good" copy of artoo.bin
+Now press and hold the power on button for at least 5 seconds. (exactly like normal)  The controller will still turn on, the screen will just be blank. You can verify that it's booting up by looking in the air vent on the rear - you should see a red and/or orange light.  Wait ~30 seconds and the `SoloLink_xxx` WiFi should come up.  Connect to it then follow the [instructions above](https://github.com/OpenSolo/documentation/blob/master/artoo/flash-custom-firmware.md#lets-start) like normal, using the artoo.bin file you downloaded.
