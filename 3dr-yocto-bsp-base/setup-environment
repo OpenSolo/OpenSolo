@@ -1,4 +1,6 @@
 #!/bin/sh
+shopt -s xpg_echo
+
 # -*- mode: shell-script; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 #
 # Copyright (C) 2012, 2013 O.S. Systems Software LTDA.
@@ -26,7 +28,7 @@ PROGNAME="setup-environment"
 
 usage()
 {
-    echo -e "\nUsage: source $PROGNAME <build-dir>
+    echo "\nUsage: source $PROGNAME <build-dir>
     <build-dir>: required option; specifies build directory location
 
 By default the script will setup MACHINE to be imx6solo-3dr-1080p.
@@ -56,7 +58,7 @@ ARGS=$(getopt --options $SHORTOPTS  \
 # Print the usage menu if invalid options are specified
 if [ $? != 0 -o $# -lt 1 ]; then
    usage && clean_up
-   return 1
+   exit 1
 fi
 
 eval set -- "$ARGS"
@@ -66,7 +68,7 @@ do
         -h|--help)
            usage
            clean_up
-           return 0
+           exit 0
            ;;
         --)
            shift
@@ -76,7 +78,8 @@ do
 done
 
 if [ "$(whoami)" = "root" ]; then
-    echo "ERROR: do not use the BSP as root. Exiting..."
+    echo "\nERROR: do not use the BSP as root. Exiting..."
+    exit 1
 fi
 
 if [ -z "$MACHINE" ]; then
@@ -87,9 +90,9 @@ fi
 LIST_MACHINES=`ls -1 $CWD/sources/*/conf/machine`
 VALID_MACHINE=`echo -e "$LIST_MACHINES" | grep ${MACHINE}.conf$ | wc -l`
 if [ "x$MACHINE" = "x" ] || [ "$VALID_MACHINE" = "0" ]; then
-    echo -e "\nSPECIFIED AN INVALID MACHINE TYPE !"
+    echo"\nERROR: Invalid machine type"
     usage && clean_up
-    return 1
+    exit 1
 else
     echo "Configuring for ${MACHINE}"
 fi
@@ -122,8 +125,9 @@ for f in $CWD/sources/base/*; do
     fi
 done
 if [ "$updated" = "true" ]; then
-    echo "The project root content has been updated. Please run $0 again."
-    return
+    
+    echo "\nACTION REQUIRED: The project root content has been updated. Please run $0 again."
+    exit 1
 fi
 
 cd $OEROOT
@@ -238,7 +242,7 @@ Your build environemnt has been configured with:
     EULA=$EULA
 EOF
 else
-    echo "Your configuration files at $1 has not been touched."
+    echo "Your configuration files at $1 have not been touched."
 fi
 
 clean_up
