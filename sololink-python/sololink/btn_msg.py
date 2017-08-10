@@ -44,13 +44,15 @@ ButtonName = ["Power", "Fly", "RTL", "Loiter", "A", "B",
 Press =  0
 Release = 1
 ClickRelease = 2
-Hold = 3
-LongHold = 4
-DoubleClick = 5
+ShortHold = 3
+Hold = 4
+LongHold = 5
+DoubleClick = 6
+HoldRelease = 7
+LongHoldRelease = 8
 # index of each name expected to match events above
-EventName = ["Press", "Release", "ClickRelease",
-             "Hold", "LongHold", "DoubleClick"]
-
+EventName = ["Press", "Release", "ClickRelease", "ShortHold",
+             "Hold", "LongHold", "DoubleClick", "HoldRelease", "LongHoldRelease"]
 
 # packet type ids
 # starting these at 2000 to avoid any collisions with app_packet,
