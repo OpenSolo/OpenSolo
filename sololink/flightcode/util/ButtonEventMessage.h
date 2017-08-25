@@ -39,12 +39,12 @@ struct __attribute((__packed__)) ButtonEventMessage {
     }
 
     // match artoo/src/button.h
-    enum ButtonEvent { Press, Release, ClickRelease, Hold, LongHold, DoubleClick, EventMax };
+    enum ButtonEvent { Press, Release, ClickRelease, ShortHold, Hold, LongHold, DoubleClick, HoldRelease, LongHoldRelease, EventMax };
 
     inline const char *eventName(void) const
     {
         static const char *names[] = {
-            "Press", "Release", "ClickRelease", "Hold", "LongHold", "DoubleClick",
+            "Press", "Release", "ClickRelease", "ShortHold", "Hold", "LongHold", "DoubleClick", "HoldRelease", "LongHoldRelease",
         };
         if (event >= 0 && event < EventMax)
             return names[event];
