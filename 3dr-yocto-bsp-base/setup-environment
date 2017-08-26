@@ -147,7 +147,7 @@ if [ ! -e conf/local.conf.sample ]; then
     grep -v '^#\|^$' conf/local.conf.sample > conf/local.conf
     cat >> conf/local.conf <<EOF
 
-BB_NUMBER_THREADS = '$NCPU'
+BB_NUMBER_THREADS = '8'
 PARALLEL_MAKE = '-j $NCPU'
 
 DL_DIR ?= "\${BSPDIR}/downloads/"
