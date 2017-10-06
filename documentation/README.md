@@ -3,13 +3,15 @@ The team working on safe, reliable releases of Open Solo publishes them here. Yo
 
 ### _Release notes and instructions_ ###
 - [Open Solo Release Notes](https://github.com/OpenSolo/documentation/releases)
-- [Install using the Solex app on Android](../master/install_solex.md)
-- [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
-- Install using SSH/SFTP on widows or mac (No procedure has been created yet)
-- [New green cube installation procedure](../master/green_cube_install.md)
+- For _stock solos and previously installed and working green cubes_, go straight to the Open Solo installation procedures:
+  - [Install using the Solex app on Android](../master/install_solex.md) for stock pixhawk cubes and previously installed green cubes
+  - [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
+  - Install using SSH/SFTP on widows or mac (No procedure has been created yet)
+- For a _brand new Green Cube installation_ please follow these updated instructions!
+  - [New green cube installation procedure](../master/green_cube_install.md)
 
 ### _Support, Social Media, and other useful links_ ###
-* [Solo Beta Test](https://www.facebook.com/groups/617648671719759/) group on Facebook (primary Open Solo support group!!)
+* [Solo Beta Test](https://www.facebook.com/groups/617648671719759/) group on Facebook (primary Open Solo and Green Cube support group!!)
 * [Solo Mod Club](https://www.facebook.com/groups/3DRSOLOModClub/) group on Facebook
 * [Solex Users](https://www.facebook.com/groups/176789056089526/) group on Facebook
 * [Solex App](http://www.solexapp.com/) official website. This app is truely the future of Solo's user interface!
