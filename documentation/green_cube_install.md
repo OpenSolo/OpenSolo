@@ -1,6 +1,10 @@
 # GREEN CUBE INSTALLATION #
 
-1. **Install OpenSolo:** Prior to installing the Green Cube, you must install Open Solo. This installation needs to be complete and operational. Follow all the instructions up to and including all calibrations and test flying.  Open Solo can be found here: https://github.com/OpenSolo/documentation/releases.
+1. **Install OpenSolo:** Prior to installing the Green Cube, you must install the latest version of Open Solo. This installation needs to be complete and operational. Follow all the instructions up to and including all calibrations and test flying. Once this is complete, proceed to step two.
+_If you already have the latest version of Open Solo installed and operational, you may proceed to step 2. You do not need to reinstall it._
+   - [Open Solo Release Notes](https://github.com/OpenSolo/documentation/releases) for the lastest version information
+   - [Install using the Solex app on Android](../master/install_solex.md)
+   - [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
 
 2. **Remove the battery tray:** Remove the battery and pop off the GPS cover.  Then unscrew all the small black screws around the battery tray. The battery tray can now be lifted up.  Unplug the GPS from the carrier board.  Set the battery tray aside. We highly recommend you do not lose the screws.
    ![Battery Tray Screws](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/battery_tray_screws.jpg)

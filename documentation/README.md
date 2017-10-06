@@ -4,7 +4,7 @@ The team working on safe, reliable releases of Open Solo publishes them here. Yo
 ### _Release notes and instructions_ ###
 - [Open Solo Release Notes](https://github.com/OpenSolo/documentation/releases)
 - For _stock solos and previously installed and working green cubes_, go straight to the Open Solo installation procedures:
-  - [Install using the Solex app on Android](../master/install_solex.md) for stock pixhawk cubes and previously installed green cubes
+  - [Install using the Solex app on Android](../master/install_solex.md)
   - [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
   - Install using SSH/SFTP on widows or mac (No procedure has been created yet)
 - For a _brand new Green Cube installation_ please follow these updated instructions!

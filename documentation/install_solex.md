@@ -1,7 +1,13 @@
-## Detailed Install Using The Solex App ##
-This is by far the fastest and easiest way to install Open Solo right now. It is also the only way I have written instructions and a process for at this time.
+## Detailed Open Solo Install Using The Solex App ##
+_WARNING: If you are doing a brand new green cube install, please be sure to start off with the [New Green Cube Install Instructions](../master/green_cube_install.md). This warning does not apply to stock solos and existing green cube solos._
 
-1. **Download packages:** With your device connected to the internet, go into the Solex firmware updates menu and download the Open Solo Clean Install packages (solo and controller). You'll need to do this _before connecting your device to the Solo's WiFi_.  The installation packages are 75MB each, so it will take a little longer to download than you may be used to. If you don't see the Firmware Updates menu, make sure you have Advanced Mode checked in the Solex app settings.
+**Please read all the instructions carefully prior to beginning. Skipping steps or doing things out of order will generally result in failure that is difficult to diagnose and repair.**
+
+1. **Download packages:** With your device connected to the internet, go into the Solex firmware updates menu. If you don't see the Firmware Updates menu, make sure you have Advanced Mode checked in the Solex app settings.
+   - Press the _clean up_ button, then the _refresh_ button to make sure you're seeing the latest files.  
+   - Download the Open Solo Clean Install packages (solo and controller) by tapping the package. _Available_ will change to _downloaded_ once complete.
+   - You'll need to do this _before connecting your device to the Solo's WiFi_.
+   - The installation packages are ~75MB each, so it will take a little longer to download than you may be used to.
 
 2. **Reconnect:** Once you've downloaded both, reconnect your mobile device to the Solo WiFi and make sure Solex says connected to vehicle. Again, your solo and controller must be fully charged, powered on, paired, connected, and not malfunctioning. 
 
