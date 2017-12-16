@@ -82,6 +82,10 @@ enum ID {
     ControllerBatteryFailsafe,
     ControllerBatteryFailsafeNoGps,
     ChargerConnected,
+    CH7low,
+    CH7high,
+    CH8low,
+    CH8high,
     TestAlert,
     AlertEnd,
 };

@@ -95,7 +95,7 @@ void UiTelemetry::updatePrimaryRegion()
         unsigned alt = MIN(999, roundf(a));
 
         const Gfx::ImageAsset & unit = useMetricUnits ? Unit_UD_Meter : Unit_UD_Feet;
-        labeledNumericField(alt, 190, 129, 3, "000", unit, altFont);
+        labeledNumericField(alt, 190, 136, 3, "000", unit, altFont);
 
         altitudeDirty = false;
     }
@@ -258,7 +258,7 @@ void UiTelemetry::updateKillSwitchProgress()
 void UiTelemetry::drawStaticElements()
 {
     Gfx::drawImage(190, 54, Label_UD_Home);
-    Gfx::drawImage(190, 114, Label_UD_Alt);
+    Gfx::drawImage(190, 120, Label_UD_Alt);
 }
 
 bool UiTelemetry::autoLandActive() const

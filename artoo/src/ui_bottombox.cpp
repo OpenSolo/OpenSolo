@@ -20,16 +20,16 @@ const UiBottomBox::Msg UiBottomBox::msgs[] = {
 
 
     /// Pre-flight - Artoo
-    { Event::SoloAppConnected, NoUserInput, 5000, "3DR Solo app connected", NULL },
+    { Event::SoloAppConnected, NoUserInput, 5000, "Mobile app connected", NULL },
 
-    { Event::SoloAppDisconnected, NoUserInput, 5000, "3DR Solo app disconnected", NULL },
+    { Event::SoloAppDisconnected, NoUserInput, 5000, "Mobile app disconnected", NULL },
 
     // Persistent alerts
     { Event::ControllerValueOutOfRange, NoUserInput, 5000, "Control stick error", "Contact 3DR Support"},
     { Event::CamControlValueOutOfRange, NoUserInput, 5000, "Manual camera controls error", "Contact 3DR Support"},
 
     // Unused
-    { Event::RecordRequiresApp, NoUserInput, 5000, "3DR Solo app required for this action", NULL },
+    { Event::RecordRequiresApp, NoUserInput, 5000, "Mobile app required for this action", NULL },
 
     { Event::UnknownBattery, NoUserInput, 5000, "Unknown controller battery", "Displayed level may not be accurate" },
 
@@ -71,6 +71,12 @@ const UiBottomBox::Msg UiBottomBox::msgs[] = {
 
     /// Misc
     { Event::LandingComplete, NoUserInput, 5000, "Landing complete", NULL },
+    
+    // RC Channels
+    { Event::CH7low, NoUserInput, 5000, "CH-7 Off/Low", NULL },
+    { Event::CH7high, NoUserInput, 5000, "CH-7 On/High", NULL },
+    { Event::CH8low, NoUserInput, 5000, "CH-8 Off/Low", NULL },
+    { Event::CH8high, NoUserInput, 5000, "CH-8 On/High", NULL },
 
     /// Testing
     { Event::TestAlert, NoUserInput, 5000, "RTL not available without GPS", "(Test test)" },

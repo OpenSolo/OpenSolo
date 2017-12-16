@@ -33,6 +33,7 @@ public:
         LowHaptic,
         MedHaptic,
         HighHaptic,
+        LowHapticMed,
     };
 
     enum DismissBtn {

@@ -474,6 +474,10 @@ void Ui::processAlert(Event::ID id)
     case Event::RecordRequiresApp:
     case Event::ControllerValueOutOfRange:
     case Event::CamControlValueOutOfRange:
+    case Event::CH7low:
+    case Event::CH7high:
+    case Event::CH8low:
+    case Event::CH8high:
         if (BIT(currentState) & (BIT(FullscreenAlert) | BIT(Arming) | BIT(Gimbal) | BIT(Telem))) {
             initFullscreenAlert(id);
         }
@@ -688,13 +692,13 @@ void Ui::drawLockout()
     //x = Gfx::write(x, y, "preflight ", HelveticaNeueLTProLightGreen);
     uint16_t color_fg = UiColor::Green;
     uint16_t color_bg = UiColor::Black;
-    x = Gfx::write(x, y, "preflight ", HelveticaNeueLTProLightLargeWhiteOnBlack, &color_fg, &color_bg);
+    x = Gfx::write(x, y, "Open ", HelveticaNeueLTProLightLargeWhiteOnBlack, &color_fg, &color_bg);
 
-    Gfx::write(x, y, "update", HelveticaNeueLTProLightLarge);
+    Gfx::write(x, y, "Solo", HelveticaNeueLTProLightLarge);
 
     const Gfx::FontAsset & f = HelveticaNeueLTProRoman;
-    Gfx::writeCanvasCenterJustified(168, "Required before first flight!", f);
-    Gfx::writeCanvasCenterJustified(168 + f.height() + 2, "Use 3DR Solo App to update", f);
+    Gfx::writeCanvasCenterJustified(168, "Solo & Controller Version Mismatch!", f);
+    Gfx::writeCanvasCenterJustified(168 + f.height() + 2, "Install Latest Updates", f);
 }
 
 Ui::State Ui::determineState()
