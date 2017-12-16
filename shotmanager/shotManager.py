@@ -1,6 +1,7 @@
 #
 # This is the entry point for shotmanager on Solo using Dronekit-Python
 
+
 # Python native imports
 import os
 from os import sys, path
@@ -23,6 +24,7 @@ from GoProConstants import *
 import GoProManager
 import rewindManager
 import GeoFenceManager
+import extFunctions
 
 # Loggers imports
 import shotLogger
@@ -44,6 +46,10 @@ except ImportError:
     VERSION = "[shot]: Unknown Shotmanager version"
 
 logger = shotLogger.logger
+
+WPNAV_ACCEL_DEFAULT = 200
+ATC_ACCEL_DEFAULT = 36000
+
 
 class ShotManager():
     def __init__(self):
@@ -69,6 +75,9 @@ class ShotManager():
 
         ### initialize button manager ###
         self.buttonManager = buttonManager.buttonManager(self)
+        
+        ### initialize extended functions ###
+        self.extFunctions = extFunctions.extFunctions(self.vehicle,self)
 
         ### initialize gopro manager ###
         self.goproManager = GoProManager.GoProManager(self)
@@ -111,7 +120,6 @@ class ShotManager():
             self.rewindManager.loadHomeLocation()
             # not yet enabled until this check proves effective
             #self.vehicle.mode = VehicleMode("RTL")
-
 
     def Run(self):
         while True:
@@ -237,7 +245,7 @@ class ShotManager():
             packet = struct.pack('<III', app_packet.SOLO_SHOT_ERROR, 4, app_packet.SHOT_ERROR_UNARMED)
             self.appMgr.sendPacket(packet)
 
-        # OK fine, you get to start the shot.
+        #OK fine, you get to start the shot.
         if self.currentShot != shot:
 
             logger.log('[shot]: Entering shot %s.' % shots.SHOT_NAMES[shot])
@@ -261,16 +269,13 @@ class ShotManager():
                 # disable the stick re-mapper
                 self.rcMgr.enableRemapping( False )
 
-                # if the Rewind shot put us into RTL, lets stay there
-                if self.vehicle.mode.name == 'RTL':
-                    logger.log("[shot]: Leaving vehicle in mode RTL")
-
-                # if vehicle mode is in another mode such as GUIDED or AUTO, then switch to LOITER
-                elif self.vehicle.mode.name in shots.SHOT_MODES:
-                    logger.log("[shot]: Changing vehicle mode to LOITER.")
+                # if vehicle mode is in GUIDED or AUTO, then switch to LOITER
+                if self.vehicle.mode.name in shots.SHOT_MODES:
+                    logger.log("[shot]: Changing vehicle mode to FLY.")
                     self.vehicle.mode = VehicleMode("LOITER")
             else:
                 self.curController = ShotFactory.get_shot_obj(shot, self.vehicle, self)
+                self.setATCaccel(36000)
 
             # update currentShot
             self.currentShot = shot
@@ -295,35 +300,56 @@ class ShotManager():
         try:
             if mode.name != self.lastMode:
                 logger.log("[callback]: Mode changed from %s -> %s"%(self.lastMode, mode.name))
-                
-                if mode.name == 'RTL':
-                    logger.log("[callback]: System entered RTL, switch to shot!")
-                    self.enterShot(shots.APP_SHOT_RTL)
-
-                elif self.currentShot != shots.APP_SHOT_NONE:
-                    # looks like somebody switched us out of guided!  Exit our current shot
-                    if mode.name not in shots.SHOT_MODES:
-                        logger.log("[callback]: Detected that we are not in the correct apm mode for this shot. Exiting shot!")
-                        self.enterShot(shots.APP_SHOT_NONE)
 
                 self.lastMode = mode.name
-
-                # don't do the following for guided, since we're in a shot
-                if self.lastMode == 'GUIDED' or mode.name == 'RTL':
-                    return
-
-                modeIndex = modes.getAPMModeIndexFromName( self.lastMode, self.vehicle)
-
+                
+                modeIndex = modes.getAPMModeIndexFromName( mode.name, self.vehicle)
+                
                 if modeIndex < 0:
-                    logger.log("couldn't find this mode index: %s" % self.lastMode)
+                    logger.log("couldn't find this mode index: %s" % self.mode.name)
+                    return
+                else:
+                    self.currentModeIndex = modeIndex
+                
+                # If changing to Guided, we're probably in a smart shot so no
+                # need to do anything here. If not, we need to run all this 
+                # cleanup stuff in case the stick and button remapping did not
+                # properly clear from the last smart shot.
+
+                if mode.name == 'GUIDED':
                     return
 
-                if self.currentShot == shots.APP_SHOT_NONE:
-                   self.buttonManager.setArtooShot( -1, modeIndex )
-                   self.currentModeIndex = modeIndex
-                   
+                self.setNormalControl(modeIndex, mode)
+
         except Exception as e:
             logger.log('[shot]: mode callback error, %s' % e)
+
+    def setNormalControl(self, modeIndex, mode):
+        # If we were in a smart shot, log that we bailed out out due to a mode change
+        if self.currentShot != shots.APP_SHOT_NONE:
+            logger.log("[callback]: Detected that we are not in the correct apm mode for this shot. Exiting shot!")
+            self.currentShot = shots.APP_SHOT_NONE
+
+        # mark curController for garbage collection
+        if self.curController != None:
+            del self.curController
+            self.curController = None
+
+        # re-enable manual gimbal controls (RC Targeting mode)
+        self.vehicle.gimbal.release()
+
+        # disable the stick re-mapper
+        self.rcMgr.enableRemapping( False )
+
+        # let the world know
+        if self.appMgr.isAppConnected():
+            self.appMgr.broadcastShotToApp(shots.APP_SHOT_NONE)         
+
+        # let Artoo know too
+        self.buttonManager.setArtooShot(shots.APP_SHOT_NONE, modeIndex)
+
+        # set new button mappings appropriately
+        self.buttonManager.setButtonMappings()
 
     def ekf_callback(self, vehicle, name, ekf_ok):
         try:
@@ -401,27 +427,26 @@ class ShotManager():
             self.vehicle.send_mavlink(msg)
 
     def notifyPause(self, inShot=0):
-        '''notify the autopilot that we would like to pause'''
-        if inShot:
-            return
-
-        msg = self.vehicle.message_factory.command_long_encode(
-            0,                                            # target system
-            1,                                            # target component
-            mavutil.mavlink.MAV_CMD_SOLO_BTN_PAUSE_CLICK, # frame
-            0,                                            # confirmation
-            int(inShot),                                  # param 1: 1 if Solo is in a shot mode, 0 otherwise
-            0, 0, 0, 0, 0, 0)                             # params 2-7 (not used)
-
-        # send command to vehicle
-        self.vehicle.send_mavlink(msg)
+        '''No longer used. Pause comes from the controller'''
+        return
 
 
     # This fetches and returns the value of the parameter matching the given name
     # If the parameter is not found, returns the given default value instead
     def getParam(self, name, default=None):
-        return self.vehicle.parameters.get(name, wait_ready=False) or default
+        self.paramValue = self.vehicle.parameters.get(name, wait_ready=False) or default
+        logger.log("[SHOT]: Parameter %s is %d" %(name, self.paramValue))
+        return self.paramValue
 
+    # This sets the parameter matching the given name
+    def setParam(self, name, value):
+        logger.log("[SHOT]: Setting parameter %s to %d" %(name, value))
+        return self.vehicle.parameters.set(name, value)
+
+    # Set the ATC_ACCEL_P and ATC_ACCEL_R parameters
+    def setATCaccel(self,val):
+        self.setParam("ATC_ACCEL_P_MAX",val)
+        self.setParam("ATC_ACCEL_R_MAX",val)
 
     # we call this at our UPDATE_RATE
     # drives the shots as well as anything else timing-dependent
@@ -451,33 +476,7 @@ class ShotManager():
     def enterFailsafe(self):
         ''' called when we loose RC link or have Batt FS event '''
 
-        # dont enter failsafe on the ground
-        if not self.vehicle.armed or self.vehicle.system_status != 'ACTIVE':
-            return
-        
-        # dont enter failsafe if we are already rewinding home
-        if self.currentShot == shots.APP_SHOT_REWIND:
-            self.curController.exitToRTL = True
-            return
-            
-        if self.currentShot == shots.APP_SHOT_RTL:
-            return
-        
-        if self.last_ekf_ok is False:
-            # no GPS - force an emergency land
-            self.vehicle.mode = VehicleMode("LAND")
-            return
-        
-        # ignore FS while in Auto mode
-        if self.vehicle.mode.name == 'AUTO' and self.rewindManager.fs_thr == 2:
-            return
-    
-        if self.rewindManager.enabled:
-            self.enterShot(shots.APP_SHOT_REWIND)
-            self.curController.exitToRTL = True
-            
-        else:
-            self.enterShot(shots.APP_SHOT_RTL)
+        # Nothing to do here now. ArduCopter handles it.
 
 
     def registerCallbacks(self):
