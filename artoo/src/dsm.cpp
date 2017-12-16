@@ -3,6 +3,8 @@
 #include "cameracontrol.h"
 #include "flightmanager.h"
 #include "tasks.h"
+#include "ui.h"
+#include "haptic.h"
 
 Dsm Dsm::instance;
 
@@ -11,21 +13,21 @@ void Dsm::init()
     for (unsigned i = 0; i < arraysize(channels); ++i) {
         channels[i] = DsmLowVal;
     }
+
 }
 
 void Dsm::onLoiterButtonEvt(Button *b, Button::Event evt)
 {
     UNUSED(b);
 
-    // toggle between hi/lo on ch7, but require a hold to go high
-    if (channels[DsmCh7] == DsmHighVal) {
-        if (evt == Button::ClickRelease) {
-            channels[DsmCh7] = DsmLowVal;
-        }
-    } else {
-        if (evt == Button::LongHold) {
-            channels[DsmCh7] = DsmHighVal;
-        }
+    // OPEN SOLO MOD: Toggle RC CH7 high and low with the pause button
+    // HoldRelease (2 sec) sets CH7 low. LongHold (3 sec) sets CH7 high.
+    if ( evt == Button::LongHold ) {
+        channels[DsmCh7] = DsmHighVal;
+        Ui::instance.pendEvent(Event::CH7high);    
+    } else if ( evt == Button::HoldRelease ) {
+        channels[DsmCh7] = DsmLowVal;
+        Ui::instance.pendEvent(Event::CH7low);
     }
 }
 
