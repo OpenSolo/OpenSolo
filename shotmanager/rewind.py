@@ -19,6 +19,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+
 from dronekit import Vehicle, LocationGlobalRelative, VehicleMode
 from pymavlink import mavutil
 import os
@@ -73,6 +74,13 @@ class RewindShot():
 
         # assign the shotManager object
         self.shotmgr = shotmgr
+
+        # Exit the shot and use RTL Mode
+        self.vehicle.mode = VehicleMode("RTL")
+        self.shotmgr.rcMgr.enableRemapping( false )
+        return
+
+        ############################################################
 
         # data manager for breadcrumbs
         self.rewindManager = shotmgr.rewindManager
@@ -149,7 +157,7 @@ class RewindShot():
 
     def exitRewind(self):
         self.rewindManager.resetSpline()
-        self.shotmgr.enterShot(shots.APP_SHOT_RTL)
+        self.vehicle.mode = VehicleMode("RTL")
 
         
     def travel(self):
@@ -196,7 +204,7 @@ class RewindShot():
 
     def handleButton(self, button, event):
         # any Pause button press or release should get out of Rewind
-        if button == btn_msg.ButtonLoiter and (event == btn_msg.Release or event == btn_msg.Press):
+        if button == btn_msg.ButtonLoiter and (event == btn_msg.Release or event == btn_msg.ClickRelease):
             #exit to fly
             self.shotmgr.enterShot(shots.APP_SHOT_NONE)
         return
