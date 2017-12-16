@@ -28,6 +28,11 @@ config_baudlist_name = "telemBaudList"
 config_dev_name = "telemDev"
 config_flow_name = "telemFlow"
 firmware_root = "/firmware"
+firmware_root_3dr = "/firmware/3dr"
+firmware_root_green = "/firmware/green"
+firmware_root_wipe = "/firmware/wipe"
+cube_version = "unknown"
+
 
 # ardupilot/libraries/AP_SerialManager/AP_SerialManager.cpp, supported bauds:
 #   1500000 921600 500000 460800 230400 115200 111100 100000 57600 38400 19200
@@ -346,12 +351,13 @@ def get_version():
     m.mav.param_request_list_send(m.target_system, m.target_component)
     start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
     end_us = start_us
-    timeout_us = 2 * 1000000
+    timeout_us = 5 * 1000000
     # Loop because we might get a STATUSTEXT without the version first.
     while (end_us - start_us) < timeout_us:
-        st = m.recv_match(type='STATUSTEXT', blocking=True, timeout=2)
+        st = m.recv_match(type='STATUSTEXT', blocking=True, timeout=5)
         end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
         if st is not None:
+            logger.info("Status Text: %s" %st)
             # "APM:Copter solo-0.1.2 (b2dacc52)"
             match = re.match("APM:.*?solo-([0-9]+\.[0-9]+\.[0-9]+)", st.text)
             if match:
@@ -367,7 +373,7 @@ def get_version():
             match = re.match(".*?([0-9]+\.[0-9]+\.[0-9]+)", st.text)
             if match:
                 logger.warning("firmware is not specifically for solo")
-                logger.debug("build version received in %0.3f sec",
+                logger.info("build version received in %0.3f sec",
                              (end_us - start_us) / 1000000.0)
                 version["build_version"] = match.group(1)
                 logger.info("build version %s", version_string(version))
@@ -379,6 +385,123 @@ def get_version():
     logger.warning("no build version received")
     return version
 
+# Checking param INS_ACC_ID to see if this is stock Pixhawk 2.0 or a Pixhawk 2.1
+#  - A pixhawk 2.1 will have INS_ACC_ID, and it will be 1442082 (return true)
+#  - A pixhawk 2.0 running master will have INS_ACC_ID, but will not be 1442082 (return false)
+#  - A pixhawk 2.0 with stock 3DR firmware will not have INS_ACC_ID at all (return false)
+def checkPixhawkVersion():
+    global cube_version
+    # Setup serial comm to the pixhawk
+    config = ConfigParser.SafeConfigParser()
+    config.optionxform = str
+    config.read(sololink_conf)
+
+    serial_dev = config_get(config, config_dev_name)
+    if serial_dev is None:
+        logger.error("reading %s from %s", config_dev_name, sololink_conf)
+        return False
+    logger.debug("%s = %s", config_dev_name, serial_dev)
+
+    serial_flow = config_getbool(config, config_flow_name, True)
+    logger.debug("%s = %s", config_flow_name, serial_flow)
+
+    serial_baud = config_getint(config, config_baud_name)
+    if serial_baud is None:
+        logger.error("reading %s from %s", config_baud_name, sololink_conf)
+        return False
+    logger.debug("%s = %d", config_baud_name, serial_baud)
+    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
+    m.set_rtscts(serial_flow)
+    timeout_us = 30 * 1000000
+
+    # First we'll check parameter INS_ACC_ID. On stock 3DR firmware, this param
+    # will not be found.  With ArduCopter 3.5+, the parameter will be detected.
+    # A value of 1442082 is a green cube.  A value of 1245474 is a stock cube.
+    logger.info("Checking parameter INS_ACC_ID to determine cube version")
+    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+    end_us = start_us
+    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
+        m.mav.param_request_read_send(m.target_system, m.target_component, 'INS_ACC_ID', -1)
+        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
+        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+        if param_check is not None:
+            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'INS_ACC_ID':
+                if str(param_check.param_value) ==  '1442082.0':
+                    logger.info("Pixhawk 2.1 on board!")
+                    cube_version = 'cube_21'
+                    m.close()
+                    return True
+                elif str(param_check.param_value) ==  '1245474.0': 
+                    logger.info("Pixhawk 2.0 on board. But not stock solo firmware")
+                    cube_version = 'cube_20'
+                    m.close()
+                    return True
+        logger.info("cube_version = %s", cube_version)
+    
+    # If we've gotten to this point, it must have not found the INS_ACC_ID. So
+    # we'll check the compass #3 device ID instead. On a stock cube with stock
+    # stock FW, it will be 66286.  On a stock with AC3.5, it is for some reason
+    # not found. So this only works for stock FW on a stock cube, which should
+    # be fine for all but a few people running master on a stock cube.
+    logger.info("Checking parameter COMPASS_DEV_ID3 to determine cube version")
+    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+    end_us = start_us
+    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
+        m.mav.param_request_read_send(m.target_system, m.target_component, 'COMPASS_DEV_ID3', -1)
+        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
+        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+        if param_check is not None:
+            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'COMPASS_DEV_ID3':
+                if str(param_check.param_value) ==  '263178.0':
+                    logger.info("Pixhawk 2.1 on board!")
+                    cube_version = 'cube_21'
+                    m.close()
+                    return True
+                elif str(param_check.param_value) ==  '66826.0':
+                    logger.info("Pixhawk 2.0 on board. You should go green :)")
+                    cube_version = 'cube_20'
+                    m.close()
+                    return True
+        logger.info("cube_version = %s", cube_version)
+    
+    # Handle scenario where the external compass is unplugged, so what was
+    # compass #3 has become #2.
+    logger.info("Checking parameter COMPASS_DEV_ID2 to determine cube version")
+    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+    end_us = start_us
+    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
+        m.mav.param_request_read_send(m.target_system, m.target_component, 'COMPASS_DEV_ID2', -1)
+        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
+        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+        if param_check is not None:
+            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'COMPASS_DEV_ID2':
+                if str(param_check.param_value) ==  '263178.0':
+                    logger.info("Pixhawk 2.1 on board!")
+                    cube_version = 'cube_21'
+                    m.close()
+                    return True
+                elif str(param_check.param_value) ==  '66826.0':
+                    logger.info("Pixhawk 2.0 on board. You should go green :)")
+                    cube_version = 'cube_20'
+                    m.close()
+                    return True
+        logger.info("cube_version = %s", cube_version)
+    
+    # If we've reached this point, we were unable to positively identify which
+    # cube is in the solo. Probably because something is malfunctioning, or
+    # because someone is running master on a stock cube. In either case, there
+    # is nothing more we can do, so returning false and leave cube_version unknown.
+    cube_version = 'unknown'
+    logger.info("Unable to determine cube version")
+    return False
+
+def removeFWfiles(dir):
+    if dir == '3dr':
+        filelist=glob.glob('/firmware/3dr/*.*')
+    elif dir == 'green':
+        filelist=glob.glob('/firmware/green/*.*')
+    for file in filelist:
+        os.remove(file)
 
 # load firmware
 def load(firmware_path):
@@ -516,8 +639,8 @@ def verify_usb():
 # (full_path, versions)
 # full_path is the full path to the file, or None if no file
 # if full_path is not None, versions is a dictionary of version info
-def find_firmware():
-    files = glob.glob("%s/*.px4" % firmware_root)
+def find_firmware(dir):
+    files = glob.glob("%s/*.px4" % dir)
     if len(files) == 0:
         return (None, None)
     # read git hashes
@@ -578,8 +701,104 @@ def version_string(version):
         vs += "unknown"
     return vs
 
+def resetParameters():
+    logger.info("   Resetting parameters...")
+    config = ConfigParser.SafeConfigParser()
+    config.optionxform = str
+    config.read(sololink_conf)
+
+    serial_dev = config_get(config, config_dev_name)
+    if serial_dev is None:
+        return
+
+    serial_flow = config_getbool(config, config_flow_name, True)
+
+    serial_baud = config_getint(config, config_baud_name)
+    if serial_baud is None:
+        return
+
+    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
+    m.set_rtscts(serial_flow)
+    
+    m.mav.param_set_send(m.target_system, m.target_component, 'SYSID_SW_MREV', 0, 0)
+    time.sleep(5)
+    m.close()
+    return
+
+def recoveryCheck():
+    p = subprocess.Popen(['df', '-h'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p1, err = p.communicate()
+    pattern = p1
+
+    if pattern.find("mmcblk0p1") == -1:
+        logger.info("Not on recovery partition")
+        return False
+    else:
+        logger.info("On recovery partition")
+        return True
+
+def setReqParams():
+    logger.info("   Setting some important parameters...")
+    config = ConfigParser.SafeConfigParser()
+    config.optionxform = str
+    config.read(sololink_conf)
+
+    serial_dev = config_get(config, config_dev_name)
+    if serial_dev is None:
+        return
+
+    serial_flow = config_getbool(config, config_flow_name, True)
+
+    serial_baud = config_getint(config, config_baud_name)
+    if serial_baud is None:
+        return
+
+    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
+    m.set_rtscts(serial_flow)
+    m.mav.param_set_send(m.target_system, m.target_component, 'NTF_OREO_THEME', 1, 0)
+    time.sleep(1)
+    m.mav.param_set_send(m.target_system, m.target_component, 'MNT_TYPE', 2, 0)
+    time.sleep(1)
+    m.mav.param_set_send(m.target_system, m.target_component, 'FRAME_CLASS', 1, 0)
+    time.sleep(1)
+    m.mav.param_set_send(m.target_system, m.target_component, 'FRAME_TYPE', 1, 0)
+    time.sleep(1)
+    m.mav.param_set_send(m.target_system, m.target_component, 'BATT_MONITOR', 5, 0)
+    time.sleep(5)
+    m.close()
+    return
+
+def rebootPixhawk():
+    logger.info("   Rebooting pixhawk...")
+    global cube_version
+    config = ConfigParser.SafeConfigParser()
+    config.optionxform = str
+    config.read(sololink_conf)
+
+    serial_dev = config_get(config, config_dev_name)
+    if serial_dev is None:
+        return
+
+    serial_flow = config_getbool(config, config_flow_name, True)
+
+    serial_baud = config_getint(config, config_baud_name)
+    if serial_baud is None:
+        return
+
+    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
+    m.set_rtscts(serial_flow)
+
+    m.mav.command_long_send(m.target_system, m.target_component,246 , 0, 1, 0, 0, 0, 0, 0, 0)
+    m.close()
+    logger.info("   Waiting 60 seconds for pixhawk to reboot...")
+    time.sleep(60)
+    return
 
 def initialize():
+    global cube_version
+    firmware_path = None
+    paramsAfterLoad = False
+
     start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
     led.blink(1000, 100)
     print "pixhawk..."
@@ -590,21 +809,30 @@ def initialize():
         logger.error("pixhawk status: no response")
         # pixhawk might be stuck in bootloader
 
-    # try to load if we have firmware, whether we found the baud or not
+    # If we're in a factory reset, we just need to reset the pixhawk.
+    # If we've just completed the clean install, load the appropriate ArduCopter FW and reset the pixhawk
+    # Otherwise, just look in /firmware and load whatever is there.
+    if recoveryCheck():
+        resetParameters()
+        rebootPixhawk()
+        setReqParams()
+        rebootPixhawk()
+    else:
+        if (os.path.isdir("/firmware/3dr") or os.path.isdir("/firmware/green")) and checkPixhawkVersion():
+            # This must be a clean install if the initial FW directories are here.
+            paramsAfterLoad = True
+            if cube_version == 'cube_20':
+                (firmware_path, firmware_version) = find_firmware(firmware_root_3dr)
+            elif cube_version == 'cube_21':
+                (firmware_path, firmware_version) = find_firmware(firmware_root_green)
+        else:
+            # Not a clean install, look for FW in the normal location
+            (firmware_path, firmware_version) = find_firmware(firmware_root)
 
-    (firmware_path, firmware_version) = find_firmware()
     if firmware_path is None:
         logger.info("no new firmware file")
-        # Another backup would be to look in /firmware/loaded and load
-        # whatever's there if we did not get a heartbeat. Getting stuck in
-        # the bootloader has so far only been observed to happen when a
-        # programming is interrupted, in which case the firmware we were
-        # loading is still in /firmware.
-    elif os.path.exists("/log/.factory") and \
-         (baud is not None) and \
-         verify_usb():
+    elif os.path.exists("/log/.factory") and (baud is not None) and verify_usb():
         logger.info("pixhawk: factory - not loading firmware")
-        move_firmware(firmware_path)
     else:
         print "pixhawk: loading firmware"
         logger.info("%s:", firmware_path)
@@ -612,41 +840,24 @@ def initialize():
             logger.info("%-20s %s", v, firmware_version[v])
         if load(firmware_path):
             move_firmware(firmware_path)
+            os.system("rm -rf /firmware/3dr")
+            os.system("rm -rf /firmware/green")
+            os.system("rm -rf /firmware/wipe")
+            if paramsAfterLoad:
+                logger.info("Executing post-install cleanups...")
+                resetParameters()
+                rebootPixhawk()
+                setReqParams()
+                rebootPixhawk()
+                logger.info("Cleanups complete")
         else:
             print "pixhawk: ERROR loading firmware"
             logger.error("pixhawk status: can't load")
 
-    # If .factory exists, we either found a baud, passed USB, and skipped
-    # loading pixhawk, or either did not find a baud or USB heartbeat, and
-    # loaded pixhawk.
     os.system("rm -f /log/.factory")
 
-    # We have followed some combination of these to get here:
-    #   * found baud | did not find baud
-    #   * no firmware | firmware and flashed it | firmware and error flashing
-    #
-    # The cases that are known to happen:
-    #   Normal cases
-    #   * Found baud, there was no new firmware
-    #   * Found baud, there was new firmware, flashed it
-    #   Error cases
-    #   * Did not find baud, there was new firmware, flashed it
-    #
-    # Other cases should "never" happen (and have not been observed):
-    #   * Did not find baud, there was no new firmware
-    #       The only known way to not find the baud is if pixhawk is stuck in
-    #       its bootloader, which happens because flashing was interrupted,
-    #       which means there is new firmware available.
-    #   * Found baud, there was new firmware, error flashing it
-    #   * Did not find baud, there was new firmware, error flashing it
-    #       Should "never" fail to flash pixhawk when we try to.
-
-    # This should work for any of the three known-to-happen cases. For the
-    # error cases, running_version will be set to an empty dictionary, and
-    # write_version_file will write "unknown" for all the versions.
-    # get_version() can return None if the configuration is corrupt, but in
-    # that case we have far deeper problems (an md5 has just succeeded).
     running_version = get_version()
+    logger.info(running_version)
 
     logger.info("now running:")
     for component in ["build_version", "ardupilot_git_hash", "px4_git_hash", "nuttx_git_hash"]:
