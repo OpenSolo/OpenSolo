@@ -207,14 +207,18 @@ class appManager():
         try:
             if packetType == app_packet.SOLO_MESSAGE_SET_CURRENT_SHOT:
                 shot = struct.unpack('<i', packetValue)[0]
-                logger.log("[app]: App requested shot : %s." % shots.SHOT_NAMES[shot])
-                self.shotMgr.enterShot(shot)
+                if self.shotMgr.currentShot != shot:
+                    logger.log("[app]: App requested shot : %s." % shots.SHOT_NAMES[shot])
+                    self.shotMgr.enterShot(shot)
 
             elif packetType == app_packet.SOLO_MESSAGE_GET_BUTTON_SETTING:
-                # this is a request for the current button mapping.
-                # fill in the fields and send it back
+                # This is a request for the current button mapping of the
+                # A & B single press. This needs to work the same as it always
+                # has from 3DR to maintain compatibility with the 3DR Solo app
+                # that is no longer being developed. So we look at press for
+                # backwards compatibility and clickRelease for Open Solo.
                 (button, event, shot, APMmode) = struct.unpack('<iiii', packetValue)
-                if event == btn_msg.Press:
+                if event == btn_msg.Press or event == btn_msg.ClickRelease:
                     (mappedShot, mappedMode) = self.shotMgr.buttonManager.getFreeButtonMapping(button)
                     logger.log("[app]: App requested button mapping for %d"%(button))
 
@@ -222,10 +226,12 @@ class appManager():
                     packet = struct.pack('<IIiiii', app_packet.SOLO_MESSAGE_GET_BUTTON_SETTING, 16, button, event, mappedShot, mappedMode)
                     self.sendPacket(packet)
 
-            # app is trying to map a button
+            # App is trying to map the single press of A or B.  We have to look
+            # for the press event since that's what the legacy 3DR app uses. But
+            # we really use the clickRelease event in Open Solo now.
             elif packetType == app_packet.SOLO_MESSAGE_SET_BUTTON_SETTING:
                 (button, event, shot, APMmode) = struct.unpack('<iiii', packetValue)
-                if event == btn_msg.Press:
+                if event == btn_msg.Press or event == btn_msg.ClickRelease:
                     self.shotMgr.buttonManager.setFreeButtonMapping( button, shot, APMmode )
 
             # Gopromanager handles these messages

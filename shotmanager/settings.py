@@ -15,7 +15,7 @@ if 'SOLOLINK_SANDBOX' in os.environ:
 else:
     CONFIG_FILE = "/etc/shotmanager.conf"
     CONFIG_FILE_BACKUP = "/etc/shotmanager.back"
-
+    CONFIG_FILE_EXT = "/usr/bin/extSettings.conf"
 
 def writeSettingsThread(name, value):
     settingsLock.acquire()
@@ -66,6 +66,23 @@ def readSetting(name):
         logger.log("error reading %s"%(CONFIG_FILE,))
         raise
         return 0
+
+def readSettingExt(name):
+    # get our saved button mappings for extended button functions
+    config = ConfigParser.SafeConfigParser()
+
+    settingsLock.acquire()
+    # if the config file is not found, an empty list is returned and the "get"
+    # operations below fail
+    config.read(CONFIG_FILE_EXT)
+    settingsLock.release()
+
+    try:
+        return config.get("extFunctions", name)
+    except:
+        logger.log("[Ext Func Settings]: Unable to read %s from %s"%(name, CONFIG_FILE_EXT,))
+        return 0
+
 
 # starts our thread which writes out our setting
 # note both name and value should be strings
