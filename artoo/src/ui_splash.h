@@ -10,7 +10,6 @@ public:
 
     void init();
     bool update();
-    void onAButtonEvent(Button *b, Button::Event e);
 
 private:
     static const unsigned MinSplashMillis = 6000;

@@ -39,24 +39,12 @@ bool UiSplash::update()
         }
     }
 
-    if (versionDrawRequested) {
-        drawVersion();
-        versionDrawRequested = false;
-    }
+    drawVersion();
 
     uint16_t w = scale(millis, 0U, BootEstimateMillis, 0U, Gfx::WIDTH);
     Gfx::fillRect(Gfx::Rect(0, Gfx::HEIGHT - ProgressBarH, w, ProgressBarH), UiColor::Green);
 
     return false;
-}
-
-void UiSplash::onAButtonEvent(Button *b, Button::Event e)
-{
-    UNUSED(b);
-
-    if (e == Button::ClickRelease) {
-        versionDrawRequested = true;
-    }
 }
 
 void UiSplash::drawVersion()
