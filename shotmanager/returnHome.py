@@ -76,6 +76,13 @@ class returnHomeShot():
         # assign the shotManager object
         self.shotmgr = shotmgr
 
+        # Exit the shot and use RTL Mode
+        self.vehicle.mode = VehicleMode("RTL")
+        self.shotmgr.rcMgr.enableRemapping( false )
+        return
+        
+        ##########################################################
+
         # grab a copy of home
         self.homeLocation = self.shotmgr.getHomeLocation()
 
@@ -253,7 +260,7 @@ class returnHomeShot():
     def handleButton(self, button, event):
 
         # any Pause button press or release should get out of RTL
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             #exit to fly
             self.shotmgr.enterShot(shots.APP_SHOT_NONE)
 
