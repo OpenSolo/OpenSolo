@@ -352,6 +352,11 @@ class GoProManager():
 
         self.queueMsg(msg)
 
+        if self.captureMode == CAPTURE_MODE_PHOTO:
+            if command == mavutil.mavlink.GOPRO_COMMAND_SHUTTER:
+                if value[0] == 1:
+                    self.sendPhotoEvent()
+
         # Follow up with a get request if notification of change is required
         if command in REQUERY_COMMANDS:
             self.sendGoProRequest(command)
@@ -471,6 +476,34 @@ class GoProManager():
         elif type == app_packet.GOPRO_SET_EXTENDED_REQUEST:
             (command, value1, value2, value3, value4, ) = struct.unpack("<HBBBB", data)
             self.sendGoProCommand(command, (value1, value2, value3, value4))
+
+    # Send a photo event with current time and location.
+    def sendPhotoEvent(self): 
+        now = monotonic.monotonic()
+        logger.log("[gopro]: send photo event.  now is %d"%now)
+
+        if self.shotMgr.vehicle.location.global_relative_frame is not None:
+            pkt = struct.pack("<IIddfI", app_packet.GOPRO_PHOTO, 24, 
+                self.shotMgr.vehicle.location.global_relative_frame.lat, 
+                self.shotMgr.vehicle.location.global_relative_frame.lon, 
+                self.shotMgr.vehicle.location.global_relative_frame.alt, 
+                monotonic.monotonic())
+
+            self.addPhotoLog(
+                self.shotMgr.vehicle.location.global_relative_frame.lat, 
+                self.shotMgr.vehicle.location.global_relative_frame.lon, 
+                self.shotMgr.vehicle.location.global_relative_frame.alt, 
+                monotonic.monotonic())
+        else:
+            pkt = struct.pack("<IIddfI", app_packet.GOPRO_PHOTO, 24, 0, 0, 0, monotonic.monotonic())
+
+        self.shotMgr.appMgr.sendPacket(pkt)
+
+    # Add an entry to /log/photo.log
+    def addPhotoLog(self, lat, lon, alt, time):
+        f = open("/log/photo.log", "a")
+        f.write("%.6f,%.6f,%.3f,%d\n" % (lat, lon, alt, time))
+        f.close();
 
 
     # packages up our entire current state and sends it to the app

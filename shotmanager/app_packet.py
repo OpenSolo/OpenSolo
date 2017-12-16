@@ -82,6 +82,7 @@ GOPRO_V1_STATE = 5005
 GOPRO_V2_STATE = 5006
 GOPRO_REQUEST_STATE = 5007
 GOPRO_SET_EXTENDED_REQUEST = 5009
+GOPRO_PHOTO = 5020 # Added to Open Solo for solex app photo logging
 
 
 # enums for packet types
