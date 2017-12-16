@@ -10,11 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/precise64"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.provision "shell", path: "tools/install-vagrant-deps.sh"
 
   config.vm.provider "virtualbox" do |v|
-    v.cpus = 4
+    v.cpus = 2
   end
 end
