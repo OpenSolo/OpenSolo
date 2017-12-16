@@ -39,7 +39,6 @@ void CameraControl::capturePreset(PresetID id)
     Params::sys.storedValues.presets[id].targetPos = cameraAngle;
 
     Params::sys.mark();
-    Haptic::startPattern(Haptic::SingleMedium);
     Ui::instance.pendEvent(Event::GimbalInput);
 }
 
@@ -137,7 +136,7 @@ void CameraControl::onButtonEvt(Button *b, Button::Event evt)
             beginPreset(buttonToPreset(b->id()));
             break;
 
-        case Button::Hold:
+        case Button::HoldRelease:
             capturePreset(buttonToPreset(b->id()));
             break;
 

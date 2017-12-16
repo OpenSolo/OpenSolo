@@ -75,6 +75,11 @@ bool Button::isr()
         ButtonManager::dispatchEvt(this, Release);
         if ((releaseTimestamp - pressTimestamp) / SysTime::msTicks(1) < ClickMillis) {
             ButtonManager::dispatchEvt(this, ClickRelease);
+        } else if (((releaseTimestamp - pressTimestamp) / SysTime::msTicks(1) > HoldMillis)
+                  && ((releaseTimestamp - pressTimestamp) / SysTime::msTicks(1) < LongHoldMillis)) {
+            ButtonManager::dispatchEvt(this, HoldRelease);
+        } else if ((releaseTimestamp - pressTimestamp) / SysTime::msTicks(1) > LongHoldMillis) {
+            ButtonManager::dispatchEvt(this, LongHoldRelease);
         }
     }
 

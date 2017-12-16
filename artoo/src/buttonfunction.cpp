@@ -35,3 +35,13 @@ void ButtonFunction::onButtonEvent(Button *b, Button::Event e)
         Haptic::startPattern(Haptic::UhUh);
     }
 }
+
+void ButtonFunction::onButtonExtEvent(Button *b, Button::Event e)
+{
+    // Provides short haptic feedback at the hold and long hold durations
+    // so the user knows they've held the button for the proper durations.
+    UNUSED(b);
+    if ( e == Button::LongHold || e == Button::Hold ) {
+        Haptic::startPattern(Haptic::SingleShort);
+    }
+}

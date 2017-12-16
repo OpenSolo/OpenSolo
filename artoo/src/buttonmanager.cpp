@@ -213,33 +213,38 @@ void ButtonManager::dispatchEvt(Button *b, Button::Event evt)
         break;
 
     case Io::ButtonLoiter:
+        ButtonFunction::onButtonExtEvent(b, evt);
         FlightManager::instance.onPauseButtonEvt(b, evt);
         Dsm::instance.onLoiterButtonEvt(b, evt);
         ButtonFunction::onButtonEvent(b, evt);
         break;
 
     case Io::ButtonA:
-        Ui::instance.splash.onAButtonEvent(b, evt);
+        ButtonFunction::onButtonExtEvent(b, evt);
         FlightManager::instance.onAButtonEvt(b, evt);
         VehicleConnector::instance.onButtonEvent(b, evt);
         ButtonFunction::onButtonEvent(b, evt);
         break;
 
     case Io::ButtonB:
+        ButtonFunction::onButtonExtEvent(b, evt);
         FlightManager::instance.onBButtonEvt(b, evt);
         VehicleConnector::instance.onButtonEvent(b, evt);
         ButtonFunction::onButtonEvent(b, evt);
         break;
 
     case Io::ButtonPreset1:
+        ButtonFunction::onButtonExtEvent(b, evt);
         CameraControl::instance.onButtonEvt(b, evt);
         break;
 
     case Io::ButtonPreset2:
+        ButtonFunction::onButtonExtEvent(b, evt);
         CameraControl::instance.onButtonEvt(b, evt);
         break;
 
     case Io::ButtonCameraClick:
+        ButtonFunction::onButtonExtEvent(b, evt);
         CameraControl::instance.onButtonEvt(b, evt);
         break;
     }
@@ -249,6 +254,11 @@ void ButtonManager::dispatchEvt(Button *b, Button::Event evt)
         // into manual mode, it's not possible for sololink
         // to treat inadvertent button presses as mode change commands
         return;
+    }
+
+    if ( evt == Button::Release || (evt == Button::DoubleClick)  ||
+       (evt == Button::Hold) || (evt == Button::ShortHold) ) {
+        return; // Not sending these events to Solo since they aren't used.
     }
 
     // store event for forwarding

@@ -9,6 +9,7 @@
 
 #include "stm32/gpio.h"
 #include "stm32/systime.h"
+#include "stm32/sys.h"
 
 class Button
 {
@@ -25,13 +26,15 @@ public:
         ShortHold,      // duration-based
         Hold,           // duration-based
         LongHold,       // duration-based
-        DoubleClick
+        DoubleClick,
+        HoldRelease,     // edge & duration based
+        LongHoldRelease // edge & duration based
     };
 
-    static const unsigned ClickMillis = 300;
+    static const unsigned ClickMillis = 500;
     static const unsigned ShortHoldMillis = ClickMillis;
-    static const unsigned HoldMillis = 1500;
-    static const unsigned LongHoldMillis = 3000;
+    static const unsigned HoldMillis = 1700;
+    static const unsigned LongHoldMillis = 2700;
 
     Button(GPIOPin p, GPIOPin active, GPIOPin backlight, Io::ButtonID bid, Polarity pol = ActiveHigh);
 
@@ -66,15 +69,22 @@ public:
     }
 
     /*
-     * wasHeld() and wasHeldLong() report whether the button
+     * wasClicked(), wasHeld() and wasHeldLong() report whether the button
      * was *previously* held, after a release.
      */
+
+    bool wasClicked() const {
+        if (isPressed()) {
+            return false;
+        }
+        return releaseTimestamp - pressTimestamp < SysTime::msTicks(ClickMillis);
+    }
 
     bool wasHeld() const {
         if (isPressed()) {
             return false;
         }
-        return releaseTimestamp - pressTimestamp > SysTime::msTicks(HoldMillis);
+        return ((releaseTimestamp - pressTimestamp > SysTime::msTicks(HoldMillis)) and releaseTimestamp - pressTimestamp < SysTime::msTicks(LongHoldMillis));
     }
 
     bool wasHeldLong() const {

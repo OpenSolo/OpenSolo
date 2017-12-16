@@ -48,6 +48,7 @@ public:
 
     static ButtonFunction::Config & get(Io::ButtonID id);
     static void onButtonEvent(Button *b, Button::Event e);
+    static void onButtonExtEvent(Button *b, Button::Event e);
 };
 
 #endif // BUTTON_FUNCTION_H

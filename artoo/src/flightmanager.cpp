@@ -226,7 +226,7 @@ void FlightManager::onFlyButtonEvt(Button *b, Button::Event evt)
         // if we're on the ground and not yet armed,
         // FLY button click puts us into FLY (Loiter) mode
         command.set(Command::FlyButtonClick);
-        Haptic::startPattern(Haptic::SingleShort);
+        Haptic::startPattern(Haptic::SingleMedium);
         break;
 
     default:
@@ -246,7 +246,7 @@ void FlightManager::onRtlButtonEvt(Button *b, Button::Event evt)
         return;
     }
 
-    if (evt == Button::Press) {
+    if (evt == Button::ClickRelease) {
         if (inFlight()) {
             // request RTL whether we think vehicle has GPS or not.
             // if our sense of vehicle GPS state is stale, we still
@@ -305,6 +305,13 @@ void FlightManager::onPauseButtonEvt(Button *b, Button::Event e)
     if (btnEventShouldForceDisarm(b, e)) {
         forceDisarm();
         return;
+    }
+    
+    if (e == Button::ClickRelease) {
+        if (inFlight()) {
+            command.set(Command::PauseButtonClick);
+            Haptic::startPattern(Haptic::SingleMedium);
+        }
     }
 }
 
@@ -932,6 +939,15 @@ void FlightManager::sendCmd(mavlink_message_t *msg)
                                       MAV_CMD_SOLO_BTN_FLY_HOLD,
                                       0,                    // confirmation
                                       TakeoffAltitude,
+                                      0, 0, 0, 0, 0, 0);    // params 2-7
+        break;
+
+    case Command::PauseButtonClick:
+        mavlink_msg_command_long_pack(Mavlink::ArtooSysID, Mavlink::ArtooComponentID, msg,
+                                      Mavlink::SoloSysID, MAV_COMP_ID_SYSTEM_CONTROL,
+                                      MAV_CMD_SOLO_BTN_PAUSE_CLICK,
+                                      0,                    // confirmation
+                                      0,                    // param 1: inShot not used yet
                                       0, 0, 0, 0, 0, 0);    // params 2-7
         break;
 

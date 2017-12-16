@@ -231,6 +231,7 @@ private:
             Takeoff,
             FlyButtonClick,
             FlyButtonHold,
+            PauseButtonClick,
         };
 
         ID id;

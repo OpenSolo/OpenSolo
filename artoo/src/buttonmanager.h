@@ -40,7 +40,7 @@ public:
 
 private:
     union ButtonEvent {
-        uint8_t bytes[];
+        uint8_t bytes[0];
         struct {
             uint8_t id;
             uint8_t event;
