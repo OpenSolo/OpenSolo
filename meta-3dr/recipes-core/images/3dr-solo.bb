@@ -3,7 +3,9 @@ include recipes-core/images/core-image-base.bb
 # created from image_types_fsl; creates additional logging partition
 inherit image_types_3dr
 
-PV = "2.4.2"
+PV = "2.4.94"
+VER_NAME = "Open Solo 2.5-RC4"
+BUILD_DATE = "Build Date: $(date "+%Y%m%d%H%M%S")"
 
 do_rootfs[depends] += "virtual/kernel:do_bundle_initramfs"
 
@@ -45,7 +47,8 @@ IMAGE_INSTALL += " \
     shotmanager \
     rpm \
     util-linux \
-    pixhawk-firmware \
+    pixhawk-stock-fw \
+    pixhawk-green-fw \
     gimbal-firmware \
     e2fsprogs-e2fsck \
     dosfstools \
@@ -83,6 +86,10 @@ update_config_files() {
     # Put a "Version" file in the root partition
     echo "${PV}" >> ${IMAGE_ROOTFS}/VERSION
     echo ${IMAGE_NAME} >> ${IMAGE_ROOTFS}/VERSION
+    echo ${VER_NAME} >> ${IMAGE_ROOTFS}/VERSION
+    echo ${BUILD_DATE} >> ${IMAGE_ROOTFS}/VERSION
+    
+    
 
     #Password is TjSDBkAu
     sed 's%^root:[^:]*:%root:I8hkLIWAASD4Q:%' \
