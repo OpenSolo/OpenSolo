@@ -12,8 +12,8 @@ from vector3 import Vector3
 logger = shotLogger.logger
 
 #Path accel/decel constants
-WPNAV_ACCEL = 3.4
-WPNAV_ACCEL_Z = 1.6
+WPNAV_ACCEL = 200
+WPNAV_ACCEL_Z = 160
 
 # for 3D max speed
 HIGH_PATH_SPEED = 5.0

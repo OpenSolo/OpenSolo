@@ -103,11 +103,11 @@ class SelfieShot():
 
     # if we can handle the button we do
     def handleButton(self, button, event):
-        if button == btn_msg.ButtonA and event == btn_msg.Press:
+        if button == btn_msg.ButtonA and event == btn_msg.ClickRelease:
             self.pointAtROI()
 
 
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             if self.pathHandler:
                 self.shotmgr.notifyPause(True)
                 self.pathHandler.togglePause()

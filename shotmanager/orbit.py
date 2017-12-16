@@ -24,7 +24,6 @@ import os
 from os import sys, path
 import math
 import struct
-
 sys.path.append(os.path.realpath(''))
 import app_packet
 import camera
@@ -259,10 +258,10 @@ class OrbitShot():
     def handleButton(self, button, event):
         '''Handle a controller button press'''
 
-        if button == btn_msg.ButtonA and event == btn_msg.Press:
+        if button == btn_msg.ButtonA and event == btn_msg.ClickRelease:
             if self.roi is None:
                 self.spotLock()
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             if self.pathHandler:
                 self.pathHandler.togglePause()
                 self.updateAppOptions()

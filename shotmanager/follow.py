@@ -1,52 +1,48 @@
-#  follow.py
-#  shotmanager
-#
-#  The Follow Me smart shot controller.
-#  Runs as a DroneKit-Python script.
-#
-#  Created by Will Silva on 12/14/2015.
-#  Altitude and Leash follow created by Jason Short 2/25/2016
-#  Copyright (c) 2016 3D Robotics.
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+'''
+follow.py
+shotmanager
 
-from dronekit import Vehicle, LocationGlobalRelative, VehicleMode
+The Follow Me smart shot controller.
+Runs as a DroneKit-Python script.
+Created by Will Silva on 12/14/2015.
+Altitude and Leash follow created by Jason Short 2/25/2016
 
-from pymavlink import mavutil
+Copyright (c) 2016 3D Robotics.
+Licensed under the Apache License, Version 2.0 (the "License");
+You may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+'''
+
 import os
-from os import sys, path
 import math
 import struct
 import monotonic
 import collections
-
-sys.path.append(os.path.realpath(''))
 import app_packet
 import camera
 import location_helpers
 import pathHandler
 import shotLogger
-from shotManagerConstants import *
 import shots
 import socket
+from dronekit import Vehicle, LocationGlobalRelative, VehicleMode
+from pymavlink import mavutil
+from shotManagerConstants import *
 from orbitController import OrbitController
 from lookAtController import LookAtController
 from flyController import FlyController
 from leashController import LeashController
-
-
+from os import sys, path
 from vector3 import Vector3
-# on host systems these files are located here
 from sololink import btn_msg
+sys.path.append(os.path.realpath(''))
 
 FOLLOW_PORT = 14558
 SOCKET_TIMEOUT = 0.01
@@ -75,27 +71,38 @@ ROI_ALT_FILTER_GAIN = 0.65 # Relative contribution of the previous and new data 
 
 logger = shotLogger.logger
 
+'''
+Define the different followStates:
 
-# Define the different followStates:
-
-# Follow Wait
-    # Initial state before everything is ready. This state exits when the first ROI is sent from the app. (in filterROI()) The shot will probably only be in this state for a few ticks.
-# Look At Me
-    # Copter does not move unless commanded by stick actions, but the camera rotates to keep the ROI in frame
-# Follow Orbit: Default behaviour.
-   # Copter translates to keep the user in frame, maintining a offset in a particular direction (i.e. North) of the user.
-   # Once the orbit is started (cruise via the app or with sticks) then the copter orbits around the ROI, keeping the subject in frame.
-# Follow Leash
-    # Copter tries to stay behind the user's direction of motion.
-    # If the copter is within the leash length from the user, the leash is "slack" so the copter rotates but does not move.
-    # Once the copter gets further from the user. It swings around to get behind the user and keep up.
-    # User can adjust altitude and radius with sticks but cannot strafe manually.
-# Follow Free Look
-    # Copter maintains an offset from the ROI and can get dragged around as the ROI moves
-    # User can move the copter with the roll/pitch sticks like FLY mode
-    # User can adjust the altitude with the controller paddle
-    # User can freely control the camera pan/tilt with the left stick. 
-    # Camera maintains constant yaw/pitch unless the user permutes it.
+Follow Wait
+    Initial state before everything is ready. This state exits when the
+    first ROI is sent from the app. (in filterROI()) The shot will probably
+    only be in this state for a few ticks.
+    
+Look At Me
+    Copter does not move unless commanded by stick actions, but the camera
+    rotates to keep the ROI in frame
+    
+Follow Orbit: Default behaviour.
+   Copter translates to keep the user in frame, maintining a offset in a
+   particular direction (i.e. North) of the user. Once the orbit is started
+   (cruise via the app or with sticks) then the copter orbits around the ROI,
+   keeping the subject in frame.
+   
+Follow Leash
+    Copter tries to stay behind the user's direction of motion.
+    If the copter is within the leash length from the user, the leash is
+    "slack" so the copter rotates but does not move. Once the copter gets
+    further from the user. It swings around to get behind the user and keep up.
+    User can adjust altitude and radius with sticks but cannot strafe manually.
+    
+Follow Free Look
+    Copter maintains an offset from the ROI and can get dragged around as
+    the ROI moves. User can move the copter with the roll/pitch sticks
+    like FLY mode. User can adjust the altitude with the controller paddle.
+    User can freely control the camera pan/tilt with the left stick. 
+    Camera maintains constant yaw/pitch unless the user permutes it.
+'''
 
 FOLLOW_WAIT = 0
 FOLLOW_LOOKAT = 1
@@ -196,9 +203,11 @@ class FollowShot():
         
         '''
         Position Control
-        Note: All follow controllers return position and velocity of the drone in "absolute" space (as opposed to relative to the ROI)
-            Pos: Lat, lon, alt. Alt is relative to home location. NEU frame, of course.
-            Vel: Speed in the x,y, and z directions. NEU frame. vel.z needs to be inverted before passing to the autopilot.
+        Note: All follow controllers return position and velocity of the
+        drone in "absolute" space (as opposed to relative to the ROI)
+            Pos: Lat, lon, alt. Alt is relative to home location. NEU frame..
+            Vel: Speed in the x,y, and z directions. NEU frame. vel.z needs
+                 to be inverted before passing to the autopilot.
         '''
         
         # Look At Me Mode (Vehicle stays put)
@@ -273,7 +282,7 @@ class FollowShot():
     # if we can handle the button we do
     def handleButton(self, button, event):
         
-        if button == btn_msg.ButtonA and event == btn_msg.Press:
+        if button == btn_msg.ButtonA and event == btn_msg.ClickRelease:
 
             # Allow the user to exit Look At Me mode (into the previous follow mode) with the A button
             if self.followPreference == FOLLOW_PREF_LEASH:
@@ -284,7 +293,7 @@ class FollowShot():
                 self.initState(FOLLOW_ORBIT)
 
         # Change Follow Mode to Look At Me on Pause button press
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             self.initState(FOLLOW_LOOKAT)
             self.shotmgr.notifyPause(True)
             self.updateAppOptions()
@@ -616,42 +625,57 @@ class FollowShot():
         # if we do have a gimbal, use mount_control to set pitch and yaw
         if self.vehicle.mount_status[0] is not None:
             msg = self.vehicle.message_factory.mount_control_encode(
-                        0, 1,    # target system, target component
-                        # pitch is in centidegrees
-                        self.camPitch * 100,
-                        0.0, # roll
-                        # yaw is in centidegrees
-                        self.camYaw * 100,
-                        0 # save position
-                        )
+                    0, 1,    # target system, target component
+                    # pitch is in centidegrees
+                    self.camPitch * 100,
+                    0.0, # roll
+                    # yaw is in centidegrees
+                    0, #self.camYaw * 100, (Disabled by Matt due to ArduCopter master mount_control problem)
+                    0 # save position
+            )
+            self.vehicle.send_mavlink(msg)
+            
+            # Use MAV_CMD_CONDITION_YAW since the yaw in MSG_MOUNT_CONTROL is not working in AC35
+            msg = self.vehicle.message_factory.command_long_encode(
+                    0, 0,    # target system, target component
+                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+                    0, #confirmation
+                    self.camYaw,  # param 1 - target angle
+                    YAW_SPEED, # param 2 - yaw speed
+                    self.camDir, # param 3 - direction
+                    0.0, # relative offset
+                    0, 0, 0 # params 5-7 (unused)
+            )
+            self.vehicle.send_mavlink(msg)
+                        
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             msg = self.vehicle.message_factory.command_long_encode(
-                        0, 0,    # target system, target component
-                        mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
-                        0, #confirmation
-                        self.camYaw,  # param 1 - target angle
-                        YAW_SPEED, # param 2 - yaw speed
-                        self.camDir, # param 3 - direction
-                        0.0, # relative offset
-                        0, 0, 0 # params 5-7 (unused)
-                        )
-        self.vehicle.send_mavlink(msg)
+                    0, 0,    # target system, target component
+                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+                    0, #confirmation
+                    self.camYaw,  # param 1 - target angle
+                    YAW_SPEED, # param 2 - yaw speed
+                    self.camDir, # param 3 - direction
+                    0.0, # relative offset
+                    0, 0, 0 # params 5-7 (unused)
+            )
+            self.vehicle.send_mavlink(msg)
 
         
     def handleLookAtPointing(self, tempROI):
         # set ROI
         msg = self.vehicle.message_factory.command_int_encode(
-                    0, 1,    # target system, target component
-                    mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, #frame
-                    mavutil.mavlink.MAV_CMD_DO_SET_ROI, #command
-                    0, #current
-                    0, #autocontinue
-                    0, 0, 0, 0, #params 1-4
-                    tempROI.lat*1.E7,
-                    tempROI.lon*1.E7,
-                    tempROI.alt + self.ROIAltitudeOffset #offset for ROI
-                    )
+                0, 1,    # target system, target component
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, #frame
+                mavutil.mavlink.MAV_CMD_DO_SET_ROI, #command
+                0, #current
+                0, #autocontinue
+                0, 0, 0, 0, #params 1-4
+                tempROI.lat*1.E7,
+                tempROI.lon*1.E7,
+                tempROI.alt + self.ROIAltitudeOffset #offset for ROI
+        )
 
         # send pointing message
         self.vehicle.send_mavlink(msg)
@@ -673,3 +697,4 @@ class FollowShot():
             return False
         else:
             return True
+

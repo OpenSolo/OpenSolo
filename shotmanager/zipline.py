@@ -10,14 +10,14 @@
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#
 #  http://www.apache.org/licenses/LICENSE-2.0
-#
+
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 
 from dronekit import Vehicle, LocationGlobalRelative, VehicleMode
 from pymavlink import mavutil
@@ -160,17 +160,17 @@ class ZiplineShot():
 
 
     def handleButton(self, button, event):
-        if button == btn_msg.ButtonA and event == btn_msg.Press:
+        if button == btn_msg.ButtonA and event == btn_msg.ClickRelease:
             self.setupZipline()
 
-        if button == btn_msg.ButtonB and event == btn_msg.Press:
+        if button == btn_msg.ButtonB and event == btn_msg.ClickRelease:
             # Toggle between free look and spot lock
             if self.camPointing is FREE_LOOK:
                 self.initCam(SPOT_LOCK)
             else:
                 self.initCam(FREE_LOOK)
 
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             if self.pathHandler:
                 self.pathHandler.togglePause()
                 self.cruiseSpeed = self.pathHandler.cruiseSpeed
@@ -321,10 +321,24 @@ class ZiplineShot():
                 # pitch is in centidegrees
                 self.camPitch * 100.0,
                 0.0,  # roll
-                # yaw is in centidegrees
-                self.camYaw * 100.0,
+                0, # self.camYaw * 100.0, # yaw is in centidegrees (Disabled by Matt for now due to ArduCopter master mount_control bug. Using condition_yaw instead)
                 0  # save position
             )
+            self.vehicle.send_mavlink(msg)
+            
+            msg = self.vehicle.message_factory.command_long_encode( # Using condition_yaw temporarily until mount_control yaw issue is fixed
+                0, 0,    # target system, target component
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
+                0,  # confirmation
+                self.camYaw,  # param 1 - target angle
+                YAW_SPEED,  # param 2 - yaw speed
+                self.camDir,  # param 3 - direction XXX
+                0.0,  # relative offset
+                0, 0, 0  # params 5-7 (unused)
+            )
+            self.vehicle.send_mavlink(msg)
+                    
+            
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             msg = self.vehicle.message_factory.command_long_encode(
@@ -337,7 +351,7 @@ class ZiplineShot():
                 0.0,  # relative offset
                 0, 0, 0  # params 5-7 (unused)
             )
-        self.vehicle.send_mavlink(msg)
+            self.vehicle.send_mavlink(msg)
 
 
     def handleSpotLock(self, channels):

@@ -6,18 +6,18 @@
 #  Runs as a DroneKit-Python script under MAVProxy.
 #
 #  Created by Jason Short and Will Silva on 11/30/2015.
-#  Copyright (c) 2015 3D Robotics.
+#  Copyright (c) 2016 3D Robotics.
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-#
 #  http://www.apache.org/licenses/LICENSE-2.0
-#
+
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 
 from dronekit import Vehicle, LocationGlobalRelative, VehicleMode
 
@@ -391,7 +391,7 @@ class PanoShot():
 
     # if we can handle the button we do
     def handleButton(self, button, event):
-        if button == btn_msg.ButtonA and event == btn_msg.Press:
+        if button == btn_msg.ButtonA and event == btn_msg.ClickRelease:
             # don't use A button for video ever
             if self.panoType != PANO_VIDEO:
                 if self.state == PANO_SETUP:
@@ -407,12 +407,12 @@ class PanoShot():
             self.setButtonMappings()
 
                 
-        if button == btn_msg.ButtonLoiter and event == btn_msg.Press:
+        if button == btn_msg.ButtonLoiter and event == btn_msg.ClickRelease:
             if self.panoType == PANO_VIDEO:
                 self.degSecondYaw = 0
 
         # cycle through options
-        if self.state == PANO_SETUP and button == btn_msg.ButtonB and event == btn_msg.Press:
+        if self.state == PANO_SETUP and button == btn_msg.ButtonB and event == btn_msg.ClickRelease:
             #clear Pano Video yaw speed
             self.degSecondYaw = 0
             if self.panoType == PANO_VIDEO:
@@ -469,27 +469,41 @@ class PanoShot():
         # if we do have a gimbal, use mount_control to set pitch and yaw
         if self.vehicle.mount_status[0] is not None:
             msg = self.vehicle.message_factory.mount_control_encode(
-                        0, 1,    # target system, target component
-                        # pitch is in centidegrees
-                        self.camPitch * 100,
-                        0.0, # roll
-                        # yaw is in centidegrees
-                        self.camYaw * 100,
-                        0 # save position
-                        )
+                    0, 1,    # target system, target component
+                    # pitch is in centidegrees
+                    self.camPitch * 100,
+                    0.0, # roll
+                    # yaw is in centidegrees
+                    0, # self.camYaw * 100, (Disabled by Matt for now due to ArduCopter master mount_control bug. Using condition_yaw instead)
+                    0 # save position
+            )
+            self.vehicle.send_mavlink(msg)
+            
+            msg = self.vehicle.message_factory.command_long_encode( # Using condition_yaw temporarily until mount_control yaw issue is fixed
+                    0, 0,    # target system, target component
+                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+                    0, #confirmation
+                    self.camYaw,  # param 1 - target angle
+                    YAW_SPEED, # param 2 - yaw speed
+                    self.camDir, # param 3 - direction
+                    0.0, # relative offset
+                    0, 0, 0 # params 5-7 (unused)
+            )
+            self.vehicle.send_mavlink(msg)
+                        
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             msg = self.vehicle.message_factory.command_long_encode(
-                        0, 0,    # target system, target component
-                        mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
-                        0, #confirmation
-                        self.camYaw,  # param 1 - target angle
-                        YAW_SPEED, # param 2 - yaw speed
-                        self.camDir, # param 3 - direction
-                        0.0, # relative offset
-                        0, 0, 0 # params 5-7 (unused)
-                        )
-        self.vehicle.send_mavlink(msg)
+                    0, 0,    # target system, target component
+                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+                    0, #confirmation
+                    self.camYaw,  # param 1 - target angle
+                    YAW_SPEED, # param 2 - yaw speed
+                    self.camDir, # param 3 - direction
+                    0.0, # relative offset
+                    0, 0, 0 # params 5-7 (unused)
+            )
+            self.vehicle.send_mavlink(msg)
 
     def enterPhotoMode(self):
         # switch into photo mode if we aren't already in it

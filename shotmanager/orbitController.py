@@ -33,7 +33,7 @@ from vector3 import Vector3
 logger = shotLogger.logger
 
 #Path accel/decel constants
-PATH_ACCEL = 2.5
+PATH_ACCEL = 2.0
 ACCEL_PER_TICK = PATH_ACCEL * UPDATE_TIME
 
 ORBIT_MIN_SPEED = 3.0

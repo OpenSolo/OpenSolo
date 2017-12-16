@@ -33,7 +33,7 @@ from orbitController import OrbitController
 logger = shotLogger.logger
 
 #Path accel/decel constants
-PATH_ACCEL = 2.5
+PATH_ACCEL = 2.0
 ACCEL_PER_TICK = PATH_ACCEL * UPDATE_TIME
 ORBIT_RAD_FOR_MIN_SPEED = 2.0
 

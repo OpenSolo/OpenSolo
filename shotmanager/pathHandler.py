@@ -11,7 +11,7 @@ import shots
 logger = shotLogger.logger
 
 #Path accel/decel constants
-PATH_ACCEL = 6
+PATH_ACCEL = 2
 ACCEL_PER_TICK = PATH_ACCEL * UPDATE_TIME
 
 
