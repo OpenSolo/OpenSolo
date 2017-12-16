@@ -1,13 +1,13 @@
 SUMMARY = "shotmanager"
 HOMEPAGE = "https://github.com/OpenSolo/shotmanager"
 
-LICENSE = "CLOSED"
-#LIC_FILES_CHKSUM = "file://requirements.txt;md5=6bd610df3d427dace1d92a4ae068d87c"
+LICENSE = "GPLv3"
+LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-#SRCREV = "v2.4.1-1"
-SRCREV = "master"
-SRC_URI = "git://github.com/OpenSolo/shotmanager/"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/OpenSolo/shotmanager"
 
+PV = "${SRCPV}"
 S = "${WORKDIR}/git"
 
 RDEPENDS_${PN} += "dronekit dronekit-solo"
@@ -18,7 +18,7 @@ FILES_${PN} += "${sysconfdir}/"
 
 do_compile () {
     echo "# auto-generated `date`" > shotManager_version.py
-    echo "VERSION = \"`git describe --tags`\"" >> shotManager_version.py
+    echo 'VERSION = "2.5-RC4"' >> shotManager_version.py
 }
 
 do_install () {
@@ -36,7 +36,9 @@ do_install () {
     install -m 0755 ${S}/cable_cam.py ${D}${bindir}
     install -m 0755 ${S}/cableController.py ${D}${bindir}
     install -m 0755 ${S}/camera.py ${D}${bindir}
-    install -m 0755 ${S}/catmullRom.py ${D}${bindir}    
+    install -m 0755 ${S}/catmullRom.py ${D}${bindir}
+    install -m 0755 ${S}/extFunctions.py ${D}${bindir}
+    install -m 0755 ${S}/extSettings.conf ${D}${bindir}
     install -m 0755 ${S}/flyController.py ${D}${bindir}
     install -m 0755 ${S}/follow.py ${D}${bindir}
     install -m 0755 ${S}/GeoFenceHelper.py ${D}${bindir}
