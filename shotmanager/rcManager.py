@@ -43,7 +43,7 @@ CHANNEL8_MIN = 0
 CHANNEL8_MAX = 1000
 CHANNEL8_MID = ( CHANNEL8_MAX - CHANNEL8_MIN ) / 2.0 + CHANNEL8_MIN
 
-THROTTLE_FAILSAFE = 950
+THROTTLE_FAILSAFE = 900
 DEAD_ZONE = 0.009
 
 TICKS_UNTIL_RC_STALE = 20 # ticks
@@ -132,7 +132,7 @@ class rcManager():
     def remap(self):
         if self.failsafe or self.channels == None:
             # send default values to the Pixhawk
-            self.channels = [DEFAULT_RC_MID, DEFAULT_RC_MID, DEFAULT_RC_MID, DEFAULT_RC_MID, DEFAULT_RC_MIN, CHANNEL6_MAX, DEFAULT_RC_MIN, CHANNEL8_MID ]
+            self.channels = [DEFAULT_RC_MID, DEFAULT_RC_MID, THROTTLE_FAILSAFE, DEFAULT_RC_MID, DEFAULT_RC_MIN, CHANNEL6_MAX, DEFAULT_RC_MIN, CHANNEL8_MID ]
 
         normChannels = [0]*8
 
@@ -150,7 +150,7 @@ class rcManager():
 
         # channel 8 (index 7) is the raw gimbal paddle and is a special case
         # its values go from CHANNEL8_MIN - CHANNEL8_MAX
-        # this value is used to understand user input
+        # this value is used in smart shots where the pitch paddle is used for altitude up/down (such as in zipline free look)
         # >500 = tilt up, 500 = no tilt, < 500 tilt down
         normChannels[RAW_PADDLE] = self.normalizeRC( self.channels[RAW_PADDLE], CHANNEL8_MIN, CHANNEL8_MAX)
 
