@@ -1,17 +1,12 @@
 SUMMARY = "SoloLink software for RC, telemetry and video"
 
-LICENSE = "CLOSED"
-#LIC_FILES_CHKSUM = "file://README.md;md5=1b7fb31af91cdcda8e83aefb184e69df"
+LICENSE = "GPLv3"
+LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-# Pull from specific tag by default
-#SRCREV = "v2.2.4"
-SRCREV = "master"
-SRC_URI = "git://github.com/OpenSolo/SoloLink/"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/OpenSolo/SoloLink"
 
-# Or, AUTOREV means pull HEAD of the branch in the URI
-#SRCREV = "${AUTOREV}"
-#SRC_URI = "git://github.com/OpenSolo/SoloLink/;branch=master"
-
+PV = "${SRCPV}"
 S = "${WORKDIR}/git"
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -61,6 +56,8 @@ do_install () {
 	install -m 0644 ${S}/flightcode/python/gpio.py ${D}${bindir}
 	install -m 0644 ${S}/flightcode/python/led_solo.py ${D}${bindir}/led.py
 	install -m 0644 ${S}/flightcode/python/usb_solo.py ${D}${bindir}/usb.py
+    install -m 0755 ${S}/flightcode/python/led_control.py ${D}${bindir}
+    install -m 0755 ${S}/flightcode/python/SoloLED.py ${D}${bindir}
 	install -m 0755 ${S}/init/pixhawk ${D}${sysconfdir}/init.d
 	# link rcS.d/S60pixhawk -> ../init.d/pixhawk created in image recipe
 
@@ -70,6 +67,9 @@ do_install () {
 
 	install -m 0755 ${S}/init/shutdownArtoo.sh ${D}${bindir}
 	ln -sf ../../usr/bin/shutdownArtoo.sh ${D}${sysconfdir}/rc0.d/S89shutdownArtoo
+    
+    install -m 0755 ${S}/init/golden_to_system.sh ${D}${sysconfdir}/init.d
+	ln -sf ../init.d/golden_to_system.sh ${D}${sysconfdir}/rc3.d/S100golden_to_system
 
 	install -m 0755 ${S}/init/clock_sync ${D}${bindir}/clock_sync
 
