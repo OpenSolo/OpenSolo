@@ -2,14 +2,12 @@ SUMMARY = "sololink-python"
 HOMEPAGE = "https://github.com/OpenSolo/sololink-python"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://requirements.txt;md5=dc90368fff309dbbef652a1fab32f191"
+LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-PROVIDES += "${PN}_${PV}"
-
-#SRCREV = "f89466ccd7addae49cf800fdf5c67ed6bdff47d6"
-SRCREV = "master"
+SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/OpenSolo/sololink-python/"
 
+PV = "${SRCPV}"
 S = "${WORKDIR}/git"
 
 inherit setuptools
