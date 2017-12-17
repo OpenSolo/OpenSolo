@@ -6,6 +6,16 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E601AAF9486D3664
 # fix broken  urllib3 or some ssl stuff diesn't work
 sudo apt-get install -y --force-yes python-pip
 sudo pip install urllib3[secure]
+sudo pip install bcrypt3
+sudo pip install pynacl
+
+# need to update pip and setuptools to newer version before cryptography will install:
+sudo pip install --upgrade pip
+sudo pip install --upgrade setuptools
+sudo apt-get install -y --force-yes libssl-dev
+# get a specificversion of this, as newer ones don't work on 14.04:
+#sudo pip install cryptography
+sudo pip install cryptography==2.0.3
 
 # fix broken python2.7.x by moving it forward to something newer than 2.7.8:
 sudo add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
