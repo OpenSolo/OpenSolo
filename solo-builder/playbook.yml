@@ -29,21 +29,21 @@
     - name: Git configuration
       copy: src=ansible.gitconfig dest=~/.gitconfig
 
-    - name: ensure github.com is a known host
-      lineinfile:
-        dest: ~/.ssh/known_hosts
-        create: yes
-        state: present
-        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
-        regexp: "^github\\.com"
+    #- name: ensure github.com is a known host
+    #  lineinfile:
+    #    dest: ~/.ssh/known_hosts
+    #    create: yes
+    #    state: present
+    #    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    #    regexp: "^github\\.com"
 
-    - name: ensure bitbucket.org is a known host
-      lineinfile:
-        dest: ~/.ssh/known_hosts
-        create: yes
-        state: present
-        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
-        regexp: "^bitbucket\\.org"
+    #- name: ensure bitbucket.org is a known host
+    #  lineinfile:
+    #    dest: ~/.ssh/known_hosts
+    #    create: yes
+    #    state: present
+    #    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
+    #    regexp: "^bitbucket\\.org"
 
     - name: create build dir
       sudo: true

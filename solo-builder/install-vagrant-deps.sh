@@ -36,6 +36,9 @@ sudo apt-get --assume-yes install libffi*
 
 sudo apt-get --assume-yes install ansible
 
+ssh-keyscan -t rsa github.com
+ssh-keyscan -t rsa bitbucket.org
+
 #sudo pip install --upgrade pip
 #sudo pip install pillow
 
