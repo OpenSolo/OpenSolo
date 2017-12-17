@@ -6,7 +6,7 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E601AAF9486D3664
 # fix broken  urllib3 or some ssl stuff diesn't work
 sudo apt-get install -y --force-yes python-pip
 sudo pip install urllib3[secure]
-sudo pip install bcrypt3
+sudo pip install bcrypt
 sudo pip install pynacl
 
 # need to update pip and setuptools to newer version before cryptography will install:
