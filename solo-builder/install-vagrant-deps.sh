@@ -24,6 +24,8 @@ sudo apt-get --assume-yes update
 sudo apt-get --assume-yes install tup freetype* python-pip python-dev gcc-arm-none-eabi git
 sudo apt-get --assume-yes install libffi*
 
+sudo apt-get --assume-yes install ansible
+
 #sudo pip install --upgrade pip
 #sudo pip install pillow
 
