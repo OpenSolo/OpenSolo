@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d92bb5439aee694c0a87bfb51579e37b"
 PR = "r0"
 
 SRCNAME = "posix_ipc"
-SRC_URI = "http://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz"
+SRC_URI = "https://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz"
 
 # 0.9.8
 #SRC_URI[md5sum] = "f3e78df4ab4e0f43ea04ef5c53563970"
