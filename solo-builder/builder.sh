@@ -15,7 +15,7 @@ GIT_BRANCH=master
 BUILD_MACHINE=both
 
 # Check if the build directory is there. If not, setup steps were skipped or messed up.
-if [ ! -d "/solo-build" ]; then
+if [ ! -d "/solo-build-alt" ]; then
   echo "No build directory. Did you skip all the other steps?"
   exit 1
 fi
@@ -47,15 +47,9 @@ case "$choice" in
 esac
 echo
 
+cd /solo-build-alt
 #Do it.
-cd /solo-build
-repo init -u https://github.com/$GIT_ACCOUNT/$GIT_REPO.git -b $GIT_BRANCH
-if [ ! $? -eq 0 ]
-then
-    exit 1
-fi
-
-repo sync --force-sync
+/vagrant/alt_sync.sh
 
 if [ ! $? -eq 0 ]
 then
@@ -71,7 +65,7 @@ then
 fi
 
 #TIP: how to build just one bit, such as the pixhawk firmware from OpenSolo/meta-3dr/recipes-firmware/pixhawk/pixhawk-firmware_1.3.1.bb :
-#assuming you've run the 'export MACHINE...' and 'source ./setup...' commands first, and are in /solo-build/build/ folder as a result:
+#assuming you've run the 'export MACHINE...' and 'source ./setup...' commands first, and are in /solo-build-alt/build/ folder as a result:
 #bitbake -c clean pixhawk-firmware
 #bitbake pixhawk-firmware
 #or verbose:
@@ -110,16 +104,16 @@ NEW_DIR=/vagrant/"completed_$(date +%F_%H-%M)"
 mkdir -p $NEW_DIR
 cd $NEW_DIR
 
-cp /solo-build/build/tmp-eglibc/deploy/images/imx6solo-3dr-1080p/3dr-solo.tar.gz $NEW_DIR
+cp /solo-build-alt/build/tmp-eglibc/deploy/images/imx6solo-3dr-1080p/3dr-solo.tar.gz $NEW_DIR
 md5sum 3dr-solo.tar.gz > 3dr-solo.tar.gz.md5
 
-cp /solo-build/build/tmp-eglibc/deploy/images/imx6solo-3dr-artoo/3dr-controller.tar.gz $NEW_DIR
+cp /solo-build-alt/build/tmp-eglibc/deploy/images/imx6solo-3dr-artoo/3dr-controller.tar.gz $NEW_DIR
 md5sum 3dr-controller.tar.gz > 3dr-controller.tar.gz.md5
 
 ls -lh $NEW_DIR
 
 echo
 echo "All build files located in below directories of the Vagrant virtual machine (squashfs, uImage, kernel, u-boot, dtb file, initramfs, rootfs.cpio, etc)"
-echo /solo-build/build/tmp-eglibc/deploy/images/imx6solo-3dr-1080p/
-echo /solo-build/build/tmp-eglibc/deploy/images/imx6solo-3dr-artoo/
+echo /solo-build-alt/build/tmp-eglibc/deploy/images/imx6solo-3dr-1080p/
+echo /solo-build-alt/build/tmp-eglibc/deploy/images/imx6solo-3dr-artoo/
 
