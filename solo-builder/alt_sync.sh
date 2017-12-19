@@ -1,5 +1,10 @@
 #!/bin/bash
 # alternative to the 'sync' tool, which puts stuff in /solo-build, for now we'll use /solo-build-alt
+# 
+# 'master', 'tags/2.9.94' ( for a tag) or '2.9.94' ( for a branch ) is ok:
+name=$1
+echo "git reference: $name"
+#  
 sudo mkdir /solo-build-alt
 sudo chown vagrant /solo-build-alt
 cd /solo-build-alt
@@ -33,7 +38,8 @@ mkdir -p sources/base
 git clone git://github.com/OpenSolo/3dr-yocto-bsp-base sources/base 2>&1 |  grep -v 'fatal'
 cd sources/base
 git fetch
-git checkout master
+echo git checkout $name
+git checkout $name
 cd ../..
 cp sources/base/README.md .
 cp sources/base/setup-environment .
@@ -43,7 +49,8 @@ mkdir -p sources/meta-3dr
 git clone git://github.com/OpenSolo/meta-3dr sources/meta-3dr 2>&1 |  grep -v 'fatal'
 cd sources/meta-3dr
 git fetch
-git checkout master
+echo git checkout $name
+git checkout $name
 cd ../..
 
 echo "----------------------------------------------------------------------------"
