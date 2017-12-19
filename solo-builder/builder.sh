@@ -14,12 +14,6 @@ GIT_REPO=3dr-arm-yocto-bsp
 GIT_BRANCH=master
 BUILD_MACHINE=both
 
-# Check if the build directory is there. If not, setup steps were skipped or messed up.
-if [ ! -d "/solo-build-alt" ]; then
-  echo "No build directory. Did you skip all the other steps?"
-  exit 1
-fi
-
 
 # Check command line options for git account, repo, and branch.
 while getopts a:r:b:m: option
@@ -47,7 +41,6 @@ case "$choice" in
 esac
 echo
 
-cd /solo-build-alt
 #Do it.
 /vagrant/alt_sync.sh
 
