@@ -7,11 +7,12 @@
 
 # EXAMPLE: builder.sh -a Pedals2Paddles -r 3dr-arm-yocto-bsp -b v0.1.0
 #   This will use Matt's fork with a branch named v0.1.0
+# TIP: if the GIT_BRANCH starts with tags/, then it's actually a git tag that's used, if not it's a branch
 
 # Defaults if options are not set from command line set
 GIT_ACCOUNT=OpenSolo
 GIT_REPO=3dr-arm-yocto-bsp
-GIT_BRANCH=master
+GIT_BRANCH=tags/2.9.94
 BUILD_MACHINE=both
 
 
@@ -42,7 +43,9 @@ esac
 echo
 
 #Do it.
-/vagrant/alt_sync.sh
+/vagrant/alt_sync.sh $GIT_BRANCH
+
+cd /solo-build-alt
 
 if [ ! $? -eq 0 ]
 then
