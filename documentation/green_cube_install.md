@@ -7,17 +7,17 @@ _If you already have the latest version of Open Solo installed and operational, 
    - [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
 
 2. **Remove the battery tray:** Remove the battery and pop off the GPS cover.  Then unscrew all the small black screws around the battery tray. The battery tray can now be lifted up.  Unplug the GPS from the carrier board.  Set the battery tray aside. We highly recommend you do not lose the screws.
-   ![Battery Tray Screws](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/battery_tray_screws.jpg)
+   ![Battery Tray Screws](https://github.com/OpenSolo/documentation/blob/master/Misc/battery_tray_screws.jpg)
 
 3. **Lift up the carrier board:** Locate the comparatively large silver screw on the right side toward the front. Unscrew that and set it aside with all the other screws that you're not going to lose.  The carrier board can now be lifted up very carefully.  You will need to fidget with the wires from the motor pods a bit.  The board will need to go up a bit, then shift back, then shift up the rest of the way. The left side can go up higher than the right, which is convenient.  It's kind of tight and generally annoying.  Be careful not to break the small wires.  Don't break any of the other wires either.  You will need to get the board high enough up to expose the Pixhawk mounted underneath it.  It's the black cube looking device.
-   ![carrier screw](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/carrier_retainer_screw.jpg)
-   ![wires](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/carrier_board_wires.jpg)
+   ![carrier screw](https://github.com/OpenSolo/documentation/blob/master/Misc/carrier_retainer_screw.jpg)
+   ![wires](https://github.com/OpenSolo/documentation/blob/master/Misc/carrier_board_wires.jpg)
 
 4. **Unscrew the stock pixhawk:** There are 4 very small screws on the top of the carrier board. Unscrew them and set them aside. The stock Pixhawk can now be removed. It will pull down off the carrier board. Set the stock Pixhawk aside somewhere safe. You will want to keep it.
-   ![Pixhawk screws](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/pixhawk_screws.jpg)
+   ![Pixhawk screws](https://github.com/OpenSolo/documentation/blob/master/Misc/pixhawk_screws.jpg)
 
 5. **Install the green cube:** The green cube installs the same way the old one came off.  Plug it into the carrier board from the bottom. When it's lined up properly, it should only take a gentle squeeze and you should hear a click as the connector seats.  Then put in the four screws.
-  ![cube installed](https://github.com/ArduPilot/SoloScripts/blob/master/Misc/cube_installed.jpg)
+  ![cube installed](https://github.com/OpenSolo/documentation/blob/master/Misc/cube_installed.jpg)
   
 6. **Do not reassemble yet:** It is best to do the initial firmware install with the Solo still opened up. If anything goes wrong, it avoids having to disassemble it again. 
 
