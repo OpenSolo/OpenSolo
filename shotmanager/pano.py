@@ -469,39 +469,25 @@ class PanoShot():
         # if we do have a gimbal, use mount_control to set pitch and yaw
         if self.vehicle.mount_status[0] is not None:
             msg = self.vehicle.message_factory.mount_control_encode(
-                    0, 1,    # target system, target component
-                    # pitch is in centidegrees
-                    self.camPitch * 100,
-                    0.0, # roll
-                    # yaw is in centidegrees
-                    0, # self.camYaw * 100, (Disabled by Matt for now due to ArduCopter master mount_control bug. Using condition_yaw instead)
-                    0 # save position
+                0, 1,                   # Target system, target component
+                self.camPitch * 100,    # Pitch in centidegrees
+                0.0,                    # Roll not used
+                self.camYaw * 100,      # Yaw in centidegrees
+                0                       # save position
             )
             self.vehicle.send_mavlink(msg)
-            
-            msg = self.vehicle.message_factory.command_long_encode( # Using condition_yaw temporarily until mount_control yaw issue is fixed
-                    0, 0,    # target system, target component
-                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
-                    0, #confirmation
-                    self.camYaw,  # param 1 - target angle
-                    YAW_SPEED, # param 2 - yaw speed
-                    self.camDir, # param 3 - direction
-                    0.0, # relative offset
-                    0, 0, 0 # params 5-7 (unused)
-            )
-            self.vehicle.send_mavlink(msg)
-                        
+
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             msg = self.vehicle.message_factory.command_long_encode(
-                    0, 0,    # target system, target component
-                    mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
-                    0, #confirmation
-                    self.camYaw,  # param 1 - target angle
-                    YAW_SPEED, # param 2 - yaw speed
-                    self.camDir, # param 3 - direction
-                    0.0, # relative offset
-                    0, 0, 0 # params 5-7 (unused)
+                0, 1,           # target system, target component
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+                0,              # confirmation
+                self.camYaw,    # param 1 - target angle
+                YAW_SPEED,      # param 2 - yaw speed
+                self.camDir,    # param 3 - direction
+                0.0,            # relative offset
+                0, 0, 0         # params 5-7 (unused)
             )
             self.vehicle.send_mavlink(msg)
 

@@ -290,49 +290,31 @@ class MultipointShot():
         newYaw += self.yawPitchOffsetter.yawOffset
 
         # Formulate mavlink message for mount controller. Use mount_control if using a gimbal. Use just condition_yaw if no gimbal.        
-        # Modified by Matt 2017-05-18 for ArducCopter master compatibility
-        
-        # mav_cmd_do_mount_control should handle gimbal pitch and copter yaw, but yaw is not working in master. 
-        # So this mount_control command is only going to do the gimbal pitch for now.
         if self.vehicle.mount_status[0] is not None:
             pointingMsg = self.vehicle.message_factory.mount_control_encode(
-                0, 1,    # target system, target component
-                newPitch * 100,  # pitch (centidegrees)
-                0.0,  # roll (centidegrees)
-                newYaw * 100,  # yaw (centidegrees)
-                0  # save position
-            )
-            self.vehicle.send_mavlink(pointingMsg)
-            
-            # Temporary fix while the yaw control is not working in the above mount_control command.
-            pointingMsg = self.vehicle.message_factory.command_long_encode(
-                0, 0,    # target system, target component
-                mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
-                0,  # confirmation
-                newYaw,  # param 1 - target angle (degrees)
-                YAW_SPEED,  # param 2 - yaw speed (deg/s)
-                0,  # param 3 - direction, always shortest route for now...
-                0.0,  # relative offset
-                0, 0, 0  # params 5-7 (unused)
+                0, 1,           # target system, target component
+                newPitch * 100, # pitch in centidegrees
+                0.0,            # roll not used
+                newYaw * 100,   # yaw in centidegrees
+                0               # save position
             )
             self.vehicle.send_mavlink(pointingMsg)
 
-            
         # if no gimbal, assume fixed mount and use condition_yaw only
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             pointingMsg = self.vehicle.message_factory.command_long_encode(
-                0, 0,    # target system, target component
+                0, 1,           # target system, target component
                 mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
-                0,  # confirmation
-                newYaw,  # param 1 - target angle (degrees)
-                YAW_SPEED,  # param 2 - yaw speed (deg/s)
-                0,  # param 3 - direction, always shortest route for now...
-                0.0,  # relative offset
-                0, 0, 0  # params 5-7 (unused)
+                0,              # confirmation
+                newYaw,         # param 1 - target angle (degrees)
+                YAW_SPEED,      # param 2 - yaw speed (deg/s)
+                0,              # param 3 - direction, always shortest route for now...
+                0.0,            # relative offset
+                0, 0, 0         # params 5-7 (unused)
             )
             self.vehicle.send_mavlink(pointingMsg)
-        
+
 
     def interpolateCamera(self):
         '''Interpolate (linear) pitch and yaw between cable control points'''
@@ -847,45 +829,26 @@ class MultipointShot():
 
         if self.vehicle.mount_status[0] is not None:
             pointingMsg = self.vehicle.message_factory.mount_control_encode(
-                0, 1,    # target system, target component
-                newPitch * 100,  # pitch (centidegrees)
-                0.0,  # roll (centidegrees)
-                newYaw * 100,  # yaw (centidegrees)
-                0  # save position
+                0, 1,             # target system, target component
+                startPitch * 100, # pitch in centidegrees
+                0.0,              # roll not used
+                startYaw * 100,   # yaw in centidegrees
+                0                 # save position
             )
             self.vehicle.send_mavlink(pointingMsg)
-            
-            pointingMsg = self.vehicle.message_factory.command_long_encode(
-                0, 0,    # target system, target component
-                mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
-                0,  # confirmation
-                startYaw,  # param 1 - target angle (degrees)
-                ATTACH_YAW_SPEED,  # param 2 - yaw speed (deg/s)
-                0,  # param 3 - direction, always shortest route for now...
-                0.0,  # relative offset
-                0, 0, 0  # params 5-7 (unused)
-            )
-            self.vehicle.send_mavlink(pointingMsg)
-            
-            # pointingMsg = self.vehicle.message_factory.mount_control_encode(
-                # 0, 1,    # target system, target component
-                # startPitch * 100,  # pitch (centidegrees)
-                # 0.0,  # roll (centidegrees)
-                # startYaw * 100,  # yaw (centidegrees)
-                # 0  # save position
-            # )
+
         # if not, assume fixed mount
         else:
             # if we don't have a gimbal, just set CONDITION_YAW
             pointingMsg = self.vehicle.message_factory.command_long_encode(
-                0, 0,    # target system, target component
+                0, 1,               # target system, target component
                 mavutil.mavlink.MAV_CMD_CONDITION_YAW,  # command
-                0,  # confirmation
-                startYaw,  # param 1 - target angle (degrees)
-                ATTACH_YAW_SPEED,  # param 2 - yaw speed (deg/s)
-                0,  # param 3 - direction, always shortest route for now...
-                0.0,  # relative offset
-                0, 0, 0  # params 5-7 (unused)
+                0,                  # confirmation
+                startYaw,           # param 1 - target angle (degrees)
+                ATTACH_YAW_SPEED,   # param 2 - yaw speed (deg/s)
+                0,                  # param 3 - direction, always shortest route for now...
+                0.0,                # relative offset
+                0, 0, 0             # params 5-7 (unused)
             )
             self.vehicle.send_mavlink(pointingMsg)
 
