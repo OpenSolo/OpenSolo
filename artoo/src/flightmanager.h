@@ -17,24 +17,26 @@ class FlightManager
 public:
     // in sync with github.com/diydrones/ardupilot/blob/master/ArduCopter/defines.h
     enum FlightMode {
-        STABILIZE   = 0,    // hold level position
-        ACRO        = 1,    // rate control
-        ALT_HOLD    = 2,    // AUTO control
-        AUTO        = 3,    // AUTO control
-        GUIDED      = 4,    // AUTO control
-        LOITER      = 5,    // Hold a single location
-        RTL         = 6,    // AUTO control
-        CIRCLE      = 7,    // AUTO control
-        LAND        = 9,    // AUTO control
-        OF_LOITER   = 10,   // Hold a single location using optical flow sensor
-        DRIFT       = 11,   // DRIFT mode (Note: 12 is no longer used)
-        SPORT       = 13,   // earth frame rate control
-        FLIP        = 14,   // flip the vehicle on the roll axis
-        AUTOTUNE    = 15,   // autotune the vehicle's roll and pitch gains
-        POSHOLD     = 16,   // position hold with manual override
-        STOP        = 17,   // full-stop using inertial/GPS system, no pilot input. also referred to as BRAKE
-    };
-    //const int NUM_MODES = STOP+1;
+        STABILIZE =     0,  // manual airframe angle with manual throttle
+        ACRO =          1,  // manual body-frame angular rate with manual throttle
+        ALT_HOLD =      2,  // manual airframe angle with automatic throttle
+        AUTO =          3,  // fully automatic waypoint control using mission commands
+        GUIDED =        4,  // fully automatic fly to coordinate or fly at velocity/direction using GCS immediate commands
+        LOITER =        5,  // automatic horizontal acceleration with automatic throttle
+        RTL =           6,  // automatic return to launching point
+        CIRCLE =        7,  // automatic circular flight with automatic throttle
+        LAND =          9,  // automatic landing with horizontal position control
+        DRIFT =        11,  // semi-automous position, yaw and throttle control
+        SPORT =        13,  // manual earth-frame angular rate control with manual throttle
+        FLIP =         14,  // automatically flip the vehicle on the roll axis
+        AUTOTUNE =     15,  // automatically tune the vehicle's roll and pitch gains
+        POSHOLD =      16,  // automatic position hold with manual override, with automatic throttle
+        BRAKE =        17,  // full-brake using inertial/GPS system, no pilot input
+        THROW =        18,  // throw to launch mode using inertial/GPS system, no pilot input
+        AVOID_ADSB =   19,  // automatic avoidance of obstacles in the macro scale - e.g. full-sized aircraft
+        GUIDED_NOGPS = 20,  // guided mode but only accepts attitude and altitude
+        SMART_RTL =    21,  // SMART_RTL returns to home by retracing its steps
+        };   
 
     /*
      * XXX: the MAVLINK_MSG_ID_STATUSTEXT indicates that the MAV_SEVERITY enum
@@ -102,11 +104,11 @@ public:
     }
     static const char *flightModeStr(FlightMode m);
     static bool flightModeIsAutonomous(FlightMode m) {
-        return (m == AUTO || m == GUIDED || m == LOITER || m == RTL || m == CIRCLE || m == DRIFT || m == POSHOLD || m == STOP );
+        return (m == AUTO || m == GUIDED || m == LOITER || m == RTL || m == CIRCLE || m == DRIFT || m == POSHOLD || m == BRAKE || m == THROW || m == AVOID_ADSB || m == GUIDED_NOGPS || m == SMART_RTL );
     }
 
     ALWAYS_INLINE bool currentFlightModeManual() const {
-        return !flightModeIsAutonomous(mode) && !(mode==OF_LOITER); // OF_LOITER is a deprecated mode
+        return !flightModeIsAutonomous(mode);
     }
 
     ALWAYS_INLINE bool currentFlightModeRequiresGPS() const {

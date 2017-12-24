@@ -46,22 +46,26 @@ void FlightManager::init()
 const char *FlightManager::flightModeStr(FlightMode m)
 {
     switch (m) {
-    case STABILIZE: return "Stabilize";
-    case ACRO:      return "Acro";
-    case ALT_HOLD:  return "Alt Hold";
-    case AUTO:      return "Auto";
-    case GUIDED:    return "Guided";
-    case LOITER:    return "Loiter";
-    case RTL:       return "Return to Home";
-    case CIRCLE:    return "Circle";
-    case LAND:      return "Land";
-    case OF_LOITER: return "OF Loiter";
-    case DRIFT:     return "Drift";
-    case SPORT:     return "Sport";
-    case FLIP:      return "Flip";
-    case AUTOTUNE:  return "Auto Tune";
-    case POSHOLD:   return "Pos Hold";
-    default:        return "Unknown";
+    case STABILIZE:     return "Stabilize";
+    case ACRO:          return "Acro";
+    case ALT_HOLD:      return "Alt Hold";
+    case AUTO:          return "Auto";
+    case GUIDED:        return "Guided";
+    case LOITER:        return "Loiter";
+    case RTL:           return "Return to Home";
+    case CIRCLE:        return "Circle";
+    case LAND:          return "Land";
+    case DRIFT:         return "Drift";
+    case SPORT:         return "Sport";
+    case FLIP:          return "Flip";
+    case AUTOTUNE:      return "Auto Tune";
+    case POSHOLD:       return "Pos Hold";
+    case BRAKE:         return "Brake";
+    case THROW:         return "Throw";
+    case AVOID_ADSB:    return "ADS-B AVOID";
+    case GUIDED_NOGPS:  return "Guided No GPS";
+    case SMART_RTL:     return "Smart RTL";
+    default:            return "Unknown";
     }
 }
 
