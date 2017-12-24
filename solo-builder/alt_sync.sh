@@ -2,6 +2,8 @@
 # alternative to the 'sync' tool, which puts stuff in /solo-build, for now we'll use /solo-build-alt
 # 
 # 'master', 'tags/2.9.94' ( for a tag) or '2.9.94' ( for a branch ) is ok:
+set -xv
+
 name=$1
 echo "git reference: $name"
 #  
