@@ -113,6 +113,11 @@ if ( me != 'vagrant' ) :
 	exit(1);
 
 
+run_command_capture_results("rm /vagrant/www/latest_run.txt", False);
+
+#run_command_capture_results("touch /vagrant/www/in-progress.txt", False);
+progress = open("/vagrant/www/in-progress.txt",'w+')
+
 
 print >>log, "now running as 'vagrant' user.\nstarting run at:\n";
 run_command_capture_results("date");
@@ -123,17 +128,50 @@ os.chdir("/vagrant");
 
 run_command_capture_results("git pull");
 
-run_command_capture_results("echo \"y\" |/vagrant/builder.sh");
+# compare git rev with last-run, if changed, then we run again...
+gitrev = run_command_capture_results("git rev-parse --verify HEAD");
+touch = run_command_capture_results("touch /vagrant/gitrev.txt");
+with open('gitrev.txt', 'r+') as f_in:
+	prev = f_in.read()	
+f_in.close()
+# if they are different, make them the same.
+if gitrev != prev:
+  with open('gitrev.txt', 'w+') as f_out:
+        f_out.write(gitrev)
+  f_in.close()
+# just let the human know the thing we are currently trying to do, by it's git hash..
+progress.write(gitrev)
 
-print >>log, "finished run at:\n";
-run_command_capture_results("date");
+# if no change, then don't re-run
+if gitrev == prev:
+  print >>log, "no change in solo-builder git revision, not re-running. ( to force re-run, delete /vagrant/gitrev.txt file)";
+  print "no change in solo-builder git revision, not re-running. ( to force re-run, delete /vagrant/gitrev.txt file)";
 
-print "log closed. \n";
-log.close();
+else:
+  # run something.
+  run_command_capture_results("echo \"y\" |/vagrant/builder.sh");
 
-print "log relocated. \n";
-run_command_capture_results("mv /vagrant/progress.log /vagrant/www/latest_run.txt", False);
+  print >>log, "finished run at:\n";
+  run_command_capture_results("date");
 
-run_command_capture_results("chmod 664 /vagrant/www/latest_run.txt", False);
+  print "log closed. \n";
+  log.close();
+
+  print "log relocated. \n";
+
+  comp = ''
+  with open('/tmp/COMP.txt', 'r+') as f_in:
+        comp = f_in.read()
+  f_in.close()
+  comp = comp.rstrip()
+  if comp == '':
+	print "log relocation aborted,cant find /tmp/COMP.txt";
+	
+  run_command_capture_results("mv /vagrant/progress.log /vagrant/binaries/"+comp+"/latest_run.txt", False);
+
+# either way, wind up the files and handles:
+progress.close()
+run_command_capture_results("rm /vagrant/www/latest_run.txt", False);
+run_command_capture_results("mv /vagrant/www/in-progress.txt /vagrant/www/latest_run.txt", False);
 
 
