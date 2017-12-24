@@ -97,7 +97,7 @@ fi
 # Copy the relevant files to a date/time stamped completed directory in the git repo folder for easy access (on git ignore list).
 # Make an MD5sum of each as is required for the Solo and Controller to accept the files.
 # The tar.gz and the .md5 go directly in the /log/updates/ directory on the solo and/or controller.
-NEW_DIR=/vagrant/www/"completed_$(date +%F_%H-%M)"
+NEW_DIR=/vagrant/binaries/"completed_$(date +%F_%H-%M)"
 mkdir -p $NEW_DIR
 cd $NEW_DIR
 
