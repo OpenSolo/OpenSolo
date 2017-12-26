@@ -102,7 +102,7 @@ def drop_privileges(uid_name='nobody', gid_name='nogroup'):
 
 print >>log, "fixing perms\n";
 print "fixing perms\n";
-run_command_capture_results("chown -R vagrant /vagrant/.*");
+run_command_capture_results("chown -R vagrant /vagrant/.git /vagrant/.gitignore");
 run_command_capture_results("chown -R vagrant /vagrant/*");
 
 # now actually do ita:
