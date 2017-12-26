@@ -5,6 +5,7 @@ import time
 import pwd
 import subprocess
 import os, pwd, grp
+import os.path
 
 def get_username():
     return pwd.getpwuid( os.getuid() )[ 0 ]
@@ -12,6 +13,10 @@ def get_username():
 me = get_username()
 if ( me != 'root' ) :
 	print(" must be run as root, sorry, aborting. \n");
+	exit(1);
+
+if os.path.isfile("/vagrant/progress.log"):
+	print "unable to run, another copy is already runniing, see /vagrant/progress.log";
 	exit(1);
 
 # open logfile:
