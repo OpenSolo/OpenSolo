@@ -69,17 +69,14 @@ fi
 #bitbake pixhawk-firmware -v
 #TIP: -k means continue-after-error-for-as-much-as-possible
 
-MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo -c clean -f -k
-if [ ! $? -eq 0 ]
-then
-    exit 1
-fi
+# these clean command/s are very verbose, and return an error code even though the clean works, lets quieten them:
+echo "solo clean started..."
+MACHINE=imx6solo-3dr-1080p bitbake world -c cleansstate -f -k 2>&1 > /dev/null
+echo "...solo clean finished."
 
-MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller -c clean -f -k
-if [ ! $? -eq 0 ]
-then
-    exit 1
-fi
+echo "controller clean started..."
+MACHINE=imx6solo-3dr-artoo bitbake world -c cleansstate -f -k 2>&1 > /dev/null
+echo "...controller clean finished"
 
 MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo
 if [ ! $? -eq 0 ]
