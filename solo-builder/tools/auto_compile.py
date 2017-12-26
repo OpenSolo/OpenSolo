@@ -100,8 +100,10 @@ def drop_privileges(uid_name='nobody', gid_name='nogroup'):
 
 # tasks potentially needing root:
 
-#run_command_capture_results("chown -R vagrant /vagrant/.*");
-#run_command_capture_results("chown -R vagrant /vagrant/*");
+print >>log, "fixing perms\n";
+print "fixing perms\n";
+run_command_capture_results("chown -R vagrant /vagrant/.*");
+run_command_capture_results("chown -R vagrant /vagrant/*");
 
 # now actually do ita:
 #print >>log, "dropping privs to 'vagrant'\n";
@@ -120,10 +122,12 @@ progress = open("/vagrant/www/in-progress.txt",'w+')
 
 
 print >>log, "now running as 'vagrant' user.\nstarting run at:\n";
+print "now running as 'vagrant' user.\nstarting run at:\n";
 run_command_capture_results("date");
 
 
 print >>log, "chdir /vagrant";
+print "chdir /vagrant";
 os.chdir("/vagrant");
 
 run_command_capture_results("git pull");
