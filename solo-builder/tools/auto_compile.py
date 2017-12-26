@@ -182,5 +182,6 @@ else:
 progress.close()
 run_command_capture_results("rm /vagrant/www/latest_run.txt", False);
 run_command_capture_results("mv /vagrant/www/in-progress.txt /vagrant/www/latest_run.txt", False);
+run_command_capture_results("rm /vagrant/progress.log", False);
 
 
