@@ -12,7 +12,7 @@
 # Defaults if options are not set from command line set
 GIT_ACCOUNT=OpenSolo
 GIT_REPO=3dr-arm-yocto-bsp
-GIT_BRANCH=tags/2.9.94
+GIT_BRANCH=master
 BUILD_MACHINE=both
 
 
