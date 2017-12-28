@@ -14,10 +14,11 @@ GIT_ACCOUNT=OpenSolo
 GIT_REPO=3dr-arm-yocto-bsp
 GIT_BRANCH=master
 BUILD_MACHINE=both
+CLEAN=clean
 
 
 # Check command line options for git account, repo, and branch.
-while getopts a:r:b:m: option
+while getopts a:r:b:m:c: option
 do
  case ${option}
  in
@@ -25,10 +26,11 @@ do
  r) GIT_REPO=${OPTARG};;
  b) GIT_BRANCH=${OPTARG};;
  m) BUILD_MACHINE=$${OPTARG};;
+ c) CLEAN=${OPTARG};;
  esac
 done
 
-# Promt for what is about to execute
+# Prompt for what is about to execute
 echo
 echo 
 echo "Ready to initialize the "$GIT_ACCOUNT $GIT_REPO" repo using branch "$GIT_BRANCH
@@ -69,15 +71,20 @@ fi
 #bitbake pixhawk-firmware -v
 #TIP: -k means continue-after-error-for-as-much-as-possible
 
-# these clean command/s are very verbose, and return an error code even though the clean works, lets quieten them:
-echo "solo clean started..."
-MACHINE=imx6solo-3dr-1080p bitbake world -c cleansstate -f -k 2>&1 > /dev/null
-echo "...solo clean finished."
 
-echo "controller clean started..."
-MACHINE=imx6solo-3dr-artoo bitbake world -c cleansstate -f -k 2>&1 > /dev/null
-echo "...controller clean finished"
+if [ $CLEAN = clean ]
+then
+    # these clean command/s are very verbose, and return an error code even though the clean works, lets quieten them:
+    echo "solo clean started..."
+    MACHINE=imx6solo-3dr-1080p bitbake world -c cleansstate -f -k 2>&1 > /dev/null
+    echo "...solo clean finished."
 
+    echo "controller clean started..."
+    MACHINE=imx6solo-3dr-artoo bitbake world -c cleansstate -f -k 2>&1 > /dev/null
+    echo "...controller clean finished"
+fi
+    
+    
 MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo
 if [ ! $? -eq 0 ]
 then
