@@ -18,7 +18,7 @@ FILES_${PN} += "${sysconfdir}/"
 
 do_compile () {
     echo "# auto-generated `date`" > shotManager_version.py
-    echo 'VERSION = "2.5-RC4"' >> shotManager_version.py
+    echo 'VERSION = "3.0.0"' >> shotManager_version.py
 }
 
 do_install () {
