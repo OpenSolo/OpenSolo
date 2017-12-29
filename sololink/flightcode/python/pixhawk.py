@@ -737,37 +737,6 @@ def recoveryCheck():
         logger.info("On recovery partition")
         return True
 
-def setReqParams():
-    logger.info("   Setting some important parameters...")
-    config = ConfigParser.SafeConfigParser()
-    config.optionxform = str
-    config.read(sololink_conf)
-
-    serial_dev = config_get(config, config_dev_name)
-    if serial_dev is None:
-        return
-
-    serial_flow = config_getbool(config, config_flow_name, True)
-
-    serial_baud = config_getint(config, config_baud_name)
-    if serial_baud is None:
-        return
-
-    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
-    m.set_rtscts(serial_flow)
-    m.mav.param_set_send(m.target_system, m.target_component, 'NTF_OREO_THEME', 1, 0)
-    time.sleep(1)
-    m.mav.param_set_send(m.target_system, m.target_component, 'MNT_TYPE', 2, 0)
-    time.sleep(1)
-    m.mav.param_set_send(m.target_system, m.target_component, 'FRAME_CLASS', 1, 0)
-    time.sleep(1)
-    m.mav.param_set_send(m.target_system, m.target_component, 'FRAME_TYPE', 1, 0)
-    time.sleep(1)
-    m.mav.param_set_send(m.target_system, m.target_component, 'BATT_MONITOR', 5, 0)
-    time.sleep(5)
-    m.close()
-    return
-
 def rebootPixhawk():
     logger.info("   Rebooting pixhawk...")
     global cube_version
@@ -815,8 +784,6 @@ def initialize():
     if recoveryCheck():
         resetParameters()
         rebootPixhawk()
-        setReqParams()
-        rebootPixhawk()
     else:
         if (os.path.isdir("/firmware/3dr") or os.path.isdir("/firmware/green")) and checkPixhawkVersion():
             # This must be a clean install if the initial FW directories are here.
@@ -844,12 +811,10 @@ def initialize():
             os.system("rm -rf /firmware/green")
             os.system("rm -rf /firmware/wipe")
             if paramsAfterLoad:
-                logger.info("Executing post-install cleanups...")
+                logger.info("Executing post-install parameter reset...")
                 resetParameters()
                 rebootPixhawk()
-                setReqParams()
-                rebootPixhawk()
-                logger.info("Cleanups complete")
+                logger.info("...Reset complete")
         else:
             print "pixhawk: ERROR loading firmware"
             logger.error("pixhawk status: can't load")
