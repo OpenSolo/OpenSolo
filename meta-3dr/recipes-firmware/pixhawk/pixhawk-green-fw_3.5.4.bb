@@ -8,13 +8,11 @@ REPO_NAME = "ardupilot-solo"
 #REPO_TAG = "solo-${PV}"
 REPO_TAG = "solo-master"
 FILE_EXT = "px4"
-FILE_SRC = "ArduCopter-v3.${FILE_EXT}"
-FILE_DST = "ArduCopter-v3_${PV}.${FILE_EXT}"
+FILE_SRC = "ArduCopter-v3_3.5.4_Solo.px4"
+FILE_DST = "ArduCopter-v3_3.5.4_Solo.px4"
 
 do_fetch () {
-
-    wget https://github.com/OpenSolo/documentation/raw/master/ArduCopter_3.5.4_Solo.px4 -O ${WORKDIR}/${FILE_SRC}
-
+    wget https://github.com/OpenSolo/documentation/raw/master/ArduCopter-v3_3.5.4_Solo.px4 -O ${WORKDIR}/${FILE_SRC}
 }
 
 do_install () {
