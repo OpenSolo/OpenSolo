@@ -53,6 +53,7 @@ cd sources/meta-3dr
 git fetch
 echo git checkout $name 2>&1
 git checkout $name 2>&1
+git pull origin
 cd ../..
 
 echo "----------------------------------------------------------------------------"
