@@ -1,5 +1,5 @@
 #!/bin/bash
 # this command should really execute:
-#git describe --tags
+# git describe --tags
 # but we don't have any version tags in the repo yet, so lets fake it:
-echo v2.5-RC4
+echo v3.0.0
