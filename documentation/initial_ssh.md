@@ -5,7 +5,7 @@ This procedure is for users that want to install Open Solo manually using variou
 
 
 ### SETUP ##
-1. **Download** the Open_Solo_XXX.zip file from the release attachments and unzip somewhere convenient on your computer.
+1. **Download** the `Open Solo x.x.x.zip` file from the release attachments and unzip somewhere convenient on your computer.
 
 2. **Power up** the copter and controller. Both should be fully charged, paired, connected, and working normally.
 
@@ -77,9 +77,9 @@ This procedure is for users that want to install Open Solo manually using variou
 From this point forward, it is the same as any other installation method.
 
 4. **Reboot:** Power cycle the Solo and controller once the Copter and Controller steps above are complete. When they power back on, they will automatically begin a factory reset procedure. Since we just installed Open Solo on the recovery partitions, they are factory resetting to Open Solo! They will then automatically execute a second update procedure, cleanly installing Open Solo on the system partition.
-    - You will likely hear the Pixhawk reboot tones twice. You may hear the firmware success happy tones from the pixhawk as well. All normal.
+    - You will likely hear the Pixhawk reboot tones 2-3 times.  This is normal.
     - You will likely see the controller reboot and say update success twice. This is also normal.
-    - It is difficult to know exactly what stage it is at since it can't speak and isn't telepathic. The process takes about 8-10 minutes on both the solo and the controller.  So just wait about 10 minutes.
+    - It is difficult to know exactly what stage it is at since it can't speak and isn't telepathic. The process takes about 6 minutes on both the solo and the controller. So just wait about 6 minutes.
 
 5. **Pair:** Hit the pair button under the Solo with a small pointy poking apparatus like a paper clip for 2 seconds to get the controller and solo re-paired. When the controller tells you it has detected the solo, hold the A and B button for 3 seconds... which is the second set of vibrations... until the the screen says pairing in progress. If the copter and controller are not pairing, reboot both. They may have timed out.
 

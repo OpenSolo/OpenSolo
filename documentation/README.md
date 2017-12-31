@@ -1,16 +1,25 @@
 # Open Solo Releases For Users #
-The team working on safe, reliable releases of Open Solo publishes them here. You can read all the details in the release notes, and link directly to installation instructions. These are the "official" instructions. These instructions superceed any other older instructions, videos, and wikis that came before Open Solo.
+***INFORMATION CURRENT FOR STABLE RELEASE v3.0.0 ON JANUARY 1, 2018***
+
+The team working on safe, reliable releases of Open Solo publishes them here. You can read all the details in the release notes, and link directly to installation instructions. These are the "official" instructions. These instructions supersede any other older instructions, videos, and wikis that came before Open Solo.
 
 ### _Release notes and instructions_ ###
-- [Open Solo Release Notes](https://github.com/OpenSolo/documentation/releases)
+
+- Release notes for each version:
+  - [Current stable release: v3.0.0](https://github.com/OpenSolo/documentation/releases/tag/v3.0.0)
+  - [All releases including old betas](https://github.com/OpenSolo/documentation/releases/)
+
 - For _stock solos and previously installed and working green cubes_, go straight to the Open Solo installation procedures:
   - [Install using the Solex app on Android](../master/install_solex.md)
   - [Install using SidePilot app on iOS](../master/initial_sidepilot.md)
-  - Install using SSH/SFTP on widows or mac (No procedure has been created yet)
+  - [Install using SSH/SFTP on widows or mac](../master/initial_ssh.md)
+  - [Install / recovery with SD card images](../master/install_sdimage.md)
+  
 - For a _brand new Green Cube installation_ please follow these updated instructions!
   - [New green cube installation procedure](../master/green_cube_install.md)
 
 ### _Support, Social Media, and other useful links_ ###
+
 * [Solo Beta Test](https://www.facebook.com/groups/617648671719759/) group on Facebook (primary Open Solo and Green Cube support group!!)
 * [Solo Mod Club](https://www.facebook.com/groups/3DRSOLOModClub/) group on Facebook
 * [Solex Users](https://www.facebook.com/groups/176789056089526/) group on Facebook
@@ -25,8 +34,24 @@ The team working on safe, reliable releases of Open Solo publishes them here. Yo
 * [Filezilla](https://filezilla-project.org/download.php?type=client) for moving files to/from the companion computer
 * [WinSCP](https://winscp.net/eng/download.php) for moving files to/from the companion computer
 
+## Tech and Contributors ##
+If you're the geeky type that wants to read all the commits to see what has been changed in Open Solo, they can all be found in the Open Solo github repositories.
 
-# Building Open Solo For Developers #
+- **The Build System** compiles all the code from all the repositories into functioning binaries to be loaded onto the Solo and Controller. This was a HUGE lift to make work outside of 3DR's environment. David Buzz (@davidbuzz) was the brains behind the move of _everything_ from 3DR, setup of new repos and servers, build system engineering, and a new AWS based auto-build system. The AWS system can compile from scratch in 1hr, whereas a home PC takes up to 5hrs.
+  - [Meta-3DR](https://github.com/OpenSolo/meta-3dr/commits/master) is all the Yocto bitbake recipes.
+  - [Solo-Builder](https://github.com/OpenSolo/solo-builder/commits/master) is the virtual machine and scripts to carry out the build.
+
+- **The Flight Code** has numerous components that got fixes and new features. Matt Lawrence (@Pedals2Paddles) worked most of these changes.  Other contributors to the code were Tim (@FLYBYME), Morten Enholm (@Spawn32), and Hugh Eaves (@hugheaves),
+  - [Sololink](https://github.com/OpenSolo/sololink/commits/master) is mostly behind the scenes stuff related to booting, networking connections, firmware loading, etc. This compiles into a version for both the Copter and Controller's IMX companion computers.
+  - [Shotmanager](https://github.com/OpenSolo/shotmanager/commits/master) is all the smart shots, button and control handling, camera stuff, and most other user facing operational stuff. This compiles primarily into the Copter's IMX companion computer.
+  - [Artoo](https://github.com/OpenSolo/artoo/commits/master) is the controller's STM32 firmware for the screen, buttons, and sticks.
+  - [Mavlink-Solo](https://github.com/OpenSolo/mavlink-solo/commits/master) is a rather old fork of Mavlink. The flight modes were brought up to current enumerations.
+  - [Sololink-python](https://github.com/OpenSolo/sololink-python/commits/master) is some misc helper python files.
+  - [ArduPilot-solo](https://github.com/OpenSolo/ardupilot-solo/commits/master) is 3DR's fork of ArduCopter used on the stock Solo pixhawk 2.0 cube.
+
+
+
+# For Developers #
 ***FOR DEVELOPERS!! Not for general users that just want to put Open Solo releases on their solo!!!***
 
 ## [Building Open Solo (everything)](https://github.com/OpenSolo/documentation/blob/master/SOLO-BUILDER.md)
