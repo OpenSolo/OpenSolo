@@ -1,7 +1,9 @@
 ## Detailed Open Solo Install Using The Solex App ##
-_WARNING: If you are doing a brand new green cube install, please be sure to start off with the [New Green Cube Install Instructions](../master/green_cube_install.md). This warning does not apply to stock solos and existing green cube solos._
+_Note: If you are doing a brand new green cube install, please be sure to start off with the [New Green Cube Install Instructions](../master/green_cube_install.md). This warning does not apply to stock solos and existing green cube solos._
 
 **Please read all the instructions carefully prior to beginning. Skipping steps or doing things out of order will generally result in failure that is difficult to diagnose and repair.**
+
+***These instructions are for Solex version 1.6.6 released ono 12/29/2017, or higher versions.  Please ensure your mobile device has the latest version of Solex installed via the Google Play Store.***
 
 1. **Download packages:** If you haven't recently downloaded the latest files, you will need to do this first.
    - First connect your mobile device to the Solo's WiFi and open Solex.  Allow Solex to connect to the Solo and download parameters. It must make this connection first, or you will not see the firemware updates menu. This is how Solex determines it is connected to a Solo and no some other type of drone.
