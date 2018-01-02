@@ -14,12 +14,12 @@ This procedure is for users that want to install Open Solo manually using variou
 
 ### COPTER FILES ##
 
-1. **SSH into the _Copter_** at address 10.1.1.10, password TjSDBkAu.
+1. **SSH into the _Copter_** at address 10.1.1.10, username `root` and password `TjSDBkAu`.
 
 2. **Prepare for upload** by executing the following commands. When you execute the --get-image command, make sure it says "latest".
     ```
     sololink_config --update-prepare
-    sololink_config --get-image   ## confirm "latest'
+    sololink_config --get-image
     umount /dev/mmcblk0p1
     mkfs.vfat /dev/mmcblk0p1 -n GOLDEN
     mkdir -p /tmp/golden
