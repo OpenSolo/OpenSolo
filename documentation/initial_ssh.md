@@ -18,8 +18,8 @@ This procedure is for users that want to install Open Solo manually using variou
 
 2. **Prepare for upload** by executing the following commands. When you execute the --get-image command, make sure it says "latest".
     ```
-    sololink_config --update-prepare sololink
     sololink_config --get-image
+    sololink_config --update-prepare sololink
     umount /dev/mmcblk0p1
     mkfs.vfat /dev/mmcblk0p1 -n GOLDEN
     mkdir -p /tmp/golden
@@ -49,8 +49,8 @@ This procedure is for users that want to install Open Solo manually using variou
 
 5. **Prepare for upload** by executing the following commands. When you execute the --get-image command, make sure it says "latest".
     ```
-    sololink_config --update-prepare
     sololink_config --get-image
+    sololink_config --update-prepare sololink
     umount /dev/mmcblk0p1
     mkfs.vfat /dev/mmcblk0p1 -n GOLDEN
     mkdir -p /tmp/golden
