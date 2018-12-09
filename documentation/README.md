@@ -1,5 +1,10 @@
 # Open Solo Releases For Users #
-***INFORMATION CURRENT FOR STABLE RELEASE v3.0.0 ON JANUARY 1, 2018***
+
+***NEW: ARDUCOPTER 3.7-DEV TESTING***
+
+[Click here for release notes and instructions](../master/install_solex.md) as of December 8, 2018 for beta testing ArduCopter 3.7-dev on the Solo.  You must already be on Open Solo to do this.  This is a major beta testing project.
+
+## INFORMATION CURRENT FOR STABLE RELEASE OPEN SOLO v3.0.0 ON JANUARY 1, 2018 ##
 
 The team working on safe, reliable releases of Open Solo publishes them here. You can read all the details in the release notes, and link directly to installation instructions. These are the "official" instructions. These instructions supersede any other older instructions, videos, and wikis that came before Open Solo.
 
