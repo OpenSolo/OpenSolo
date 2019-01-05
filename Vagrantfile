@@ -39,12 +39,6 @@ Vagrant.configure(2) do |config|
     vb.cpus = processor_count
   end
 
-  config.vm.provision "guest_ansible" do |ansible|
-    ansible.extra_vars = {
-      build_dir_owner: "vagrant"
-    }
-    ansible.playbook = "playbook.yml"
-  end
 end
 
 

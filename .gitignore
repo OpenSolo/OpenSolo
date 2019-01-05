@@ -116,3 +116,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+#Vagrant files to be ignored
+.vagrant/
