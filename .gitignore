@@ -119,3 +119,6 @@ $RECYCLE.BIN/
 
 #Vagrant files to be ignored
 .vagrant/
+
+#Builder binaries
+solo-builder/binaries/
