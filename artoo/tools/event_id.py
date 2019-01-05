@@ -1,0 +1,126 @@
+# enum matches C++ implementation 
+
+EventID = [
+        'None', \
+        'GimbalInput', \
+        'PairingRequest', \
+        'PairingInProgress', \
+        'PairingSucceeded', \
+        'PairingCanceled', \
+        'PairingIncomplete', \
+        'ChargerConnChanged', \
+        'ButtonFunctionUpdated', \
+        'AltitudeUpdated', \
+        'RssiUpdated', \
+        'ArmStateUpdated', \
+        'SystemLockoutStateChanged', \
+        'SystemShutdown', \
+        'BatteryThermalLimitExceeded', \
+        'GpsFixChanged', \
+        'GpsNumSatellitesChanged', \
+        'GpsPositionChanged', \
+        'HomeLocationChanged', \
+        'FlightBatteryChanged', \
+        'ArtooBatteryChanged', \
+        'SystemUpdateBegin', \
+        'SystemUpdateComplete', \
+        'SystemUpdateFail', \
+        'VehicleConnectionChanged', \
+        'FlightModeChanged', \
+        'SystemEnteredRunningState', \
+        'AlertRecovery', \
+        'NonAlertEnd', \
+        'AlertBegin',  \
+        'AltitudeCalRequired', \
+        'CompassCalRequired', \
+        'CompassInterference', \
+        'LevelError', \
+        'CalibrationFailed', \
+        'WaitingForNavChecks', \
+        'CantArmWhileLeaning', \
+        'VehicleCalibrating', \
+        'CompassCalibrating', \
+        'CompassCalRecovery', \
+        'ThrottleError', \
+        'VehicleRequiresService', \
+        'FlightBatteryTooLowForTakeoff', \
+        'UnknownBattery', \
+        'ControllerBatteryTooLowForTakeoff', \
+        'SystemIdleWarning', \
+        'SoloAppConnected', \
+        'SoloAppDisconnected', \
+        'ControllerValueOutOfRange', \
+        'CamControlValueOutOfRange', \
+        'RecordRequiresApp', \
+        'GimbalNotConnected', \
+        'RCFailsafe', \
+        'RCFailsafeNoGPS', \
+        'RCFailsafeRecovery', \
+        'FlightBatteryLow', \
+        'FlightBatteryCritical', \
+        'FlightBatteryFailsafe', \
+        'MaximumAltitude', \
+        'CrashDetected', \
+        'LandingComplete', \
+        'GpsLost', \
+        'GpsLostManual', \
+        'GpsLostRecovery', \
+        'ShotInfoUpdated', \
+        'ShotInfoUpdateFail', \
+        'RTLWithoutGPS', \
+        'SoloConnectionPoor', \
+        'ControllerBatteryCritical', \
+        'ControllerBatteryFailsafe', \
+        'ControllerBatteryFailsafeNoGps', \
+        'ChargerConnected', \
+        'TestAlert', \
+        'AlertEnd', \
+        ]
+
+# For reference
+# enum ID {
+#     None,
+#     GimbalInput,
+#     GimbalNotConnected,
+#     PairingRequest,
+#     PairingInProgress,
+#     PairingSucceeded,
+#     PairingCanceled,
+#     PairingIncomplete,
+#     ChargerConnChanged,
+#     ButtonFunctionUpdated,
+#     RssiUpdated,
+#     ShotInfoUpdated,
+#     ArmStateUpdated,
+#     SystemLockoutStateChanged,
+#     SystemShutdown,
+#     BatteryThermalLimitExceeded,
+#     GpsPositionChanged,
+#     FlightBatteryChanged,
+#     ArtooBatteryChanged,
+#     SystemUpdateBegin,
+#     SystemUpdateComplete,
+#     SystemUpdateFail,
+#     VehicleConnectionChanged,
+#     FlightModeChanged,
+#     // alerts
+#     AlertBegin                  = 100,
+#     GpsLost                     = AlertBegin,
+#     UnknownBattery,
+#     FlightBatteryTooLowForTakeoff,
+#     FlightBatteryLow,
+#     FlightBatteryCritical,
+#     SystemIdleWarning,
+#     VehicleRequiresService,
+#     WaitingForGps,
+#     CompassCalRequired,
+#     ControllerBatteryTooLowForTakeoff,
+#     VehicleCalibrating,
+#     CalibrationFailed,
+#     CantArmWhileLeaning,
+#     RTLWithoutGPS,
+#     ShotInfoUpdateFail,
+#     ControllerBatteryCritical,
+#     SoloConnectionPoor,
+#     AlertEnd,
+# };

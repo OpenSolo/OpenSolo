@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## Returns the most recent release tag string
+## If the head is the most recent tag, it will display only the tag such as v3.0.0
+## If there are untagged commits after the last tag, it will display something v3.0.0-2-876FH
+git describe --tags
+

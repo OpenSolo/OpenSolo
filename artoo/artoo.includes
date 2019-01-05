@@ -1,0 +1,14 @@
+src
+src/stm32
+src/Adafruit-GFX-Library
+src/mavlink/c_library/minimal
+src/mavlink/c_library/slugs
+src/mavlink/c_library/pixhawk
+src/mavlink/c_library
+src/mavlink/c_library/common
+src/mavlink/c_library/ardupilotmega
+src/mavlink/c_library/matrixpilot
+src/mavlink/c_library/autoquad
+src/mavlink/c_library/test
+src/mavlink/c_library/ASLUAV
+src/mavlink/c_library/ualberta

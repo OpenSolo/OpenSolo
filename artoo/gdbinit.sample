@@ -1,0 +1,24 @@
+
+set print pretty on
+set mem inaccessible-by-default off
+
+define hook-run
+    set confirm off
+end
+
+define hook-quit
+    set confirm off
+end
+
+define reload
+    load
+    run
+end
+
+# update for default path on your machine
+target extended-remote /dev/cu.usbmodemE3BB9CE1
+monitor jtag_scan
+att 1
+
+# set the DBG_STANDBY | DBG_STOP | DBG_SLEEP bits in the DBGMCU_CR register
+set *(uint32_t*)0xE0042004 = 0x7
