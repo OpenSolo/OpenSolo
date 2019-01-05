@@ -500,6 +500,8 @@ def removeFWfiles(dir):
         filelist=glob.glob('/firmware/3dr/*.*')
     elif dir == 'green':
         filelist=glob.glob('/firmware/green/*.*')
+    elif dir == 'main':
+        filelist=glob.glob('/firmware/*.px4') + glob.glob('/firmware/*.apj')
     for file in filelist:
         os.remove(file)
 
@@ -640,7 +642,7 @@ def verify_usb():
 # full_path is the full path to the file, or None if no file
 # if full_path is not None, versions is a dictionary of version info
 def find_firmware(dir):
-    files = glob.glob("%s/*.px4" % dir)
+    files = glob.glob("%s/*.apj" % dir) + glob.glob("%s/*.px4" % dir)
     if len(files) == 0:
         return (None, None)
     # read git hashes
