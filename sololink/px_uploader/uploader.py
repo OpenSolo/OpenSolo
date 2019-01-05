@@ -67,15 +67,24 @@ import os
 
 from sys import platform as _platform
 
+# default list of port names to look for autopilots
+default_ports = [ '/dev/serial/by-id/usb-Ardu*',
+                  '/dev/serial/by-id/usb-3D*',
+                  '/dev/serial/by-id/usb-APM*',
+                  '/dev/serial/by-id/usb-Radio*',
+                  '/dev/serial/by-id/usb-*_3DR_*',
+                  '/dev/serial/by-id/usb-Hex_Technology_Limited*',
+                  '/dev/serial/by-id/usb-Hex_ProfiCNC*',
+                  '/dev/tty.usbmodem*']
+
+if "cygwin" in _platform:
+    default_ports += [ '/dev/ttyS*' ]
+    
 # Detect python version
 if sys.version_info[0] < 3:
     runningPython3 = False
 else:
     runningPython3 = True
-
-# list of tuples (bootloader boardID, firmware boardID, boardname)
-# designating firmware builds compatible with multiple boardIDs
-compatible_IDs = [(33, 9, 'AUAVX2.1')]
 
 class firmware(object):
     '''Loads a firmware file'''
@@ -196,7 +205,7 @@ class uploader(object):
 
     def __init__(self, portname, baudrate_bootloader, baudrate_flightstack, baudrate_bootloader_flash=None):
         # open the port, keep the default timeout short so we can poll quickly
-        self.port = serial.Serial(portname, baudrate_bootloader, timeout=0.5)
+        self.port = serial.Serial(portname, baudrate_bootloader, timeout=1.0)
         self.otp = b''
         self.sn = b''
         self.baudrate_bootloader = baudrate_bootloader
@@ -349,14 +358,14 @@ class uploader(object):
         self.__send(uploader.CHIP_ERASE +
                     uploader.EOC)
 
-        # erase is very slow, give it 30s
-        deadline = time.time() + 30.0
+        # erase is very slow, give it 20s
+        deadline = time.time() + 20.0
         while time.time() < deadline:
 
             # Draw progress bar (erase usually takes about 9 seconds to complete)
             estimatedTimeRemaining = deadline-time.time()
             if estimatedTimeRemaining >= 9.0:
-                self.__drawProgressBar(label, 30.0-estimatedTimeRemaining, 9.0)
+                self.__drawProgressBar(label, 20.0-estimatedTimeRemaining, 9.0)
             else:
                 self.__drawProgressBar(label, 10.0, 10.0)
                 sys.stdout.write(" (timeout: %d seconds) " % int(deadline-time.time()))
@@ -494,24 +503,13 @@ class uploader(object):
     def upload(self, fw, force=False, boot_delay=None):
         # Make sure we are doing the right thing
         if self.board_type != fw.property('board_id'):
-            # ID mismatch: check compatibility
-            incomp = True
-            for entry in compatible_IDs:
-                if (entry[0] == self.board_type) and (entry[1] == fw.property('board_id')):
-                     msg = "Target %s (board_id: %d) is compatible with firmware for board_id=%u)" % (
-                         entry[2], self.board_type, fw.property('board_id'))
-                     print("INFO: %s" % msg)
-                     incomp = False
-                     break
-            if incomp:                        
-                msg = "Firmware not suitable for this board (board_type=%u board_id=%u)" % (
-                    self.board_type, fw.property('board_id'))
-                print("WARNING: %s" % msg)
-                
-                if force:
-                    print("FORCED WRITE, FLASHING ANYWAY!")
-                else:
-                    raise IOError(msg)
+            msg = "Firmware not suitable for this board (board_type=%u board_id=%u)" % (
+                self.board_type, fw.property('board_id'))
+            print("WARNING: %s" % msg)
+            if force:
+                print("FORCED WRITE, FLASHING ANYWAY!")
+            else:
+                raise IOError(msg)
         if self.fw_maxsize < fw.property('image_size'):
             raise RuntimeError("Firmware image is too large for this board")
 
@@ -574,14 +572,14 @@ class uploader(object):
         self.port.close()
 
     def __next_baud_flightstack(self):
-        if self.baudrate_flightstack_idx + 1 >= len(self.baudrate_flightstack):
+        self.baudrate_flightstack_idx = self.baudrate_flightstack_idx + 1
+        if self.baudrate_flightstack_idx >= len(self.baudrate_flightstack):
             return False
+
         try:
-            self.port.baudrate = self.baudrate_flightstack[self.baudrate_flightstack_idx + 1]
-            self.baudrate_flightstack_idx = self.baudrate_flightstack_idx + 1
-        except serial.SerialException:
-            # Sometimes _configure_port fails
-            time.sleep(0.04)
+            self.port.baudrate = self.baudrate_flightstack[self.baudrate_flightstack_idx]
+        except Exception:
+            return False
 
         return True
 
@@ -618,7 +616,8 @@ def main():
 
     # Parse commandline arguments
     parser = argparse.ArgumentParser(description="Firmware uploader for the PX autopilot system.")
-    parser.add_argument('--port', action="store", required=True, help="Comma-separated list of serial port(s) to which the FMU may be attached")
+    parser.add_argument('--port', action="store", help="Comma-separated list of serial port(s) to which the FMU may be attached",
+                        default=None)
     parser.add_argument('--baud-bootloader', action="store", type=int, default=115200, help="Baud rate of the serial port (default is 115200) when communicating with bootloader, only required for true serial ports.")
     parser.add_argument('--baud-bootloader-flash', action="store", type=int, default=None, help="Attempt to negotiate this baudrate with bootloader for flashing.")
     parser.add_argument('--baud-flightstack', action="store", default="57600", help="Comma-separated list of baud rate of the serial port (default is 57600) when communicating with flight stack (Mavlink or NSH), only required for true serial ports.")
@@ -642,11 +641,14 @@ def main():
     try:
         while True:
             portlist = []
-            patterns = args.port.split(",")
+            if args.port is None:
+                patterns = default_ports
+            else:
+                patterns = args.port.split(",")
             # on unix-like platforms use glob to support wildcard ports. This allows
             # the use of /dev/serial/by-id/usb-3D_Robotics on Linux, which prevents the upload from
             # causing modem hangups etc
-            if "linux" in _platform or "darwin" in _platform:
+            if "linux" in _platform or "darwin" in _platform or "cygwin" in _platform:
                 import glob
                 for pattern in patterns:
                     portlist += glob.glob(pattern)
@@ -663,12 +665,14 @@ def main():
                 try:
                     if "linux" in _platform:
                         # Linux, don't open Mac OS and Win ports
-                        if "COM" not in port and "tty.usb" not in port:
-                            up = uploader(port, args.baud_bootloader, baud_flightstack, args.baud_bootloader_flash)
+                        up = uploader(port, args.baud_bootloader, baud_flightstack, args.baud_bootloader_flash)
                     elif "darwin" in _platform:
                         # OS X, don't open Windows and Linux ports
                         if "COM" not in port and "ACM" not in port:
                             up = uploader(port, args.baud_bootloader, baud_flightstack, args.baud_bootloader_flash)
+                    elif "cygwin" in _platform:
+                        # Cygwin, don't open MAC OS and Win ports, we are more like Linux. Cygwin needs to be before Windows test
+                        up = uploader(port, args.baud_bootloader, baud_flightstack, args.baud_bootloader_flash)
                     elif "win" in _platform:
                         # Windows, don't open POSIX ports
                         if "/" not in port:

@@ -513,7 +513,7 @@ def load(firmware_path):
 
     # load firmware
     start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    ret = subprocess.call(["px_uploader.py",
+    ret = subprocess.call(["uploader.py",
                            "--port=%s" % dev_pattern_usb,
                            firmware_path])
     if ret != 0:

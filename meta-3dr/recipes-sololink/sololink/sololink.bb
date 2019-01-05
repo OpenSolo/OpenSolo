@@ -50,7 +50,7 @@ do_install () {
 	install -m 0755 ${S}/flightcode/python/stm32_defs.py ${D}${bindir}
 	install -m 0755 ${S}/flightcode/python/lsproc.py ${D}${bindir}
 
-	install -m 0755 ${S}/px_uploader/px_uploader.py ${D}${bindir}
+	install -m 0755 ${S}/px_uploader/uploader.py ${D}${bindir}
 	install -m 0755 ${S}/px_uploader/loadPixhawk.py ${D}${bindir}
 	install -m 0755 ${S}/flightcode/python/pixhawk.py ${D}${bindir}
 	install -m 0644 ${S}/flightcode/python/gpio.py ${D}${bindir}
