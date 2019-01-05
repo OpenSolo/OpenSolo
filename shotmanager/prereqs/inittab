@@ -1,0 +1,47 @@
+# /etc/inittab: init(8) configuration.
+# $Id: inittab,v 1.91 2002/01/25 13:35:21 miquels Exp $
+
+# The default runlevel.
+id:3:initdefault:
+
+# Boot-time system configuration/initialization script.
+# This is run first except when booting in emergency (-b) mode.
+si::sysinit:/etc/init.d/rcS
+
+# What to do in single-user mode.
+~~:S:wait:/sbin/sulogin
+
+# /etc/init.d executes the S and K scripts upon change
+# of runlevel.
+#
+# Runlevel 0 is halt.
+# Runlevel 1 is single-user.
+# Runlevel 2 is multi-user.
+# Runlevel 3 is STANDBY (controller/solo not paired).
+# Runlevel 4 is READY or FLIGHT (all flight code running).
+# Runlevel 5 is MAINTENANCE.
+# Runlevel 6 is reboot.
+
+l0:0:wait:/etc/init.d/rc 0
+l1:1:wait:/etc/init.d/rc 1
+l2:2:wait:/etc/init.d/rc 2
+l3:3:wait:/etc/init.d/rc 3
+l4:4:wait:/etc/init.d/rc 4
+l5:5:wait:/etc/init.d/rc 5
+l6:6:wait:/etc/init.d/rc 6
+# Normally not reached, but fallthrough in case of emergency.
+z6:6:respawn:/sbin/sulogin
+
+LOGD:345:respawn:logd.py
+
+PAIR:3:respawn:pair_solo.py
+CONN:45:respawn:pair_solo_connected.py
+
+RCRX:4:respawn:pixrc
+VID:4:respawn:video_send.sh
+MAV:4:respawn:telem_forwarder
+API:4:respawn:runMavproxy.sh
+
+2:2345:respawn:/sbin/getty 115200 ttyGS0 vt100
+BLNK:2345:once:`echo phy0assoc >> /sys/class/leds/user2/trigger`
+mxc::respawn:/etc/init.d/rc_mxc.S

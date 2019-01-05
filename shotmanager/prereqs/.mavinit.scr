@@ -1,0 +1,11 @@
+module load dronekit.module.api
+module unload terrain
+module unload log
+module unload battery
+module unload fence
+module unload rally
+module unload calibration
+module unload relay
+module unload misc
+module unload rc
+api start /usr/bin/main.py
