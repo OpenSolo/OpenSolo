@@ -7,9 +7,6 @@
 [submodule "dronekit-python-solo"]
 	path = dronekit-python-solo
 	url = https://github.com/dronekit/dronekit-python-solo.git
-[submodule "stm32loader"]
-	path = stm32loader
-	url = https://github.com/OpenSolo/stm32loader.git
 [submodule "imx6-linux"]
 	path = imx6-linux
 	url = https://github.com/OpenSolo/imx6-linux.git
