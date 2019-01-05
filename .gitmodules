@@ -4,9 +4,6 @@
 [submodule "ardupilot-solo"]
 	path = ardupilot-solo
 	url = https://github.com/OpenSolo/ardupilot-solo.git
-[submodule "shotmanager"]
-	path = shotmanager
-	url = https://github.com/OpenSolo/shotmanager.git
 [submodule "sololink-python"]
 	path = sololink-python
 	url = https://github.com/OpenSolo/sololink-python.git
