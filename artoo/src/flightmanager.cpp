@@ -431,6 +431,23 @@ void FlightManager::onSoloMavlinkMsg(const mavlink_message_t * msg)
         c.set(global_pos.lat / 1e7, global_pos.lon / 1e7);
         onGpsPositionChanged(c);
         currentLoc.set(c.lat(), c.lng());
+        
+        // global_position_int uses mm, so convert altitude to meters
+        float alt_m = global_pos.relative_alt * 0.001;
+        
+        // Used to determine if takeoff is complete
+        if (takeoffState == TakeoffAscending) {
+            if (alt_m >= (TakeoffAltitude - 0.2)) {
+                takeoffState = TakeoffComplete;
+            }
+        }
+        
+        // Altitude display on the controller
+        // Formerly used vfr_hud, now using global_position_int.relative_alt
+        if (!isWithin(telemetryVals.altitude, alt_m, 0.1)) {
+            onAltitudeChanged(alt_m);
+            telemetryVals.altitude = alt_m;
+        }
     } break;
 
     case MAVLINK_MSG_ID_GPS_RAW_INT:
@@ -450,24 +467,6 @@ void FlightManager::onSoloMavlinkMsg(const mavlink_message_t * msg)
     case MAVLINK_MSG_ID_VFR_HUD:
         mavlink_vfr_hud_t vfr_hud;
         mavlink_msg_vfr_hud_decode(msg, &vfr_hud);
-
-        /*
-         * When taking off, we want to switch to Loiter
-         * once we've reached the desired altitude.
-         */
-        if (takeoffState == TakeoffAscending) {
-            if (vfr_hud.alt >= (TakeoffAltitude - 0.2)) {
-                takeoffState = TakeoffComplete;
-                // we don't actually do much of anything here for now...
-                // but presumably at some point we can signal to the user
-                // that the system is ready for them to start flying.
-            }
-        }
-
-        if (!isWithin(telemetryVals.altitude, vfr_hud.alt, 0.1)) {
-            onAltitudeChanged(vfr_hud.alt);
-            telemetryVals.altitude = vfr_hud.alt;
-        }
         telemetryVals.airSpeed = vfr_hud.airspeed;
         telemetryVals.groundSpeed = vfr_hud.groundspeed;
         break;
