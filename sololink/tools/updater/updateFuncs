@@ -1,0 +1,198 @@
+# Intended to be sourced by other scripts
+
+export SOLO_IP=10.1.1.10
+export ARTOO_IP=10.1.1.1
+
+SCP="scp -o StrictHostKeyChecking=no ${RSA_KEY}"
+SSH="ssh -o StrictHostKeyChecking=no ${RSA_KEY}"
+
+sl_init_environment() {
+    system=`uname -a | awk '{print $1}'`
+    if [ $system == "Darwin" ]; then
+        if [ ! -e /usr/local/bin/md5sum ] && [ ! -e /opt/local/bin/md5sum ]; then 
+            echo "md5sum missing: please install md5sha1sum using macports or brew"
+            return 1
+        fi
+        export MD5SUM='md5sum --check'
+    else
+        export MD5SUM='md5sum --check --quiet'
+    fi
+    return 0
+}
+
+# sl_start_update [ip] [filename] [message]
+#   print message, then start update of 'ip' with 'filename'
+# sl_start_update [ip] [filename]
+#   print default message, then start update of 'ip' with 'filename'
+# sl_start_update [ip] [filename] -
+#   silently start update of 'ip' with 'filename'
+sl_start_update() {
+    ${MD5SUM} ${2}.md5 > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "ERROR checking md5 for ${2}.md5"
+        exit
+    fi
+    msg="updating ${1} with ${2}"
+    if [ "${3}_" != "_" ]; then
+        msg=${3}
+    fi
+    if [ "${msg}" != "-" ]; then
+        echo ${msg}
+    fi
+    ssh-keygen -R ${1} &> /dev/null
+    ${SSH} root@${1} "rm -rf /log/updates" &> /dev/null
+    ${SSH} root@${1} "mkdir -p /log/updates" &> /dev/null
+    ${SSH} root@${1} "touch /log/updates/UPDATE" &> /dev/null
+    ${SCP} ${2} root@${1}:/log/updates/
+    ${SCP} ${2}.md5 root@${1}:/log/updates/
+    ${SSH} root@${1} "shutdown -r now"
+}
+
+
+# sl_start_makegolden [ip] [message]
+#   print message, then start makegold on 'ip'
+# sl_start_makegolden [ip]
+#   print default message, then start makegold on 'ip'
+# sl_start_makegolden [ip] -
+#   silently start makegold on 'ip'
+sl_start_makegolden() {
+    msg="makegold on ${1}"
+    if [ "${2}_" != "_" ]; then
+        msg=${2}
+    fi
+    if [ "${msg}" != "-" ]; then
+        echo ${msg}
+    fi
+    ssh-keygen -R ${1} &> /dev/null
+    ${SCP} ./makeGolden.sh root@${1}: &> /dev/null
+    ${SSH} root@${1} "chmod +x ./makeGolden.sh"
+    ${SSH} root@${1} "./makeGolden.sh"
+}
+
+
+# sl_start_factory [ip] [message]
+#   print message, then start factory reset on 'ip'
+# sl_start_factory [ip]
+#   print default message, then start factory reset on 'ip'
+# sl_start_factory [ip] -
+#   silently start factory reset on 'ip'
+sl_start_factory() {
+    msg="starting factory reset on ${1}"
+    if [ "${2}_" != "_" ]; then
+        msg=${2}
+    fi
+    if [ "${msg}" != "-" ]; then
+        echo ${msg}
+    fi
+    ssh-keygen -R ${1} &> /dev/null
+    ${SSH} root@${1} "mkdir -p /log/updates" &> /dev/null
+    ${SSH} root@${1} "touch /log/updates/FACTORYRESET" &> /dev/null
+    ${SSH} root@${1} "shutdown -r now"
+}
+
+
+# sl_wait_target [ip] [message]
+#   print message, then dots until ip is pingable, then ok
+# sl_wait_target [ip]
+#   print default message, then dots until ip is pingable, then ok
+# sl_wait_target [ip] -
+#   silently wait until ip is pingable
+sl_wait_target() {
+    msg="waiting for ${1}"
+    if [ "${2}_" != "_" ]; then
+        msg=${2}
+    fi
+    if [ "${msg}" != "-" ]; then
+        echo -n "${msg} ..."
+    fi
+    # wait for it to be pingable (network up)
+    while ! ping -c1 -W1 ${1} &> /dev/null; do
+        if [ "${msg}" != "-" ]; then echo -n "."; fi
+    done
+    # wait for it to be accepting ssh connections
+    while ! ${SSH} root@${1} "true" &> /dev/null; do
+        sleep 1
+        if [ "${msg}" != "-" ]; then echo -n "-"; fi
+    done
+    # wait for it to be in runlevel 3, 4, or 5
+    sl_get_runlevel ${1}
+    runlevel=$?
+    until [ "${runlevel}_" == "3_" ] || [ "${runlevel}_" == "4_" ] || [ "${runlevel}_" == "5_" ]; do
+        sleep 1
+        sl_get_runlevel ${1}
+        if [ "${msg}" != "-" ]; then echo -n "+"; fi
+    done
+    if [ "${msg}" != "-" ]; then echo " ok"; fi
+}
+
+
+# sl_get_runlevel [ip]
+sl_get_runlevel() {
+    rl=`${SSH} root@${1} 'runlevel'`
+    for w in ${rl}; do
+        a=${w}
+    done
+    return ${a}
+}
+
+
+# sl_check_update_files [filename] ...
+sl_check_update_files() {
+    result=0
+    if [ -z "${MD5SUM}" ]; then
+        echo "MD5SUM not set in environment"
+        result=1
+    fi
+    until [ -z "${1}" ]; do
+        if [ ! -f "${1}" ]; then
+            echo "${1} missing"
+            result=1
+        elif [ ! -f "${1}.md5" ]; then
+            echo "${1}.md5 missing"
+            result=1
+        elif [ ! -z "${MD5SUM}" ]; then
+            ${MD5SUM} ${1}.md5 > /dev/null 2>&1
+            if [ $? -ne 0 ]; then
+                echo "${1}.md5 incorrect"
+                result=1
+            fi
+        fi
+        shift
+    done
+    return ${result}
+}
+
+
+# sl_get_version [ip] [which]
+sl_get_version() {
+    echo `${SSH} root@${1} "cat /${2} | head -n 1"`
+}
+
+
+# sl_clean_firmware [ip]
+# forces loading firmware on next boot if the build's version is different
+# from what is already loaded
+sl_clean_firmware() {
+    ssh-keygen -R ${1} &> /dev/null
+    ${SSH} root@${1} "rm -rf /mnt/rootfs.rw/firmware" &> /dev/null
+}
+
+
+# sl_start_update_pixhawk [ip] [filename] [message]
+sl_start_update_pixhawk() {
+    msg="starting update of pixhawk to ${2} ... "
+    if [ "${3}_" != "_" ]; then
+        msg=${3}
+    fi
+    if [ "${msg}" != "-" ]; then
+        echo -n "${msg}"
+    fi
+
+    ssh-keygen -R ${1} &> /dev/null
+    ${SCP} ${2} root@${1}:/firmware/ &> /dev/null
+    ${SSH} root@${1} "shutdown -r now"
+
+    if [ "${msg}" != "-" ]; then
+        echo "ok"
+    fi
+}

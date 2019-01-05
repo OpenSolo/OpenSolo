@@ -1,0 +1,8 @@
+#!/bin/bash
+
+TEMPFILE=/sys/class/thermal/thermal_zone0/temp
+
+while true; do
+    logger -t temp -p local5.info -- `cat $TEMPFILE`
+    sleep 60
+done

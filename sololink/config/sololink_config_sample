@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# run_cmd prints a command, then the command's output, then 'ok' or 'error',
+# depending on the command's exit status, then a blank line.
+#
+# All text after the command and before the 'ok' or 'error' is what the
+# command sends to stdout.
+run_cmd() {
+echo $1
+$1
+if [ $? -eq 0 ]; then echo "ok"; else echo "error"; fi
+echo
+}
+
+for SSH in "ssh root@10.1.1.1" "ssh root@10.1.1.10"; do
+
+run_cmd "$SSH sololink_config --get-version"
+run_cmd "$SSH sololink_config --get-version sololink"
+run_cmd "$SSH sololink_config --get-version artoo"
+run_cmd "$SSH sololink_config --get-version pixhawk"
+run_cmd "$SSH sololink_config --get-version golden"
+run_cmd "$SSH sololink_config --get-version all"
+run_cmd "$SSH sololink_config --get-wifi-ssid"
+run_cmd "$SSH sololink_config --get-wifi-password"
+run_cmd "$SSH sololink_config --get-image"
+run_cmd "$SSH sololink_config --get-pairing"
+
+done

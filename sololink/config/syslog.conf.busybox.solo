@@ -1,0 +1,11 @@
+# Configuration file for busybox's syslogd utility
+local0.info	/log/3dr-rc.log
+local1.info	/log/3dr-solo.log
+local2.info	/log/shotlog.log
+local3.info	/log/3dr-wifi.log
+local4.info	/log/3dr-telem.log
+local5.info	/log/3dr-temp.log
+local6.info	/log/3dr-video.log
+local7.info	/log/3dr-accessorykit.log
+
+kern,user.*	/log/kern.log

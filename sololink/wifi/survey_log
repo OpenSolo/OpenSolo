@@ -1,0 +1,16 @@
+#!/bin/sh
+
+logfile=/log/3dr-solo.log
+
+# This is run once from inittab when entering run level 3.
+# WiFi has not quite finished initializing by then, so wait a bit.
+# Running on ifup does not work; wifi is never finished scanning at that point.
+sleep 10
+
+echo "" >> ${logfile}
+
+grep ^acs_num_scans= /etc/hostapd.conf >> ${logfile}
+
+survey_dump >> ${logfile}
+
+echo "" >> ${logfile}

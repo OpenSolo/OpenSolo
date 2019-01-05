@@ -1,0 +1,689 @@
+#!/bin/bash
+
+# runs on ubuntu-14.04
+# does not run on osx
+
+if [ -z ${TESTHOSTNAME} ]; then
+  echo "ERROR: set TESTHOSTNAME"
+  echo "       TESTHOSTNAME=3dr_solo ./sololink_config_test"
+  echo "       TESTHOSTNAME=3dr_controller ./sololink_config_test"
+  exit 1
+fi
+
+export SOLOLINK_CONFIG_TEST=1
+export ROOT=./test_${TESTHOSTNAME}
+
+error=0
+
+if ! ./sololink_config --pass; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+fi
+
+if ./sololink_config --fail; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+fi
+
+### WIFI SSID
+
+# backup, ignoring errors
+cp ${ROOT}/etc/wpa_supplicant.conf wpa_supplicant.save > /dev/null 2>&1
+cp ${ROOT}/etc/hostapd.conf hostapd.save > /dev/null 2>&1
+
+# get to initial state
+./sololink_config --reset-wifi-settings
+
+echo -n "wifi: set ssid; not set ... "
+x=`./sololink_config --set-wifi-ssid SoloLink_one`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "SoloLink_one" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set ssid; already set ... "
+x=`./sololink_config --set-wifi-ssid SoloLink_two`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "SoloLink_two" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set ssid; too short ... "
+x=`./sololink_config --set-wifi-ssid 1234567`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set ssid; not SoloLink_ ... "
+x=`./sololink_config --set-wifi-ssid 12345678`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set ssid; max length ... "
+xx="SoloLink_12345678901234567890123"
+x=`./sololink_config --set-wifi-ssid $xx`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "$xx" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set ssid; too long ... "
+x=`./sololink_config --set-wifi-ssid SoloLink_123456789012345678901234`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+# restore
+if [ -f wpa_supplicant.save ]; then
+  mv wpa_supplicant.save ${ROOT}/etc/wpa_supplicant.conf
+fi
+if [ -f hostapd.save ]; then
+  mv hostapd.save ${ROOT}/etc/hostapd.conf
+fi
+
+### WIFI PASSWORD
+
+# backup, ignoring errors
+cp ${ROOT}/etc/wpa_supplicant.conf wpa_supplicant.save > /dev/null 2>&1
+cp ${ROOT}/etc/hostapd.conf hostapd.save > /dev/null 2>&1
+
+# get to initial state
+./sololink_config --reset-wifi-settings
+
+echo -n "wifi: set password; not set ... "
+x=`./sololink_config --set-wifi-password 12345678`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "12345678" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set password; already set ... "
+x=`./sololink_config --set-wifi-password 87654321`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "87654321" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set password; with space ... "
+x=`./sololink_config --set-wifi-password "ABCD EFGH"`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "ABCD EFGH" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set password; max length ... "
+xx=123456789012345678901234567890123456789012345678901234567890123
+x=`./sololink_config --set-wifi-password $xx`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "$xx" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set password; too short ... "
+x=`./sololink_config --set-wifi-password 1234567`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "wifi: set password; too long ... "
+xx=1234567890123456789012345678901234567890123456789012345678901234
+x=`./sololink_config --set-wifi-password $xx`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+# restore
+if [ -f wpa_supplicant.save ]; then
+  mv wpa_supplicant.save ${ROOT}/etc/wpa_supplicant.conf
+fi
+if [ -f hostapd.save ]; then
+  mv hostapd.save ${ROOT}/etc/hostapd.conf
+fi
+
+### PAIR/UNPAIR
+
+# backup, ignoring errors
+cp ${ROOT}/etc/wpa_supplicant.conf wpa_supplicant.save > /dev/null 2>&1
+cp ${ROOT}/log/3dr-pairing.conf 3dr-pairing.save > /dev/null 2>&1
+
+echo -n "pair: set pairing; unpair ... "
+x=`./sololink_config --set-pairing`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+    if grep -q "network=" ${ROOT}/etc/wpa_supplicant.conf; then
+      echo "ERROR at line ${LINENO}"
+      error=1
+    else
+      echo "OK"
+    fi
+  else
+    if [ -f ${ROOT}/log/3dr-pairing.conf ]; then
+      echo "ERROR at line ${LINENO}"
+      error=1
+    else
+      echo "OK"
+    fi
+  fi
+fi
+
+echo -n "pair: get pairing; when unpaired ... "
+pair=`./sololink_config --get-pairing`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "pair: set pairing; not paired ... "
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  peer="SoloLink_ABC"
+elif [ "${TESTHOSTNAME}" == "3dr_controller" ]; then
+  peer="12:34:56:78:90:ab"
+fi
+pair=`./sololink_config --set-pairing ${peer}`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+    if ! grep -q "ssid=\"${peer}\"" ${ROOT}/etc/wpa_supplicant.conf; then
+      echo "ERROR at line ${LINENO}"
+      cat ${ROOT}/etc/wpa_supplicant.conf
+      error=1
+    else
+      echo "OK"
+    fi
+  else
+    if [ ! -f ${ROOT}/log/3dr-pairing.conf ]; then
+      echo "ERROR at line ${LINENO}"
+      error=1
+    else
+      echo "OK"
+    fi
+  fi
+fi
+
+echo -n "pair: set pairing; already paired ... "
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  peer="SoloLink_123"
+elif [ "${TESTHOSTNAME}" == "3dr_controller" ]; then
+  peer="cd:EF:ab:11:22:9A"
+fi
+x=`./sololink_config --set-pairing ${peer}`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+    if ! grep -q "ssid=\"${peer}\"" ${ROOT}/etc/wpa_supplicant.conf; then
+      echo "ERROR at line ${LINENO}"
+      cat ${ROOT}/etc/wpa_supplicant.conf
+      error=1
+    else
+      echo "OK"
+    fi
+  else
+    if [ ! -f ${ROOT}/log/3dr-pairing.conf ]; then
+      echo "ERROR at line ${LINENO}"
+      error=1
+    else
+      echo "OK"
+    fi
+  fi
+fi
+
+# restore
+if [ -f wpa_supplicant.save ]; then
+  mv wpa_supplicant.save ${ROOT}/etc/wpa_supplicant.conf
+fi
+if [ -f 3dr-pairing.save ]; then
+  mv 3dr-pairing.save ${ROOT}/log/3dr-pairing.conf
+else
+  rm -f ${ROOT}/log/3dr-pairing.conf
+fi
+
+### UPDATE
+
+echo -n "update: factory reset ... "
+x=`./sololink_config --factory-reset`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ ! -f ${ROOT}/log/updates/FACTORYRESET ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "update: settings reset ... "
+x=`./sololink_config --settings-reset`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ ! -f ${ROOT}/log/updates/RESETSETTINGS ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+dir_empty() {
+  [ -d ${1} ] && [ `find ${1} | wc -l` -eq 1 ]
+}
+
+echo -n "update: prepare artoo ... "
+x=`./sololink_config --update-prepare artoo`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+else
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  elif ! dir_empty ${ROOT}/firmware; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+fi
+
+echo -n "update: apply artoo ... "
+x=`./sololink_config --update-apply artoo`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+else
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+fi
+
+echo -n "update: prepare pixhawk ... "
+x=`./sololink_config --update-prepare pixhawk`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  elif ! dir_empty ${ROOT}/firmware; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+else
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+fi
+
+echo -n "update: apply pixhawk ... "
+x=`./sololink_config --update-apply pixhawk`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+else
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+fi
+
+echo -n "update: prepare sololink ... "
+x=`./sololink_config --update-prepare sololink`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif ! dir_empty ${ROOT}/log/updates; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+echo -n "update: apply sololink; correct file ... "
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  updatefile="3dr-solo-1234.tar.gz"
+else
+  updatefile="3dr-controller-1234.tar.gz"
+fi
+touch ${ROOT}/log/updates/${updatefile}
+pushd ${ROOT}/log/updates > /dev/null 2>&1
+md5sum ${updatefile} > ${updatefile}.md5
+popd > /dev/null 2>&1
+x=`./sololink_config --update-apply sololink`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ ! -f ${ROOT}/log/updates/UPDATE ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+rm ${ROOT}/log/updates/*
+
+echo -n "update: apply sololink; incorrect file ... "
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  updatefile="3dr-controller-1234.tar.gz"
+else
+  updatefile="3dr-solo-1234.tar.gz"
+fi
+touch ${ROOT}/log/updates/${updatefile}
+pushd ${ROOT}/log/updates > /dev/null 2>&1
+md5sum ${updatefile} > ${updatefile}.md5
+popd > /dev/null 2>&1
+x=`./sololink_config --update-apply sololink`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+rm ${ROOT}/log/updates/${updatefile}*
+
+echo -n "update: apply sololink; bad md5 ... "
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  updatefile="3dr-solo-1234.tar.gz"
+else
+  updatefile="3dr-controller-1234.tar.gz"
+fi
+touch ${ROOT}/log/updates/${updatefile}
+pushd ${ROOT}/log/updates > /dev/null 2>&1
+md5sum ${updatefile} > ${updatefile}.md5
+md5sum ${updatefile}.md5 > ${updatefile}.md5
+popd > /dev/null 2>&1
+x=`./sololink_config --update-apply sololink`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+rm ${ROOT}/log/updates/${updatefile}*
+
+echo -n "update: apply sololink; missing file ... "
+x=`./sololink_config --update-apply sololink`
+if [ $? -eq 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+### VERSION
+
+echo -n "version: script ... "
+x=`./sololink_config --get-version`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "${x} ... OK"
+fi
+
+echo -n "version: sololink ... "
+x=`./sololink_config --get-version sololink`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}: ${x}"
+  error=1
+else
+  echo "${x} ... OK"
+fi
+
+echo -n "version: artoo ... "
+x=`./sololink_config --get-version artoo`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}: ${x}"
+    error=1
+  else
+    echo "${x} ... OK"
+  fi
+else
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}: ${x}"
+    error=1
+  else
+    echo "${x} ... OK"
+  fi
+fi
+
+echo -n "version: pixhawk ... "
+x=`./sololink_config --get-version pixhawk`
+r=$?
+if [ "${TESTHOSTNAME}" == "3dr_solo" ]; then
+  if [ ${r} -ne 0 ]; then
+    echo "ERROR at line ${LINENO}: ${x}"
+    error=1
+  else
+    echo "${x} ... OK"
+  fi
+else
+  if [ ${r} -eq 0 ]; then
+    echo "ERROR at line ${LINENO}: ${x}"
+    error=1
+  else
+    echo "${x} ... OK"
+  fi
+fi
+
+### GET/SET CONFIG
+
+# backup, ignoring errors
+cp ${ROOT}/etc/sololink.conf sololink.save > /dev/null 2>&1
+cp ${ROOT}/etc/sololink.conf.md5 sololink.save.md5 > /dev/null 2>&1
+
+# append test variables
+cat >> ${ROOT}/etc/sololink.conf <<TESTVARS
+var0=val0
+ var1=val1
+var2 =val2
+var3= val3
+var4 = val4
+	var5=val5
+var6	=val6
+var7=	val7
+var8	=	val8
+	 var9  =	val9
+TESTVARS
+
+check_get_config() {
+  echo -n "get-config: ${1}=${2} ... "
+  x=`./sololink_config --get-config ${1}`
+  if [ $? -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  elif [ "$x" != "${2}" ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+}
+
+check_set_config() {
+  echo -n "set-config: ${1}=${2} ... "
+  x=`./sololink_config --set-config ${1} ${2}`
+  if [ $? -ne 0 ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  elif [ "$x" != "${2}" ]; then
+    echo "ERROR at line ${LINENO}"
+    error=1
+  else
+    echo "OK"
+  fi
+}
+
+# get, does not exist
+echo -n "get-config: get nonexistant variable ... "
+x=`./sololink_config --get-config qwerty`
+if [ $? -ne 1 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "qwerty not set" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+# set, does not exist
+echo -n "set-config: set nonexistant variable ... "
+x=`./sololink_config --set-config qwerty asdf`
+if [ $? -ne 1 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "qwerty not set" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+# set, does not exist, add new
+echo -n "set-config: set nonexistant variable with add ... "
+x=`./sololink_config --set-config qwerty asdf --add`
+if [ $? -ne 0 ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+elif [ "$x" != "asdf" ]; then
+  echo "ERROR at line ${LINENO}"
+  error=1
+else
+  echo "OK"
+fi
+
+# get
+check_get_config var0 val0
+check_get_config var1 val1
+check_get_config var2 val2
+check_get_config var3 val3
+check_get_config var4 val4
+check_get_config var5 val5
+check_get_config var6 val6
+check_get_config var7 val7
+check_get_config var8 val8
+check_get_config var9 val9
+
+# set
+check_set_config var0 new0
+check_set_config var1 new1
+check_set_config var2 new2
+check_set_config var3 new3
+check_set_config var4 new4
+check_set_config var5 new5
+check_set_config var6 new6
+check_set_config var7 new7
+check_set_config var8 new8
+check_set_config var9 new9
+
+# get
+check_get_config var0 new0
+check_get_config var1 new1
+check_get_config var2 new2
+check_get_config var3 new3
+check_get_config var4 new4
+check_get_config var5 new5
+check_get_config var6 new6
+check_get_config var7 new7
+check_get_config var8 new8
+check_get_config var9 new9
+
+# restore
+if [ -f sololink.save ]; then
+  mv sololink.save ${ROOT}/etc/sololink.conf
+fi
+if [ -f sololink.save.md5 ]; then
+  mv sololink.save.md5 ${ROOT}/etc/sololink.conf.md5
+fi
+
+###
+
+if [ $error -eq 0 ]; then
+  echo ALL PASSED
+else
+  echo ERRORS
+fi

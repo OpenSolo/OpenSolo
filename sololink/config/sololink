@@ -1,0 +1,5 @@
+# This file goes in /etc/profile.d/ and is sourced by /etc/profile at boot time
+# Contents are created by sololink recipe, and should end up looking something
+# like this:
+# export SOLOLINK_CONFIG_DIR=/etc
+# export SOLOLINK_LOG_DIR=/log

@@ -1,0 +1,101 @@
+#!/bin/bash
+
+source updateFuncs
+
+ARTOO_FILE_1=3dr-controller-20150316023643.tar.gz
+SOLO_FILE_1=3dr-solo-20150316023855.tar.gz
+SOLOLINK_VER_1=0.6.4
+PIXHAWK_VER_1=0.0.26
+STM32_VER_1=0.6.7
+
+ARTOO_FILE_2=3dr-controller-20150316024635.tar.gz
+SOLO_FILE_2=3dr-solo-20150316024848.tar.gz
+SOLOLINK_VER_2=0.7.0
+PIXHAWK_VER_2=0.0.27
+STM32_VER_2=0.6.8
+
+if ! sl_init_environment; then
+    echo "can't continue"
+    exit
+fi
+
+if ! sl_check_update_files ${SOLO_FILE_1} ${ARTOO_FILE_1} ${SOLO_FILE_2} ${ARTOO_FILE_2}; then
+    echo "can't continue"
+    exit
+fi
+
+show_versions() {
+    echo -n "Controller: "
+    echo -n "SoloLink `sl_get_version 10.1.1.1 VERSION` "
+    echo    "STM32 `sl_get_version 10.1.1.1 STM_VERSION`"
+    echo -n "Solo: "
+    echo -n "SoloLink `sl_get_version 10.1.1.10 VERSION` "
+    echo    "Pixhawk `sl_get_version 10.1.1.10 PIX_VERSION`"
+}
+
+# check_versions [sololink_version] [stm32_version] [pixhawk_version]
+check_versions() {
+    artoo_version=`sl_get_version 10.1.1.1 VERSION`
+    stm32_version=`sl_get_version 10.1.1.1 STM_VERSION`
+    solo_version=`sl_get_version 10.1.1.10 VERSION`
+    pixhawk_version=`sl_get_version 10.1.1.10 PIX_VERSION`
+    result=0
+    if [ ${artoo_version} != ${1} ]; then
+        echo "artoo sololink is ${artoo_version}; expected ${1}"
+        result=1
+    fi
+    if [ ${solo_version} != ${1} ]; then
+        echo "solo sololink is ${solo_version}; expected ${1}"
+        result=1
+    fi
+    if [ ${stm32_version} != ${2} ]; then
+        echo "artoo stm32 is ${stm32_version}; expected ${2}"
+        result=1
+    fi
+    if [ ${pixhawk_version} != ${3} ]; then
+        echo "solo pixhawk is ${pixhawk_version}; expected ${3}"
+        result=1
+    fi
+    if [ ${result} -eq 0 ]; then
+        echo "versions correct"
+    fi
+    return ${result}
+}
+
+SCPARGS="-o StrictHostKeyChecking=no -i ./updater_id_rsa"
+
+sl_wait_target ${SOLO_IP}
+
+# start toggling back and forth
+
+update_count=0
+
+while true; do
+
+    sl_clean_firmware ${SOLO_IP}
+    sl_start_update ${SOLO_IP} ${SOLO_FILE_1} "updating solo to ${SOLO_FILE_1}"
+    sl_clean_firmware ${ARTOO_IP}
+    sl_start_update ${ARTOO_IP} ${ARTOO_FILE_1} "updating artoo to ${ARTOO_FILE_1}"
+
+    sleep 10
+    sl_wait_target ${SOLO_IP} "waiting for update to complete"
+
+    check_versions ${SOLOLINK_VER_1} ${STM32_VER_1} ${PIXHAWK_VER_1}
+
+    update_count=$((update_count+1))
+    echo "${update_count} updates"
+
+    sl_clean_firmware ${SOLO_IP}
+    sl_start_update ${SOLO_IP} ${SOLO_FILE_2} "updating solo to ${SOLO_FILE_2}"
+    sl_clean_firmware ${ARTOO_IP}
+    sl_start_update ${ARTOO_IP} ${ARTOO_FILE_2} "updating artoo to ${ARTOO_FILE_2}"
+
+    sleep 10
+    sl_wait_target ${SOLO_IP} "waiting for update to complete"
+
+    check_versions ${SOLOLINK_VER_2} ${STM32_VER_2} ${PIXHAWK_VER_2}
+
+    update_count=$((update_count+1))
+    echo "${update_count} updates"
+
+done

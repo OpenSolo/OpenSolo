@@ -1,0 +1,19 @@
+---
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: false
+BreakBeforeBinaryOperators: true
+AlwaysBreakTemplateDeclarations: true
+ColumnLimit: 100
+Standard: Cpp11
+IndentWidth: 4
+UseTab: Never
+BreakBeforeBraces: Linux
+#AlignConsecutiveAssignments: true # only available as of clang-format 3.7
+BreakBeforeBinaryOperators: false
+PointerAlignment: Right
+# SpacesInAngles needed for nested templates (gcc 4.8.4 errors)
+SpacesInAngles: true
+---
+# other lang configs here...
+...

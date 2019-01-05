@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Normally, /etc/timestamp is update in a shutdown script.
+#
+# However, on Solo, we do not shut down; power just disappears.
+#
+# The goal of this script is to make time move forward, more-or-less, between
+# runs, i.e. all logs from one run should have timestamps greater than those
+# in logs from a previous run. /etc/timestamp only has minute-resolution, so
+# there can be overlap of up to about a minute between the very end of one
+# run and the very beginning of the next run.
+#
+# This is started by init and runs as long as the system is up.
+#
+# This only runs on Solo; Artoo is expected to get a power-button shutdown.
+#
+# Implementation note: Since power just disappears, we try to update
+# /etc/timestamp in a way such that it is always has valid contents. If we
+# just > into it, there may be a short time period when it is empty or does
+# not exist. The goal of writing a temp file, then doing a move, is to reduce
+# or eliminate the time window when it does not exist.
+
+while true; do
+  date -u +%4Y%2m%2d%2H%2M > /etc/timestamp.new
+  mv /etc/timestamp.new /etc/timestamp
+  sleep 10
+done

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# wpa_supplicant one-time initialization
+#
+# If Solo's name in wpa_supplicant.conf is the default,
+# change it to something unique.
+
+WPA_SUPPLICANT_CONF=/etc/wpa_supplicant.conf
+
+# Return true if Solo's name  in wpa_supplicant.conf is still the default
+soloNameIsDefault() {
+    grep -i -q "^device_name=Solo Default" $1
+}
+
+if soloNameIsDefault ${WPA_SUPPLICANT_CONF}; then
+  soloname="Solo `/usr/bin/ip.py --mac3 wlan0`"
+  sed -i "s/^device_name=Solo Default/device_name=${soloname}/" ${WPA_SUPPLICANT_CONF}
+  md5sum ${WPA_SUPPLICANT_CONF} > ${WPA_SUPPLICANT_CONF}.md5
+fi

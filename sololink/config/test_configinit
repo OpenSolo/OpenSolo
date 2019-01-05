@@ -1,0 +1,244 @@
+#!/bin/sh
+
+verbose=
+
+# arguments
+# -v verbose
+until [ -z "$1" ]; do
+  case "$1" in
+    -v) verbose="-v" ;;
+  esac
+  shift
+done
+
+# This runs on Ubuntu
+MD5SUM='md5sum -c --status'
+
+config_names="hostapd wpa_supplicant sololink"
+
+valid() {
+  [ -f ${1} ] && [ -f ${1}.md5 ] && ${MD5SUM} ${1}.md5
+}
+
+assert_valid() {
+  if ! valid ${1}; then
+    echo "##### TEST FAILED ##### (valid ${1})"
+  fi
+}
+
+assert_same() {
+  if ! cmp ${1} ${2}; then
+    echo "##### TEST FAILED ##### (cmp ${1} ${2})"
+  fi
+}
+
+test_first_boot() {
+  echo
+  echo "##### test_first_boot starting"
+  echo
+
+  # delete all
+  mkdir -p etc/
+  rm -f etc/*
+
+  # only .orig files exist
+  for config in ${config_names}; do
+    cp rootfs.ro/etc/${config}.orig etc/${config}.orig
+    chmod +w etc/${config}.orig
+  done
+
+  ./configinit ${verbose}
+
+  # should have:
+  # * .base, .base.md5
+  # * .conf, .conf.md5
+  # * .orig, .orig.md5
+  # * .base, .conf, .orig should all be the same
+  # * all .md5 should be good
+  for config in ${config_names}; do
+    assert_valid etc/${config}.base
+    assert_valid etc/${config}.conf
+    assert_valid etc/${config}.orig
+    assert_same etc/${config}.orig etc/${config}.base
+    assert_same etc/${config}.orig etc/${config}.conf
+  done
+
+  echo
+  echo "##### test_first_boot complete"
+  echo
+}
+
+test_normal_boot() {
+  echo
+  echo "##### test_normal_boot starting"
+  echo
+
+  # delete all
+  mkdir -p etc/
+  rm -f etc/*
+
+  # .orig, .base, and .conf files exist
+  for config in ${config_names}; do
+    cp rootfs.ro/etc/${config}.orig etc/${config}.orig
+    chmod +w etc/${config}.orig
+    md5sum `realpath etc/${config}.orig` > etc/${config}.orig.md5
+    cp etc/${config}.orig etc/${config}.base
+    md5sum `realpath etc/${config}.base` > etc/${config}.base.md5
+    cp etc/${config}.orig etc/${config}.conf
+    # .conf is normally changed from .orig
+    echo "# added line!" >> etc/${config}.conf
+    md5sum `realpath etc/${config}.conf` > etc/${config}.conf.md5
+  done
+
+  ./configinit ${verbose}
+
+  # should have:
+  # * .base, .base.md5
+  # * .conf, .conf.md5
+  # * .orig, .orig.md5
+  # * .base and .orig should be the same
+  # * all .md5 should be good
+  for config in ${config_names}; do
+    assert_valid etc/${config}.base
+    assert_valid etc/${config}.conf
+    assert_valid etc/${config}.orig
+    assert_same etc/${config}.orig etc/${config}.base
+  done
+
+  echo
+  echo "##### test_normal_boot complete"
+  echo
+}
+
+test_invalid_conf() {
+  echo
+  echo "##### test_invalid_conf starting"
+  echo
+
+  # delete all
+  mkdir -p etc/
+  rm -f etc/*
+
+  # .orig, .base, and .conf files exist
+  for config in ${config_names}; do
+    cp rootfs.ro/etc/${config}.orig etc/${config}.orig
+    chmod +w etc/${config}.orig
+    md5sum `realpath etc/${config}.orig` > etc/${config}.orig.md5
+    cp etc/${config}.orig etc/${config}.base
+    md5sum `realpath etc/${config}.base` > etc/${config}.base.md5
+    cp etc/${config}.orig etc/${config}.conf
+    # incomplete update of .conf
+    cp etc/${config}.conf etc/${config}.back
+    md5sum `realpath etc/${config}.back` > etc/${config}.back.md5
+    echo "# added line!" >> etc/${config}.conf
+    # .conf.md5 is now invalid
+  done
+
+  ./configinit ${verbose}
+
+  # should have:
+  # * .base, .base.md5
+  # * .conf, .conf.md5
+  # * .orig, .orig.md5
+  # * .base and .orig should be the same
+  # * all .md5 should be good
+  for config in ${config_names}; do
+    assert_valid etc/${config}.base
+    assert_valid etc/${config}.conf
+    assert_valid etc/${config}.orig
+    assert_same etc/${config}.orig etc/${config}.base
+  done
+
+  echo
+  echo "##### test_invalid_conf complete"
+  echo
+}
+
+test_update() {
+  echo
+  echo "##### test_update starting"
+  echo
+
+  # delete all
+  mkdir -p etc/
+  rm -f etc/*
+
+  # .orig, .base, and .conf files exist
+  for config in ${config_names}; do
+    cp rootfs.ro/etc/${config}.orig etc/${config}.orig
+    chmod +w etc/${config}.orig
+    md5sum `realpath etc/${config}.orig` > etc/${config}.orig.md5
+    cp etc/${config}.orig etc/${config}.base
+    md5sum `realpath etc/${config}.base` > etc/${config}.base.md5
+    cp etc/${config}.orig etc/${config}.conf
+    md5sum `realpath etc/${config}.conf` > etc/${config}.conf.md5
+  done
+
+  # prior to the update, hostapd.conf and wpa_supplicant.conf had ssid changed
+
+  sed -i "s/^ssid=SoloLink_.*/ssid=SoloLink_Test/" etc/hostapd.conf
+  md5sum `realpath etc/hostapd.conf` > etc/hostapd.conf.md5
+
+  echo "network={"                  >> etc/wpa_supplicant.conf
+  echo "	ssid=\"SoloLink_Test\"" >> etc/wpa_supplicant.conf
+  echo "	key_mgmt=NONE"          >> etc/wpa_supplicant.conf
+  echo "}"                          >> etc/wpa_supplicant.conf
+  md5sum `realpath etc/wpa_supplicant.conf` > etc/wpa_supplicant.conf.md5
+
+  # telemetry baud was changed in sololink.conf
+  sed -i "s/^telemBaud=.*/telemBaud=115200/" etc/sololink.conf
+  md5sum `realpath etc/sololink.conf` > etc/sololink.conf.md5
+
+  # as part of update, we change something in hostapd.orig
+  sed -i "s/^acs_num_scans=.*/acs_num_scans=1000/" etc/hostapd.orig
+
+  # we do not change wpa_supplicant.orig
+
+  # we add a new setting to sololink.orig
+  sed -i "s/useGpsTime=True/useGpsTime=True\n\nuseOuijiTime=Definitely/" etc/sololink.orig
+
+  # .orig.md5 is no longer correct for the updated versions
+  # (that is how the update is detected)
+
+  # show changes
+  for config in ${config_names}; do
+    echo "user changes in ${config}.conf:"
+    diff etc/${config}.base etc/${config}.conf
+    echo
+    echo "update changes in ${config}.orig:"
+    diff rootfs.ro/etc/${config}.orig etc/${config}.orig
+    echo
+  done
+
+  ./configinit ${verbose}
+
+  # should have:
+  # * .base, .base.md5
+  # * .conf, .conf.md5
+  # * .orig, .orig.md5
+  # * .base and .orig should be the same, no user changes
+  # * .conf should have both update and user changes
+  for config in ${config_names}; do
+    assert_valid etc/${config}.base
+    assert_valid etc/${config}.conf
+    assert_valid etc/${config}.orig
+    assert_same etc/${config}.orig etc/${config}.base
+    echo "${config}.conf should have both user and update mods:"
+    diff rootfs.ro/etc/${config}.orig etc/${config}.conf
+  done
+
+  echo
+  echo "##### test_update complete"
+  echo
+}
+
+test_first_boot
+
+test_normal_boot
+
+test_invalid_conf
+
+test_update
+
+# clean up
+rm -rf ./etc

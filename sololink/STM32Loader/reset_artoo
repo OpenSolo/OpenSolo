@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# -d 'N': delay 'N' seconds during reset
+# -n: don't kill stm32 process
+
+usage() {
+  echo "usage: reset_artoo [-d N] [-n]"
+  echo "  -d N    delay N seconds with reset asserted"
+  echo "  -n      don't kill the stm32 process (debug usage)"
+}
+
+delay=0
+dokill=true
+until [ -z "${1}" ]; do
+  case ${1} in
+    -d)
+      if [ -z "${2}" ]; then
+        usage
+      fi
+      delay="${2}"
+      shift
+      ;;
+    -n)
+      dokill=false
+      ;;
+  esac
+  shift
+done
+
+pin_boot=45
+pin_reset=46
+
+set_pin() {
+  pushd /sys/class/gpio > /dev/null
+  if [ ! -e gpio${1} ]; then
+    echo "${1}" > /sys/class/gpio/export
+  fi
+  echo "out" > /sys/class/gpio/gpio${1}/direction
+  echo "${2}" > /sys/class/gpio/gpio${1}/value
+  popd > /dev/null
+}
+
+if ${dokill}; then
+  # stop it
+  init 2
+  # wait for it to be truly gone
+  until ! killall -q -CONT stm32; do
+    true
+  done
+fi
+
+# deassert boot
+set_pin ${pin_boot} 0
+
+# pulse reset
+set_pin ${pin_reset} 1
+sleep ${delay}
+set_pin ${pin_reset} 0
+
+if ${dokill}; then
+  # restart everything
+  init 3
+fi

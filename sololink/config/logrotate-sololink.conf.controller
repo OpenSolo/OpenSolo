@@ -1,0 +1,23 @@
+# see "man logrotate" for details
+# rotate logs, keeping 20 versions
+
+# specifying 'create' makes it so the log file is always there, even if
+# nothing writes to it on a particular run, so on the next rotation, the empty
+# file is rotated along with all the others, keeping the .N extensions in sync
+# (e.g. so all the .2 files are from the same run).
+
+# specifying 'missingok' is needed for the very first run when there are no
+# log files to rotate.
+
+create
+missingok
+rotate 20
+nodateext
+
+/log/3dr-top.log { }
+/log/3dr-solo.log { }
+/log/3dr-stm32.log { }
+/log/3dr-video.log { }
+/log/3dr-wifi.log { }
+/log/3dr-temp.log { }
+/log/pkt_delays.csv { }
