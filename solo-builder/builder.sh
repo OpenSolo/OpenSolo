@@ -14,7 +14,7 @@ GIT_ACCOUNT=OpenSolo
 GIT_REPO=3dr-arm-yocto-bsp
 GIT_BRANCH=master
 BUILD_MACHINE=both
-CLEAN=clean
+CLEAN=
 
 
 # Check command line options for git account, repo, and branch.
