@@ -61,10 +61,10 @@ def glob_file(pattern):
 
 # /dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00
 # /dev/serial/by-id/usb-3D_Robotics_PX4_BL_FMU_v2.x_0-if00
-dev_pattern_usb = "/dev/serial/by-id/usb-3D_Robotics*"
+dev_pattern_usb = "/dev/serial/by-id/usb*"
 
 # return device name or None
-def create_usb_serial(timeout=2):
+def create_usb_serial(timeout=5):
     usb.init()
     usb.enable()
     start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
