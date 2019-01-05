@@ -25,9 +25,6 @@
 [submodule "solo-builder"]
 	path = solo-builder
 	url = https://github.com/OpenSolo/solo-builder.git
-[submodule "3dr-yocto-bsp-base"]
-	path = 3dr-yocto-bsp-base
-	url = https://github.com/OpenSolo/3dr-yocto-bsp-base.git
 [submodule "dronekit-python-solo"]
 	path = dronekit-python-solo
 	url = https://github.com/dronekit/dronekit-python-solo.git
