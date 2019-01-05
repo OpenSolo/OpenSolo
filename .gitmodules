@@ -1,6 +1,3 @@
-[submodule "sololink"]
-	path = sololink
-	url = https://github.com/OpenSolo/sololink.git
 [submodule "ardupilot-solo"]
 	path = ardupilot-solo
 	url = https://github.com/OpenSolo/ardupilot-solo.git
