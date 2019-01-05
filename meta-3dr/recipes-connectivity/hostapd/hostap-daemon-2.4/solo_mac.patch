@@ -1,0 +1,53 @@
+From 03182a61d51cf0d2458932c449e75c5a31976011 Mon Sep 17 00:00:00 2001
+From: Allan Matthew <amatthew@3dr.com>
+Date: Thu, 19 Nov 2015 13:45:27 -0800
+Subject: [PATCH] Use solo's mac for disassoc checking
+
+---
+ src/ap/drv_callbacks.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/src/ap/drv_callbacks.c b/src/ap/drv_callbacks.c
+index a0adc67..5bcf3b7 100644
+--- a/src/ap/drv_callbacks.c
++++ b/src/ap/drv_callbacks.c
+@@ -418,14 +418,35 @@ void hostapd_notif_disassoc(struct hostapd_data *hapd, const u8 *addr)
+ 	ap_free_sta(hapd, sta);
+ }
+ 
+-
+ void hostapd_event_sta_low_ack(struct hostapd_data *hapd, const u8 *addr)
+ {
++  char buf[20];
++  char addr_str[20];
++
+ 	struct sta_info *sta = ap_get_sta(hapd, addr);
+ 
+ 	if (!sta || !hapd->conf->disassoc_low_ack)
+ 		return;
+ 
++  /* Try and read the /log/3dr-pairing.conf file */
++  FILE *fd = fopen("/log/3dr-pairing.conf","r");
++  if(fd) {
++    if( fgets(buf, sizeof(buf) - 1, fd) == buf ) {
++      /* This should be in the form [88:dc:96:33:f0:67], so
++       * get rid of the first and last characters when doing any
++       * comparison */
++      memset(addr_str, 0, sizeof(addr_str));
++      sprintf(addr_str, MACSTR, MAC2STR(addr));
++      if(!strncmp((const char*)(buf+1), (const char*)addr_str, 17)) {
++        hostapd_logger(hapd, addr, HOSTAPD_MODULE_IEEE80211,
++            HOSTAPD_LEVEL_INFO, "Would disassoc but solo addr");
++        fclose(fd);
++        return;
++      }
++    }
++    fclose(fd);
++  }
++
+ 	hostapd_logger(hapd, addr, HOSTAPD_MODULE_IEEE80211,
+ 		       HOSTAPD_LEVEL_INFO, "disconnected due to excessive "
+ 		       "missing ACKs");
+-- 
+2.1.2
+

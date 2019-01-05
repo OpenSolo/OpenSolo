@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if [ -f /usr/sbin/logrotate -a -f /var/log/wtmp ]; then
+	logrotate -f /etc/logrotate-wtmp.conf -s /dev/null
+fi

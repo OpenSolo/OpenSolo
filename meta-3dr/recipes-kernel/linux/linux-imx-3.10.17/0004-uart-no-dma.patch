@@ -1,0 +1,17 @@
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index d799140..fbe4f56 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1335,10 +1335,12 @@ imx_set_termios(struct uart_port *port, struct ktermios *termios,
+ 			ucr2 &= ~UCR2_IRTS;
+ 			ucr2 |= UCR2_CTSC;
+ 
++#if 0
+ 			/* Can we enable the DMA support? */
+ 			if (is_imx6q_uart(sport) && !uart_console(port)
+ 				&& !sport->dma_is_inited)
+ 				imx_uart_dma_init(sport);
++#endif
+ 		} else {
+ 			termios->c_cflag &= ~CRTSCTS;
+ 		}

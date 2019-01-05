@@ -1,0 +1,6 @@
+The recipe for mavlink (vs. pymavlink) was deleted 7/18/2015 since it is not
+used and is very out of date. Resurrect from git or redo as necessary.
+
+It may be better to use a mavlink recipe as a basis for both pymavlink and
+mavlink (as used in the flight code). Quick attempts at doing so were not
+successful a few months ago (the time it became unused and abandoned).

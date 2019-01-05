@@ -1,0 +1,80 @@
+From ca8181d335313371b01299957405b7fff69ae420 Mon Sep 17 00:00:00 2001
+From: Allan Matthew <amatthew@3dr.com>
+Date: Mon, 4 Jan 2016 14:41:55 -0800
+Subject: [PATCH] Fixes for Japanese reg domain.  We lower the THRESH62 value
+ for CA and eliminate stuck beacon resets and nfcals to eliminate spurious
+ transmissions
+
+---
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.c | 14 ++++++++++++++
+ drivers/net/wireless/ath/ath9k/beacon.c        | 12 +++++++++---
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+index 922042a..a75522c 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+@@ -4135,6 +4135,7 @@ static void ar9003_hw_apply_minccapwr_thresh(struct ath_hw *ah,
+ 					     bool is2ghz)
+ {
+ 	struct ar9300_eeprom *eep = &ah->eeprom.ar9300_eep;
++  struct ath_regulatory *regulatory = ath9k_hw_regulatory(ah);
+ 	const u_int32_t cca_ctrl[AR9300_MAX_CHAINS] = {
+ 		AR_PHY_CCA_CTRL_0,
+ 		AR_PHY_CCA_CTRL_1,
+@@ -4143,6 +4144,19 @@ static void ar9003_hw_apply_minccapwr_thresh(struct ath_hw *ah,
+ 	int chain;
+ 	u32 val;
+ 
++  /* Force a lower thresh value */
++  if(regulatory->region == NL80211_DFS_JP) {
++    ath_dbg(ath9k_hw_common(ah), EEPROM, "Japanese regulatory, setting THRESH62 lower\n");
++    val = (u32)(-60);
++    for (chain = 0; chain < AR9300_MAX_CHAINS; chain++) {
++      if (!(ah->caps.tx_chainmask & BIT(chain)))
++        continue;
++
++      REG_RMW_FIELD(ah, cca_ctrl[chain],
++          AR_PHY_EXT_CCA0_THRESH62_1, val);
++    }
++  }
++
+ 	if (is2ghz) {
+ 		if (!(eep->base_ext1.misc_enable & BIT(2)))
+ 			return;
+diff --git a/drivers/net/wireless/ath/ath9k/beacon.c b/drivers/net/wireless/ath/ath9k/beacon.c
+index f50a6bc..d161f2b 100644
+--- a/drivers/net/wireless/ath/ath9k/beacon.c
++++ b/drivers/net/wireless/ath/ath9k/beacon.c
+@@ -321,6 +321,7 @@ void ath9k_beacon_tasklet(unsigned long data)
+ 	struct ath_softc *sc = (struct ath_softc *)data;
+ 	struct ath_hw *ah = sc->sc_ah;
+ 	struct ath_common *common = ath9k_hw_common(ah);
++  struct ath_regulatory *regulatory = ath9k_hw_regulatory(ah);
+ 	struct ath_buf *bf = NULL;
+ 	struct ieee80211_vif *vif;
+ 	bool edma = !!(ah->caps.hw_caps & ATH9K_HW_CAP_EDMA);
+@@ -358,12 +359,17 @@ void ath9k_beacon_tasklet(unsigned long data)
+ 				"missed %u consecutive beacons\n",
+ 				sc->beacon.bmisscnt);
+ 			ath9k_hw_stop_dma_queue(ah, sc->beacon.beaconq);
+-			if (sc->beacon.bmisscnt > 3)
+-				ath9k_hw_bstuck_nfcal(ah);
++      /* Do not reset nfcal in Japan, as it might cause a spurious beacon */
++      if(regulatory->region != NL80211_DFS_JP) {
++        if (sc->beacon.bmisscnt > 3)
++          ath9k_hw_bstuck_nfcal(ah);
++      }
+ 		} else if (sc->beacon.bmisscnt >= BSTUCK_THRESH) {
+ 			ath_dbg(common, BSTUCK, "beacon is officially stuck\n");
+ 			sc->beacon.bmisscnt = 0;
+-			ath9k_queue_reset(sc, RESET_TYPE_BEACON_STUCK);
++      /* Do not reset chip in Japan, as it might cause a spurious beacon */
++      if(regulatory->region != NL80211_DFS_JP)
++        ath9k_queue_reset(sc, RESET_TYPE_BEACON_STUCK);
+ 		}
+ 
+ 		return;
+-- 
+2.1.2
+

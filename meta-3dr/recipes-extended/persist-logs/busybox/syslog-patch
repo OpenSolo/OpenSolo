@@ -1,0 +1,14 @@
+--- a/syslog.busybox	2015-11-12 11:13:23.000000000 -0800
++++ b/syslog.busybox	2015-11-12 11:13:04.000000000 -0800
+@@ -54,7 +54,11 @@
+ case "$1" in
+   start)
+ 	echo -n "Starting syslogd/klogd: "
++	if [ -f /usr/sbin/logrotate -a -f /var/log/messages ]; then
++		logrotate -f /etc/logrotate-syslog.conf -s /dev/null
++	fi
+ 	start-stop-daemon -S -b -n syslogd -a /sbin/syslogd -- -n $SYSLOG_ARGS
++	usleep 10000
+ 	start-stop-daemon -S -b -n klogd -a /sbin/klogd -- -n
+ 	echo "done"
+ 	;;

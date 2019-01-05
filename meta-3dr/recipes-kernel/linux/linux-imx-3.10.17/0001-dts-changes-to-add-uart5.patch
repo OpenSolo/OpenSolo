@@ -1,0 +1,50 @@
+From 58085a1475840fd91d07392470c20a4bec23b2f1 Mon Sep 17 00:00:00 2001
+From: Allan Matthew <amatthew@3drobotics.com>
+Date: Wed, 11 Feb 2015 11:04:55 +0800
+Subject: [PATCH] dts changes to add uart5
+
+---
+ arch/arm/boot/dts/imx6qdl.dtsi           | 9 +++++++++
+ arch/arm/boot/dts/imx6solo-3dr-1080p.dts | 6 ++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 0836e90..7cf97c8 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1594,6 +1594,15 @@
+ 		};
+ 	};
+ 
++    uart5 {
++        pinctrl_uart5_1: uart5grp-1 {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA 0x1b0b1
++				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA 0x1b0b1
++			>;
++		};
++	};
++
+ 	usbotg {
+ 		pinctrl_usbotg_1: usbotggrp-1 {
+ 			fsl,pins = <
+diff --git a/arch/arm/boot/dts/imx6solo-3dr-1080p.dts b/arch/arm/boot/dts/imx6solo-3dr-1080p.dts
+index 4a347e1..b17241c 100644
+--- a/arch/arm/boot/dts/imx6solo-3dr-1080p.dts
++++ b/arch/arm/boot/dts/imx6solo-3dr-1080p.dts
+@@ -368,6 +368,12 @@
+         status = "okay";
+ };
+ 
++&uart5 {
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_uart5_1>;
++        status = "okay";
++};
++
+ &usbh1 {
+ 	vbus-supply = <&reg_usb_h1_vbus>;
+ 	status = "okay";
+-- 
+2.1.0
+
