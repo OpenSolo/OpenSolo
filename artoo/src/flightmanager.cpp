@@ -65,6 +65,9 @@ const char *FlightManager::flightModeStr(FlightMode m)
     case AVOID_ADSB:    return "ADS-B AVOID";
     case GUIDED_NOGPS:  return "Guided No GPS";
     case SMART_RTL:     return "Smart RTL";
+    case FLOWHOLD:      return "Flow Hold";
+    case FOLLOW:        return "Follow";
+    case ZIGZAG:        return "Zig Zag";
     default:            return "Unknown";
     }
 }

@@ -36,6 +36,9 @@ public:
         AVOID_ADSB =   19,  // automatic avoidance of obstacles in the macro scale - e.g. full-sized aircraft
         GUIDED_NOGPS = 20,  // guided mode but only accepts attitude and altitude
         SMART_RTL =    21,  // SMART_RTL returns to home by retracing its steps
+        FLOWHOLD =     22,  // FLOWHOLD holds position with optical flow without rangefinder
+        FOLLOW    =    23,  // Follow attempts to follow another vehicle or ground station
+        ZIGZAG    =    24,  // ZIGZAG mode is able to fly in a zigzag manner with predefined point A and point B
         };   
 
     /*
@@ -104,7 +107,8 @@ public:
     }
     static const char *flightModeStr(FlightMode m);
     static bool flightModeIsAutonomous(FlightMode m) {
-        return (m == AUTO || m == GUIDED || m == LOITER || m == RTL || m == CIRCLE || m == DRIFT || m == POSHOLD || m == BRAKE || m == THROW || m == AVOID_ADSB || m == GUIDED_NOGPS || m == SMART_RTL );
+        return (m == AUTO || m == GUIDED || m == LOITER || m == RTL || m == CIRCLE || m == DRIFT || m == POSHOLD || m == BRAKE || m == THROW || m == AVOID_ADSB || m == GUIDED_NOGPS || m == SMART_RTL || m == FLOWHOLD
+        || m == FOLLOW || m == ZIGZAG);
     }
 
     ALWAYS_INLINE bool currentFlightModeManual() const {
