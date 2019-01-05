@@ -7,9 +7,6 @@
 [submodule "shotmanager"]
 	path = shotmanager
 	url = https://github.com/OpenSolo/shotmanager.git
-[submodule "meta-3dr"]
-	path = meta-3dr
-	url = https://github.com/OpenSolo/meta-3dr.git
 [submodule "sololink-python"]
 	path = sololink-python
 	url = https://github.com/OpenSolo/sololink-python.git
