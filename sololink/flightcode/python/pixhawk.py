@@ -28,10 +28,6 @@ config_baudlist_name = "telemBaudList"
 config_dev_name = "telemDev"
 config_flow_name = "telemFlow"
 firmware_root = "/firmware"
-firmware_root_3dr = "/firmware/3dr"
-firmware_root_green = "/firmware/green"
-firmware_root_wipe = "/firmware/wipe"
-cube_version = "unknown"
 
 
 # ardupilot/libraries/AP_SerialManager/AP_SerialManager.cpp, supported bauds:
@@ -76,10 +72,10 @@ def create_usb_serial(timeout=5):
     end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
     dev_name = glob_file(dev_pattern_usb)
     if os.path.exists(dev_name):
-        logger.debug("%s created in %0.3f sec",
+        logger.info("%s created in %0.3f sec",
                      dev_name, (end_us - start_us) / 1000000.0)
     else:
-        logger.error("creating %s", dev_pattern_usb)
+        logger.info("error creating %s", dev_pattern_usb)
         usb.disable()
         usb.uninit()
     return dev_name
@@ -385,211 +381,58 @@ def get_version():
     logger.warning("no build version received")
     return version
 
-# Checking param INS_ACC_ID to see if this is stock Pixhawk 2.0 or a Pixhawk 2.1
-#  - A pixhawk 2.1 will have INS_ACC_ID, and it will be 1442082 (return true)
-#  - A pixhawk 2.0 running master will have INS_ACC_ID, but will not be 1442082 (return false)
-#  - A pixhawk 2.0 with stock 3DR firmware will not have INS_ACC_ID at all (return false)
-def checkPixhawkVersion():
-    global cube_version
-    # Setup serial comm to the pixhawk
-    config = ConfigParser.SafeConfigParser()
-    config.optionxform = str
-    config.read(sololink_conf)
-
-    serial_dev = config_get(config, config_dev_name)
-    if serial_dev is None:
-        logger.error("reading %s from %s", config_dev_name, sololink_conf)
-        return False
-    logger.debug("%s = %s", config_dev_name, serial_dev)
-
-    serial_flow = config_getbool(config, config_flow_name, True)
-    logger.debug("%s = %s", config_flow_name, serial_flow)
-
-    serial_baud = config_getint(config, config_baud_name)
-    if serial_baud is None:
-        logger.error("reading %s from %s", config_baud_name, sololink_conf)
-        return False
-    logger.debug("%s = %d", config_baud_name, serial_baud)
-    m = mavutil.mavlink_connection(serial_dev, baud=serial_baud)
-    m.set_rtscts(serial_flow)
-    timeout_us = 30 * 1000000
-
-    # First we'll check parameter INS_ACC_ID. On stock 3DR firmware, this param
-    # will not be found.  With ArduCopter 3.5+, the parameter will be detected.
-    # A value of 1442082 is a green cube.  A value of 1245474 is a stock cube.
-    logger.info("Checking parameter INS_ACC_ID to determine cube version")
-    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    end_us = start_us
-    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
-        m.mav.param_request_read_send(m.target_system, m.target_component, 'INS_ACC_ID', -1)
-        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
-        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-        if param_check is not None:
-            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'INS_ACC_ID':
-                if str(param_check.param_value) ==  '1442082.0':
-                    logger.info("Pixhawk 2.1 on board!")
-                    cube_version = 'cube_21'
-                    m.close()
-                    return True
-                elif str(param_check.param_value) ==  '1245474.0': 
-                    logger.info("Pixhawk 2.0 on board. But not stock solo firmware")
-                    cube_version = 'cube_20'
-                    m.close()
-                    return True
-        logger.info("cube_version = %s", cube_version)
-    
-    # If we've gotten to this point, it must have not found the INS_ACC_ID. So
-    # we'll check the compass #3 device ID instead. On a stock cube with stock
-    # stock FW, it will be 66286.  On a stock with AC3.5, it is for some reason
-    # not found. So this only works for stock FW on a stock cube, which should
-    # be fine for all but a few people running master on a stock cube.
-    logger.info("Checking parameter COMPASS_DEV_ID3 to determine cube version")
-    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    end_us = start_us
-    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
-        m.mav.param_request_read_send(m.target_system, m.target_component, 'COMPASS_DEV_ID3', -1)
-        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
-        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-        if param_check is not None:
-            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'COMPASS_DEV_ID3':
-                if str(param_check.param_value) ==  '263178.0':
-                    logger.info("Pixhawk 2.1 on board!")
-                    cube_version = 'cube_21'
-                    m.close()
-                    return True
-                elif str(param_check.param_value) ==  '66826.0':
-                    logger.info("Pixhawk 2.0 on board. You should go green :)")
-                    cube_version = 'cube_20'
-                    m.close()
-                    return True
-        logger.info("cube_version = %s", cube_version)
-    
-    # Handle scenario where the external compass is unplugged, so what was
-    # compass #3 has become #2.
-    logger.info("Checking parameter COMPASS_DEV_ID2 to determine cube version")
-    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    end_us = start_us
-    while ((end_us - start_us) < timeout_us) and cube_version == 'unknown':
-        m.mav.param_request_read_send(m.target_system, m.target_component, 'COMPASS_DEV_ID2', -1)
-        param_check = m.recv_match(type='PARAM_VALUE', blocking=True, timeout=5)
-        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-        if param_check is not None:
-            if param_check.get_type() == 'PARAM_VALUE' and str(param_check.param_id) == 'COMPASS_DEV_ID2':
-                if str(param_check.param_value) ==  '263178.0':
-                    logger.info("Pixhawk 2.1 on board!")
-                    cube_version = 'cube_21'
-                    m.close()
-                    return True
-                elif str(param_check.param_value) ==  '66826.0':
-                    logger.info("Pixhawk 2.0 on board. You should go green :)")
-                    cube_version = 'cube_20'
-                    m.close()
-                    return True
-        logger.info("cube_version = %s", cube_version)
-    
-    # If we've reached this point, we were unable to positively identify which
-    # cube is in the solo. Probably because something is malfunctioning, or
-    # because someone is running master on a stock cube. In either case, there
-    # is nothing more we can do, so returning false and leave cube_version unknown.
-    cube_version = 'unknown'
-    logger.info("Unable to determine cube version")
-    return False
-
-def removeFWfiles(dir):
-    if dir == '3dr':
-        filelist=glob.glob('/firmware/3dr/*.*')
-    elif dir == 'green':
-        filelist=glob.glob('/firmware/green/*.*')
-    elif dir == 'main':
-        filelist=glob.glob('/firmware/*.px4') + glob.glob('/firmware/*.apj')
-    for file in filelist:
-        os.remove(file)
-
 # load firmware
 def load(firmware_path):
     logger.info("loading %s", firmware_path)
+    print "pixhawk: loading firmware %s:", firmware_path
 
     dev_name = create_usb_serial()
     if dev_name is None:
+        logger.info("Failed to open USB serial port to load firmware")
         return False
 
     # load firmware
     start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    ret = subprocess.call(["uploader.py",
+    uploader = subprocess.Popen(["uploader.py",
                            "--port=%s" % dev_pattern_usb,
                            firmware_path])
-    if ret != 0:
+
+    ## Start a 2 minute timeout for loading firmware in case it fails
+    delay = 1.0
+    timeout = int(120 / delay)                      
+    while uploader.poll() is None and timeout > 0:
+        time.sleep(delay)
+        timeout -= delay                       
+
+    if uploader.poll() is None:
+        #px_uploader.py failed to complete, probably hosed
         loaded = False
-        logger.error("loading firmware")
-    else:
+        logger.info("Firmware loading failed due to timeout.")
+    elif uploader.returncode != 0:
+        #px_uploader.py returned error, failed to load due to error
+        loaded = False
+        logger.info("Firmware loading failed due to error.")
+    elif uploader.returncode == 0:
+        #px_uploader succeeded
         loaded = True
         end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
         logger.info("firmware loaded in %0.3f sec",
                     (end_us - start_us) / 1000000.0)
-
-    if loaded:
-        # firmware loaded; wait for heartbeat on telemetry port
-        # This allows for the baud rate to change along with the firmware load.
-        start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-        # 0.6.x ... 1.0.5 has a pixhawk build at 115200 baud
-        # internal versions might have a pixhawk build at 921600  baud
-        # 1.1.5 and later have a pixhawk build at 115200 baud
-        baudlist = get_baudlist(None, 115200)
-        hb_quit = False
-        hb_time_us = None
-        wait_us = None
-        hb = None
-        while not hb_quit:
-            for baud in baudlist:
-                logger.debug("trying %d", baud)
-                m = create_tty_mavlink(baud)
-                if m is None:
-                    logger.error("creating tty mavlink connection")
-                    hb_quit = True
-                    break # for baud
-                # flush input - could we have data from before flashing?
-                flush_bytes = m.port.inWaiting()
-                if flush_bytes > 0:
-                    logger.info("flushing %d bytes", flush_bytes)
-                    m.port.flushInput()
-                logger.debug("waiting for heartbeat")
-                hb = m.recv_match(type='HEARTBEAT', blocking=True, timeout=1.1)
-                wait_us = clock.gettime_us(clock.CLOCK_MONOTONIC) - start_us
-                if hb is None:
-                    logger.debug("timeout waiting for first heartbeat")
-                else:
-                    # insisting on a second heartbeat was in response to
-                    # occasionally detecting a heartbeat at the wrong baud
-                    # when the baud changes with the firmware (!)
-                    logger.debug("got first heartbeat")
-                    hb_time_us = clock.gettime_us(clock.CLOCK_MONOTONIC) - start_us
-                    hb = m.recv_match(type='HEARTBEAT', blocking=True, timeout=1.1)
-                    if hb is None:
-                        # this has been observed to happen (rarely)
-                        logger.info("timeout waiting for second heartbeat at %d after loading", baud)
-                        # ...and continue with the next baud rate
-                    else:
-                        logger.debug("got second heartbeat")
-                m.close()
-                if hb is not None:
-                    set_baud(baud)
-                    hb_quit = True
-                    break # for baud
-                # 0.1.0 comes up in about 25 sec
-                # 1.0.8 comes up in about 8 sec
-                # 1.1.4 comes up in about 15 sec
-                if wait_us > 45000000: # 45 sec
-                    hb_quit = True # to exit the while loop
-                    break # exit the baud loop
-            ### for baud in baudlist
-        ### while !hb_quit
-        if hb is None:
-            logger.error("timeout waiting for heartbeat after loading")
-        else:
-            logger.info("heartbeat after loading in %0.3f sec", hb_time_us / 1000000.0)
+    else:
+        #Unsure if loading FW worked or not, so we'll proceed
+        loaded = True
+        end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+        logger.info("firmware may have loaded. Checking for HB")
 
     delete_usb_serial()
 
+    if loaded:
+        move_firmware(firmware_path)
+    else:
+        os.system("rm -f /firmware/*.apj")
+        os.system("rm -f /firmware/*.px4")
+
+    time.sleep(5)
     return loaded
 
 
@@ -633,7 +476,7 @@ def verify_usb():
                     (end_us - start_us) / 1000000.0)
         return True
     else:
-        logger.error("ERROR getting heartbeat over USB")
+        logger.info("ERROR getting heartbeat over USB")
         return False
 
 
@@ -644,6 +487,7 @@ def verify_usb():
 def find_firmware(dir):
     files = glob.glob("%s/*.apj" % dir) + glob.glob("%s/*.px4" % dir)
     if len(files) == 0:
+        logger.info("No firmware file found")
         return (None, None)
     # read git hashes
     full_path = files[-1]
@@ -724,7 +568,10 @@ def resetParameters():
     
     m.mav.param_set_send(m.target_system, m.target_component, 'SYSID_SW_MREV', 0, 0)
     time.sleep(5)
+    m.mav.command_long_send(m.target_system, m.target_component,246 , 0, 1, 0, 0, 0, 0, 0, 0)
     m.close()
+    logger.info("   Waiting 30 seconds for pixhawk to reboot...")
+    time.sleep(30)
     return
 
 def recoveryCheck():
@@ -761,68 +608,17 @@ def rebootPixhawk():
 
     m.mav.command_long_send(m.target_system, m.target_component,246 , 0, 1, 0, 0, 0, 0, 0, 0)
     m.close()
-    logger.info("   Waiting 60 seconds for pixhawk to reboot...")
-    time.sleep(60)
+    logger.info("   Waiting 30 seconds for pixhawk to reboot...")
+    time.sleep(30)
     return
 
-def initialize():
-    global cube_version
-    firmware_path = None
-    paramsAfterLoad = False
-
-    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
-    led.blink(1000, 100)
-    print "pixhawk..."
+def checkArduCopter():
     baud = get_baud()
     if baud == None:
         print "pixhawk: ERROR checking baud"
-        logger.error("finding baud")
-        logger.error("pixhawk status: no response")
-        # pixhawk might be stuck in bootloader
-
-    # If we're in a factory reset, we just need to reset the pixhawk.
-    # If we've just completed the clean install, load the appropriate ArduCopter FW and reset the pixhawk
-    # Otherwise, just look in /firmware and load whatever is there.
-    if recoveryCheck():
-        resetParameters()
-        rebootPixhawk()
-    else:
-        if (os.path.isdir("/firmware/3dr") or os.path.isdir("/firmware/green")) and checkPixhawkVersion():
-            # This must be a clean install if the initial FW directories are here.
-            paramsAfterLoad = True
-            if cube_version == 'cube_20':
-                (firmware_path, firmware_version) = find_firmware(firmware_root_3dr)
-            elif cube_version == 'cube_21':
-                (firmware_path, firmware_version) = find_firmware(firmware_root_green)
-        else:
-            # Not a clean install, look for FW in the normal location
-            (firmware_path, firmware_version) = find_firmware(firmware_root)
-
-    if firmware_path is None:
-        logger.info("no new firmware file")
-    elif os.path.exists("/log/.factory") and (baud is not None) and verify_usb():
-        logger.info("pixhawk: factory - not loading firmware")
-    else:
-        print "pixhawk: loading firmware"
-        logger.info("%s:", firmware_path)
-        for v in firmware_version:
-            logger.info("%-20s %s", v, firmware_version[v])
-        if load(firmware_path):
-            move_firmware(firmware_path)
-            os.system("rm -rf /firmware/3dr")
-            os.system("rm -rf /firmware/green")
-            os.system("rm -rf /firmware/wipe")
-            if paramsAfterLoad:
-                logger.info("Executing post-install parameter reset...")
-                resetParameters()
-                rebootPixhawk()
-                logger.info("...Reset complete")
-        else:
-            print "pixhawk: ERROR loading firmware"
-            logger.error("pixhawk status: can't load")
-
-    os.system("rm -f /log/.factory")
-
+        logger.info("Error checking baud. No response")
+        return False
+    
     running_version = get_version()
     logger.info(running_version)
 
@@ -840,6 +636,45 @@ def initialize():
         print "pixhawk: running %s" % running_version["build_version"]
     else:
         print "pixhawk: ERROR checking version"
+    
+    return True
+
+def doFirmware():
+    firmware_path = None
+    (firmware_path, firmware_version) = find_firmware(firmware_root)
+
+    if firmware_path is not None and verify_usb():
+        # We have firmware to load.
+        for v in firmware_version:
+            logger.info("%-20s %s", v, firmware_version[v])
+
+        load(firmware_path)
+
+def initialize():
+    start_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
+    led.blink(1000, 100)
+    print "pixhawk..."
+
+    serial_ok = False
+ 
+    if os.path.exists("/log/.factory") or os.path.exists("/log/updates/FACTORYRESET") or os.path.exists("/log/updates/UPDATE") or os.path.exists("/log/updates/RESETSETTINGS"):
+        os.system("rm -f /log/.factory")
+    else:
+        serial_ok = checkArduCopter()
+
+        # if we're in factory reset, just reset parameters and exit
+        if recoveryCheck() and serial_ok:
+            resetParameters()
+        else:
+            # find and load ArduCopter FW
+            if doFirmware():
+                serial_ok = checkArduCopter()
+
+            # reset ArduCopter parameters if tagged
+            if os.path.exists("/firmware/resetParams") and serial_ok:
+                resetParameters()
+                os.remove("/firmware/resetParams")
+    
     led.off()
     end_us = clock.gettime_us(clock.CLOCK_MONOTONIC)
     logger.debug("pixhawk initialization took %0.3f sec",
@@ -867,6 +702,8 @@ if __name__ == "__main__":
                       help="firmware root directory (%s)" % firmware_root)
     parser.add_option("-p", "--pix_version", dest="pix", type="string", default=None,
                       help="pixhawk version file (%s)" % version_file)
+    parser.add_option("-r", "--reboot", dest="reboot", action="store_true",
+                      default=False, help="reboots pixhawk")
     (opts, args) = parser.parse_args()
 
     if opts.conf is not None:
@@ -907,5 +744,8 @@ if __name__ == "__main__":
 
     if opts.usb:
         print check_usb()
+
+    if opts.reboot:
+        rebootPixhawk()
 
     logger.info("pixhawk.py finished")
