@@ -102,7 +102,7 @@ fi
 # Make an MD5sum of each as is required for the Solo and Controller to accept the files.
 # The tar.gz and the .md5 go directly in the /log/updates/ directory on the solo and/or controller.
 COMP="completed_$(date +%F_%H-%M)"
-NEW_DIR=/vagrant/binaries/$COMP
+NEW_DIR=/vagrant/solo-builder/binaries/$COMP
 echo $COMP > /tmp/COMP.txt
 mkdir -p $NEW_DIR
 cd $NEW_DIR
