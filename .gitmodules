@@ -1,0 +1,45 @@
+[submodule "documentation"]
+	path = documentation
+	url = https://github.com/OpenSolo/documentation.git
+[submodule "sololink"]
+	path = sololink
+	url = https://github.com/OpenSolo/sololink.git
+[submodule "ardupilot-solo"]
+	path = ardupilot-solo
+	url = https://github.com/OpenSolo/ardupilot-solo.git
+[submodule "artoo"]
+	path = artoo
+	url = https://github.com/OpenSolo/artoo.git
+[submodule "shotmanager"]
+	path = shotmanager
+	url = https://github.com/OpenSolo/shotmanager.git
+[submodule "meta-3dr"]
+	path = meta-3dr
+	url = https://github.com/OpenSolo/meta-3dr.git
+[submodule "sololink-python"]
+	path = sololink-python
+	url = https://github.com/OpenSolo/sololink-python.git
+[submodule "mavlink-solo"]
+	path = mavlink-solo
+	url = https://github.com/OpenSolo/mavlink-solo.git
+[submodule "solo-builder"]
+	path = solo-builder
+	url = https://github.com/OpenSolo/solo-builder.git
+[submodule "3dr-yocto-bsp-base"]
+	path = 3dr-yocto-bsp-base
+	url = https://github.com/OpenSolo/3dr-yocto-bsp-base.git
+[submodule "dronekit-python-solo"]
+	path = dronekit-python-solo
+	url = https://github.com/dronekit/dronekit-python-solo.git
+[submodule "stm32loader"]
+	path = stm32loader
+	url = https://github.com/OpenSolo/stm32loader.git
+[submodule "imx6-linux"]
+	path = imx6-linux
+	url = https://github.com/OpenSolo/imx6-linux.git
+[submodule "imx6-uboot"]
+	path = imx6-uboot
+	url = https://github.com/OpenSolo/imx6-uboot.git
+[submodule "MAVProxy"]
+	path = MAVProxy
+	url = https://github.com/OpenSolo/MAVProxy.git
