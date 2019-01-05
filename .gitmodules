@@ -10,9 +10,6 @@
 [submodule "mavlink-solo"]
 	path = mavlink-solo
 	url = https://github.com/OpenSolo/mavlink-solo.git
-[submodule "solo-builder"]
-	path = solo-builder
-	url = https://github.com/OpenSolo/solo-builder.git
 [submodule "dronekit-python-solo"]
 	path = dronekit-python-solo
 	url = https://github.com/dronekit/dronekit-python-solo.git
