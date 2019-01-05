@@ -255,13 +255,6 @@ void FlightManager::onRtlButtonEvt(Button *b, Button::Event evt)
 
     if (evt == Button::ClickRelease) {
         if (inFlight()) {
-            // request RTL whether we think vehicle has GPS or not.
-            // if our sense of vehicle GPS state is stale, we still
-            // want to trigger an RTL if at all possible.
-            //
-            // if we have confidence that our copy of vehicle state is current,
-            // we could trigger Event::RTLWithoutGPS to inform user
-            // RTL without GPS is not possible.
             requestFlightModeChange(RTL);
 
             if (!telemetryVals.hasGpsFix()) {
@@ -269,6 +262,16 @@ void FlightManager::onRtlButtonEvt(Button *b, Button::Event evt)
             }
 
             Haptic::startPattern(Haptic::SingleMedium);
+        }
+    } else if (evt == Button::HoldRelease) {
+        if (inFlight()) {
+            requestFlightModeChange(SMART_RTL);
+
+            if (!telemetryVals.hasGpsFix()) {
+                Ui::instance.pendEvent(Event::RTLWithoutGPS);
+            }
+
+            Haptic::startPattern(Haptic::SingleShort);
         }
     }
 }
