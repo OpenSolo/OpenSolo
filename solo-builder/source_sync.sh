@@ -37,24 +37,27 @@ cd ../..
 
 echo "----------------------------------------------------------------------------"
 mkdir -p sources/base
-git clone git://github.com/OpenSolo/3dr-yocto-bsp-base sources/base 2>&1 |  grep -v 'fatal'
-cd sources/base
-git fetch
-echo git checkout $name 2>&1
-git checkout $name 2>&1
-cd ../..
+rsync -r /vagrant/3dr-yocto-bsp-base/ sources/base --delete
+# mkdir -p sources/base
+# git clone git://github.com/OpenSolo/3dr-yocto-bsp-base sources/base 2>&1 |  grep -v 'fatal'
+# cd sources/base
+# git fetch
+# echo git checkout $name 2>&1
+# git checkout $name 2>&1
+# cd ../..
 cp sources/base/README.md .
 cp sources/base/setup-environment .
 
 echo "----------------------------------------------------------------------------"
 mkdir -p sources/meta-3dr
-git clone git://github.com/OpenSolo/meta-3dr sources/meta-3dr 2>&1 |  grep -v 'fatal'
-cd sources/meta-3dr
-git fetch
-echo git checkout $name 2>&1
-git checkout $name 2>&1
-git pull origin
-cd ../..
+rsync -r /vagrant/meta-3dr/ sources/meta-3dr --delete
+# mkdir -p sources/meta-3dr
+# git clone git://github.com/OpenSolo/meta-3dr sources/meta-3dr 2>&1 |  grep -v 'fatal'
+# cd sources/meta-3dr
+# git fetch
+# echo git checkout $name 2>&1
+# git checkout $name 2>&1
+# git pull origin
 
 echo "----------------------------------------------------------------------------"
 mkdir -p sources/meta-fsl-arm-extra

@@ -45,7 +45,7 @@ esac
 echo
 
 #Do it.
-/vagrant/alt_sync.sh $GIT_BRANCH 2>&1
+/vagrant/solo-builder/source_sync.sh $GIT_BRANCH 2>&1
 echo "sync done"
 
 cd /solo-build-alt
