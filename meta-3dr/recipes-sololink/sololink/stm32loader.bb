@@ -1,12 +1,12 @@
 SUMMARY = "stm32loader.py for bootloading the stm32"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://COPYING3;md5=4fe869ee987a340198fb0d54c55c47f1"
+LIC_FILES_CHKSUM = "file:///vagrant/LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/OpenSolo/stm32loader/"
+SRC_URI = "git:///vagrant/;protocol=file"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/stm32loader"
 
 FILES_${PN} += "${bindir}/"
 

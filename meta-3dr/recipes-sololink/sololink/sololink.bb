@@ -1,13 +1,13 @@
 SUMMARY = "SoloLink software for RC, telemetry and video"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
+LIC_FILES_CHKSUM = "file:///vagrant/LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/OpenSolo/SoloLink"
+SRC_URI = "git:///vagrant/;protocol=file"
 
 PV = "${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/sololink"
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 

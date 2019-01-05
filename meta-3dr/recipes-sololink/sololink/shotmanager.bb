@@ -2,13 +2,12 @@ SUMMARY = "shotmanager"
 HOMEPAGE = "https://github.com/OpenSolo/shotmanager"
 
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
+LIC_FILES_CHKSUM = "file:///vagrant/LICENSE-APACHE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/OpenSolo/shotmanager"
-
+SRC_URI = "git:///vagrant/;protocol=file"
 PV = "${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/shotmanager"
 
 RDEPENDS_${PN} += "dronekit dronekit-solo"
 
@@ -18,7 +17,7 @@ FILES_${PN} += "${sysconfdir}/"
 
 do_compile () {
     echo "# auto-generated `date`" > shotManager_version.py
-    echo 'VERSION = "3.0.0"' >> shotManager_version.py
+    echo 'VERSION = "4-DEV"' >> shotManager_version.py
 }
 
 do_install () {
