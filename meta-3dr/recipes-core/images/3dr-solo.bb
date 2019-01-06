@@ -47,8 +47,7 @@ IMAGE_INSTALL += " \
     shotmanager \
     rpm \
     util-linux \
-    pixhawk-stock-fw \
-    pixhawk-green-fw \
+    cubeBlack-solo \
     gimbal-firmware \
     e2fsprogs-e2fsck \
     dosfstools \
