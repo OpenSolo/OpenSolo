@@ -464,10 +464,10 @@ void DataFlash_Logger::send_start_or_stop_logging_packet(bool is_start)
     uint8_t component_id = is_start ? target_component_id : sender_component_id;
     uint32_t magic_number;
     if (is_start) {
-        la_log(LOG_INFO, "mh-dfl: sending start packet to (%d/%d)", system_id, component_id);
+        // la_log(LOG_INFO, "mh-dfl: sending start packet to (%d/%d)", system_id, component_id);
         magic_number = MAV_REMOTE_LOG_DATA_BLOCK_START;
     } else {
-        la_log(LOG_INFO, "mh-dfl: sending stop packet to (%d/%d)", system_id, component_id);
+        // la_log(LOG_INFO, "mh-dfl: sending stop packet to (%d/%d)", system_id, component_id);
         magic_number = MAV_REMOTE_LOG_DATA_BLOCK_STOP;
     }
     mavlink_msg_remote_log_block_status_pack(this_system_id, this_component_id, &msg, system_id,
