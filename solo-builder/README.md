@@ -1,88 +1,48 @@
-WARNING - WORK IN PROGRESS
+# Solo Builder #
+The solo-builder will create file system images for the Solo's IMX and the controller's IMX. The Open Solo vagrant virual machine is used for the build environment. The vagrant VM used for solo-builder is also used for the Artoo STM32 firmware builder. So if you already installed and setup the VM for artoo, you can skip right to executing the build.
 
-```
-This code is known to be high risk , but also early-adopter friendly.  
+## Instructions ##
 
-We will remove this warning from the repository when it is no longer required.
-```
+### Initial Vagrant VM Setup ###
 
+Visit the [Open Solo Vagrant VM readme](/vagrant_readme.md) for first time installation and initialization of the Vagrant VM.
 
-# solo-builder
-## Quick start guide
-You may find the following "quick start" guide useful.  You can find the [Open Solo Quick Start Guide](http://ardupilot.org/dev/docs/solo-opensolo-quickstart.html) on ardupilot.org.
+### Executing Build ###
 
-## Using vagrant
-
-Works in [vagrant](http://vagrantup.com), typically useful for local builds.
-First install this plugin:
-```
-$ vagrant plugin install vagrant-guest_ansible
-$ vagrant up
-```
-
-(If `vagrant up` fails, run `vagrant provision` to try provisioning your VM
-again.)
-
-To fire off the builder:
-
-```
-$ vagrant ssh -c /vagrant/builder.sh
-```
-
-
-## Using docker
-
-DOCKER IS UNTESTED OUTSIDE 3DR , USE VAGRANT FOR NOW.
+ 1. `vagrant up` from the root of root of the OpenSolo repo directory (windows command prompt or ubuntu terminal) starts the VM
  
-Works in Docker and boot2docker. 
-Copy `id_rsa` and `solo-builder.pem` to this directory (sorry). Then run
+ 2. `vagrant ssh` connects you to the vagrant VM, where you will do all the building
+    * FYI `vagrant@vagrant-ubuntu-trusty-64:~$` is what the prompt will look like once you're connected. You will land in the home directory (`~/`)
+    * FYI `/vagrant` within the vagrant VM is symlink to the root of the OpenSolo repo outside the vagrant VM.
+ 
+ 3. `$ cd /vagrant/solo-builder` changes to the solo-builder directory
 
-```
-docker build -t 3drobotics/solo-builder .
-```
+ 4. `$ ./builder.sh` executes the build. See below for command line options. On first run, you will be prompted to restart the builder after syc completes.
 
-Then run
+#### Command line options ####
 
-```
-docker run -i 3drobotics/solo-builder su -l ubuntu /solo-build/builder.sh
-```
+`% builder.sh` with no options will build the copter IMX, controller IMX, and the Artoo STM32 firmware.
 
-TODO: write a script that gets the files off after
+`$ builder.sh -a -m -c -n ` option arguments are available:
+ * `-a false` will skip building the Artoo STM32 FW and use what is already in the recipe files directory. Default is true if not specified.
+ * `-m both` will build both the copter and controller IMX. This is the default if not specified.
+ * `-m solo` will build only the copter's IMX, not the controller.
+ * `-m controller` will build only the controller's IMX, not the copter.
+ * `-c true` will clean the build recipies prior to beginning the build.  Default is false if not specified.
+ * `-n true` nuclear option deletes the build directory (`/vagrant/solo-build/`) to start from a totally clean slate. Default is false if not specified.
 
-## Using something else
+#### Completed files ####
 
-`playbook.yml` is an ansible file for an Ubuntu 14.04 distro. `builder.sh` is the build script for a user named `ubuntu`. Make it happen!
+Completed binaries will be copied to a date-time stamped folder in /solo-build/binaries.
+ * `3dr-solo.tar.gz` and `3dr-solo.tar.gz.md5` for the copter's IMX
+ * `3dr-controller.tar.gz` and `3dr-controller.tar.gz.md5` for the controller's IMX
+ * `artoo.bin` for the controller's STM32 (already included within the controller IMX build)
 
-## Repos
+### Exiting The Builder ###
 
-3dr Private:
+ * `$ exit` will exit the vagrant SSH session, returning you to the PC's command prompt.
+ * `vagrant halt` will shutdown the VM.
 
-* https://github.com/3drobotics/mavlink-solo
-* https://github.com/3drobotics/sculpture_proprietary
-* https://github.com/3drobotics/solo-gimbal
-* https://github.com/3drobotics/artoo
-* https://github.com/3drobotics/SoloLink
+## TO-DO ##
 
-Public:
-
-* https://github.com/3drobotics/imx6-uboot
-* https://github.com/3drobotics/imx6-linux
-* https://github.com/3drobotics/MAVProxy
-* https://github.com/3drobotics/stm32loader
-* https://github.com/3drobotics/ardupilot-solo
-
-* https://github.com/OpenSolo/ardupilot-solo
-* https://github.com/OpenSolo/sololink
-* https://github.com/OpenSolo/artoo
-* https://github.com/OpenSolo/imx6-uboot
-* https://github.com/OpenSolo/imx6-linux
-* https://github.com/OpenSolo/3dr-arm-yocto-bsp
-* https://github.com/OpenSolo/meta-3dr
-* https://github.com/OpenSolo/dronekit-python-solo
-* https://github.com/OpenSolo/sololink-python
-* https://github.com/OpenSolo/solo-builder
-* https://github.com/OpenSolo/3dr-yocto-bsb-base
-* https://github.com/OpenSolo/stm32loader
-* https://github.com/OpenSolo/MAVProxy
-
-
+`ERROR: Function failed: Fetcher failure for URL: 'git://git.gnome.org/gtk-doc-stub'. Unable to fetch URL from any source` will happen the first time you run the build from scratch.  This is a false error, as the repo is fetched and available.  Restart the build, and it will proceed just fine.  Needs to be fixed somehow.
