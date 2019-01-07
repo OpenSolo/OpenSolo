@@ -636,7 +636,7 @@ update_prepare() {
         echo "solo can't update artoo"
         return 1
       fi
-      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      rm -rf ${ROOT}/firmware
       mkdir -p ${ROOT}/firmware
       ;;
     "pixhawk" )
@@ -644,13 +644,13 @@ update_prepare() {
         echo "controller can't update pixhawk"
         return 1
       fi
-      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      rm -rf ${ROOT}/firmware
       mkdir -p ${ROOT}/firmware
       ;;
     "sololink" )
       rm -rf ${ROOT}/log/updates
       mkdir -p ${ROOT}/log/updates
-      rm -rf ${ROOT}/mnt/rootfs.rw/firmware
+      rm -rf ${ROOT}/firmware
       mkdir -p ${ROOT}/firmware
       ;;
     * )
