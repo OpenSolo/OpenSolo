@@ -127,7 +127,7 @@ done
 if [ "$updated" = "true" ]; then
     
     echo "\nACTION REQUIRED: The project root content has been updated. Please run $0 again."
-    exit 1
+    return 2
 fi
 
 cd $OEROOT
