@@ -12,16 +12,16 @@ const UiAlertManager::Alert UiAlertManager::alerts[] = {
     { Red, NoHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Calibrating ", "altitude", "Please wait", NULL },
 
     // CompassCalRequired
-    { Red, HighHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Compass ", "error", "Please calibrate compass using\nmobile app and reboot solo", NULL },
+    { Red, LowHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Compass ", "error", "Please calibrate compass using\nmobile app and reboot solo", NULL },
 
     // CompassInterference
     { Red, NoHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Magnetic ", "interference", "Move Solo away from metal objects", NULL },
 
     // LevelError
-    { Red, MedHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Level ", "error", "Please calibrate level using\nmobile app and reboot solo", NULL },
+    { Red, LowHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Level ", "error", "Please calibrate level using\nmobile app and reboot solo", NULL },
 
     // CalibrationFailed
-    { Red, MedHaptic, FullScreenModal, NO_TIMEOUT, DismissA, "Motion ", "detected", "Take off from a steady surface", NULL },
+    { Red, LowHaptic, FullScreenModal, NO_TIMEOUT, DismissA, "Motion ", "detected", "Take off from a steady surface", NULL },
 
     // WaitingForNavChecks
     { Green, NoHaptic, FullScreenModal, NO_TIMEOUT, DismissNone, "Calibrating ", "sensors", "Please wait", NULL },
@@ -99,13 +99,13 @@ const UiAlertManager::Alert UiAlertManager::alerts[] = {
     /// In-flight - RC
 
     // RCFailsafe, XXX: temporarily remove "Returning home" contextMsg since this can be triggered when the vehicle doesn't actually rc failsafe
-    { Red, NoHaptic, FullScreenModal, 5000, DismissNone, "Controller ", "signal lost", NULL, NULL },
+    { Red, HighHaptic, FullScreenModal, 5000, DismissNone, "Controller ", "signal lost", NULL, NULL },
 
     // RCFailsafeNoGPS, XXX: temporarily remove "Emergency landing started" contextMsg since this can be triggered when the vehicle doesn't actually rc failsafe
-    { Red, LowHaptic, FullScreenModal, 5000, DismissNone, "Controller ", "signal lost", NULL, NULL },
+    { Red, HighHaptic, FullScreenModal, 5000, DismissNone, "Controller ", "signal lost", NULL, NULL },
 
     // RCFailsafeRecovery
-    { Green, NoHaptic, FullScreenModal, NO_TIMEOUT, DismissFly, "Signal ", "recovered", NULL, "Press FLY to take control" },
+    { Green, MedHaptic, FullScreenModal, NO_TIMEOUT, DismissFly, "Signal ", "recovered", NULL, "Press FLY to take control" },
 
     /// In-flight - Flight battery
 
