@@ -49,7 +49,7 @@ makeSystem() {
     ls -lh /log/updates/
     sed -i '1s/.*/golden/' /VERSION
     echo "Applying Update"
-    sololink_config --update-apply sololink
+    sololink_config --update-apply sololink --reset
 }
 
 if ! isGolden; then
