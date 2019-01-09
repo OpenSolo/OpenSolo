@@ -2,7 +2,7 @@
 
 The controller's STM32 is the hardware behind the buttons, sticks, and display.  It is a separate piece of hardware from the IMX linux computers.  When the solo-builder runs to compile the full copter and controller images, this Artoo STM32 firmware is included.  You can aso run the Artoo STM32 builder here separately if you only want to make changes to it.  It is fast and simple compared to the entire copter and controller builds.
 
-Some compiled versions of the Artoo STM32 firmware can be found in the [/Firmware/Artoo STM32](/Firmware/Artoo%20STM32) directory.
+Some compiled versions of the Artoo STM32 firmware can be found in the [/Firmware/Artoo STM32](/Firmware/Artoo) directory.
 
 ***
 
@@ -36,11 +36,16 @@ Visit the [Open Solo Vagrant VM readme](/vagrant_readme.md) for first time insta
 
 ## Install Artoo STM32 Firmware On Controller ##
 
-_BELOW NEEDS UPDATING_
+The default filename is `artoo.bin`.  You can rename it, as long as it begins with `artoo_`.  For example, you can name the file `artoo_1234xyz.bin`.  This firmware can be installed directly using SCP or and SFTP application. Connect your PC to the Solo's WiFi. If you never changed the Solo's wifi password, the default is sololink.
 
-[How to flash the stm32 firmware](/artoo/flash-custom-firmware.md)
+_Doublecheck the .bin file to make sure it is about 200-300kb in size. If it's 0kb, the build failed and it shouldn't be loaded_
+  1. Connect via SCP or an SFTP application to the **controller** with IP 10.1.1.10, username root, password TjSDBkAu
+  2. Copy `artoo.bin` to the `/firmware` directory on the controller.
+  3. Reboot the controller.  When powering up, the display will go out and come back on during the update.
 
-[How to customise start/shutdown image](/artoo/customisation/custom-boot-screen.md)
+If you inadvertantly flash an empty or bad .bin file, it is generally easy to fix.  Simply redo these steps using a known good .bin file and it will load.
+
+[How to customise start/shutdown image](/documentation/artoo/customisation/custom-boot-screen.md)
 
 ***
 
