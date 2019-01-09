@@ -1,18 +1,18 @@
 [submodule "ardupilot-solo"]
-	path = ardupilot-solo
+	path = modules/ardupilot-solo
 	url = https://github.com/OpenSolo/ardupilot-solo.git
 [submodule "mavlink-solo"]
-	path = mavlink-solo
+	path = modules/mavlink-solo
 	url = https://github.com/OpenSolo/mavlink-solo.git
 [submodule "dronekit-python-solo"]
-	path = dronekit-python-solo
+	path = modules/dronekit-python-solo
 	url = https://github.com/dronekit/dronekit-python-solo.git
 [submodule "imx6-linux"]
-	path = imx6-linux
+	path = modules/imx6-linux
 	url = https://github.com/OpenSolo/imx6-linux.git
 [submodule "imx6-uboot"]
-	path = imx6-uboot
+	path = modules/imx6-uboot
 	url = https://github.com/OpenSolo/imx6-uboot.git
 [submodule "MAVProxy"]
-	path = MAVProxy
+	path = modules/MAVProxy
 	url = https://github.com/OpenSolo/MAVProxy.git
