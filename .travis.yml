@@ -1,0 +1,21 @@
+dist: trusty
+
+sudo: false
+
+git:
+  submodules: false
+
+cache:
+  directories:
+  - $HOME/opt
+  - $/solo-build/sources
+
+before_install:
+  - sudo ln -sf /$TRAVIS_BUILD_DIR /vagrant
+
+install:
+  - time /$TRAVIS_BUILD_DIR/install-vagrant-deps.sh 1>/dev/null
+
+script:
+  - cd /$TRAVIS_BUILD_DIR/solo-builder && ./source_sync.sh
+  - cd /$TRAVIS_BUILD_DIR/artoo && tup
