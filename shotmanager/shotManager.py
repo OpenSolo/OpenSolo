@@ -57,6 +57,15 @@ class ShotManager():
         self.currentShot = shots.APP_SHOT_NONE
         self.currentModeIndex = DEFAULT_APM_MODE
         self.curController = None
+        self.batt_cell_min = 0
+        self.batt_cell_max = 0
+        self.batt_cell_diff = 0
+        self.batt_capacity = 0
+        self.batt_cell_low_warned = False
+        self.batt_cell_diff_warned = False
+        self.batt_capacity_warned = False
+        self.batt_last_warned = time.time() + 60    # wait one minute before blabbering warnings
+        self.str_BattHealth = None
 
     def Start(self, vehicle):
         logger.log("+-+-+-+-+-+-+ Starting up %s +-+-+-+-+-+-+" % VERSION)
@@ -120,6 +129,8 @@ class ShotManager():
             self.rewindManager.loadHomeLocation()
             # not yet enabled until this check proves effective
             #self.vehicle.mode = VehicleMode("RTL")
+
+        self.batt_capacity = self.getParam("BATT_CAPACITY",0)
 
     def Run(self):
         while True:
@@ -404,6 +415,10 @@ class ShotManager():
         except Exception as e:
             logger.log('[callback]: camera feedback callback error, %s.' % e)
 
+    def battery_status_callback(self, vehicle, name, msg):
+        self.solo_batt_cells = [msg.voltages[0], msg.voltages[1],msg.voltages[2],msg.voltages[3]]
+        self.checkBatteryHealth()
+
     def initStreamRates(self):
         STREAM_RATES = {
             mavutil.mavlink.MAV_DATA_STREAM_EXTENDED_STATUS: 2,
@@ -502,3 +517,46 @@ class ShotManager():
         self.vehicle.add_attribute_listener('gopro_status', self.goproManager.state_callback)
         self.vehicle.add_attribute_listener('gopro_get_response', self.goproManager.get_response_callback)
         self.vehicle.add_attribute_listener('gopro_set_response', self.goproManager.set_response_callback)
+
+        self.vehicle.add_message_listener('BATTERY_STATUS', self.battery_status_callback) #register with vehicle class (dronekit)
+
+    def checkBatteryHealth(self):
+
+        if self.appMgr.isAppConnected():
+            
+            # Set battery cell min, max, and diff
+            self.batt_cell_min = min(self.solo_batt_cells)
+            self.batt_cell_max = max(self.solo_batt_cells)
+            self.batt_cell_diff = self.batt_cell_max - self.batt_cell_min
+            
+            # Get battery capacity if we don't already have it
+            if self.batt_capacity == 0:
+                self.batt_capacity = self.getParam("BATT_CAPACITY",0)
+
+            # Reset 1 minute warning timer
+            if time.time() - self.batt_last_warned > 60:
+                # Reset warnings
+                self.batt_cell_low_warned = False
+                self.batt_cell_diff_warned = False
+                self.batt_capacity_warned = False
+
+            # Warn if battery cell is low, differential too high, or capacity sucks
+            if self.batt_cell_min < BATT_CELL_LOW_WARN and self.vehicle.system_status not in ['CRITICAL', 'EMERGENCY'] and self.batt_cell_low_warned == False:
+                str_BattHealth = "Warning, Low battery cell voltage: %1.2fV" % round((self.batt_cell_min * 0.001),2)
+                self.batt_cell_low_warned = True
+                self.batt_last_warned = time.time()
+            elif self.batt_cell_diff > BATT_CELL_DIFF_WARN and self.batt_cell_diff_warned == False:
+                str_BattHealth = "Warning, Battery cell differential: %dmV" % self.batt_cell_diff
+                self.batt_cell_diff_warned = True
+                self.batt_last_warned = time.time()
+            elif self.batt_capacity > 0 and self.batt_capacity < BATT_CAPACITY_WARN and self.batt_capacity_warned == False:
+                str_BattHealth = "Warning, Battery capacity unhealthy: %dmAh" % self.batt_capacity
+                self.batt_capacity_warned = True
+                self.batt_last_warned = time.time()
+
+            if str_BattHealth is not None:
+                logger.log(str_BattHealth)
+                packet = struct.pack('<II%ds' % (len(str_BattHealth)), app_packet.SOLO_MESSAGE_SHOTMANAGER_ERROR, len(str_BattHealth), str_BattHealth)
+                self.appMgr.sendPacket(packet)
+                time.sleep(0.4)
+                str_BattHealth = None

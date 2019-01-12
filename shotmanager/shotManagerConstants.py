@@ -37,3 +37,7 @@ FILTERED_PADDLE = 5
 RAW_PADDLE = 7
 
 RTL_SPEED = 10
+
+BATT_CAPACITY_WARN = 3500   # Alert user if battery full charge capacity has degrated to this
+BATT_CELL_LOW_WARN = 3490   # low cell voltage warning
+BATT_CELL_DIFF_WARN = 200   # cell differencial warning
