@@ -168,6 +168,8 @@ class GoProManager():
                 self.sendGoProRequest(mavutil.mavlink.GOPRO_COMMAND_PROTUNE_GAIN)
                 self.sendGoProRequest(mavutil.mavlink.GOPRO_COMMAND_PROTUNE_SHARPNESS)
                 self.sendGoProRequest(mavutil.mavlink.GOPRO_COMMAND_PROTUNE_EXPOSURE)
+                time.sleep(5)
+                self.update_gopro_time()
 
         if self.captureMode != captureMode:
             self.captureMode = captureMode
@@ -362,12 +364,21 @@ class GoProManager():
             self.sendGoProRequest(command)
 
     # Updates the gopro time.
-    def update_gopro_time(self, timeInSecs):
-        logger.log("[gopro]: Updating gopro time to " + str(timeInSecs))
-        tm = int(timeInSecs)
-        tm_list = [tm & 0xff, (tm >> 8) & 0xff, (tm >> 16) & 0xff, (tm >> 24) & 0xff]
-
-        self.sendGoProCommand(mavutil.mavlink.GOPRO_COMMAND_TIME, tm_list)
+    def update_gopro_time(self):
+        try:
+            settings_offset=settings.readSettingExt("timeOffsetHrs")
+            logger.log("[GoPro] Time offset Setting: " + str(settings_offset))
+            if settings_offset != "None":
+                localTimeSec = time.time()+((float(settings_offset) * 3600))    # Unix time stamp + offset seconds for local time
+                logger.log("[gopro]: Updating gopro time to " + str(localTimeSec))
+                tm = int(localTimeSec)
+                tm_list = [tm & 0xff, (tm >> 8) & 0xff, (tm >> 16) & 0xff, (tm >> 24) & 0xff]
+                self.sendGoProCommand(mavutil.mavlink.GOPRO_COMMAND_TIME, tm_list)
+            else:
+                logger.log("[GoPro] Time offset not configured. Could not update GoPro clock.")
+        except:
+            logger.log("Unable to set GoPro time.")
+            
 
     def isValidCommandValue(self, value):
         if value[0] < 0 or value[0] > 255:
