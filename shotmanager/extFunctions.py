@@ -154,7 +154,7 @@ class extFunctions():
                 self.setServo(8, SERVO_PWM_HIGH)
             elif self.funcSetting == 13:    # gripper close
                 self.setGripper(0)
-            elif self.funcSetting == 13:    # gripper open
+            elif self.funcSetting == 14:    # gripper open
                 self.setGripper(1)
             else:
                 pass
