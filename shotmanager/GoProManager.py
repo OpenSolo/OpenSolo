@@ -394,7 +394,17 @@ class GoProManager():
     # handle a call to start/stop/toggle recording on the given mode
     def handleRecordCommand(self, mode, command):
         if self.status == mavutil.mavlink.GOPRO_HEARTBEAT_STATUS_DISCONNECTED or self.status == mavutil.mavlink.GOPRO_HEARTBEAT_STATUS_INCOMPATIBLE:
-            logger.log("[gopro]: handleRecordCommand called but GoPro is not connected")
+            # GoPro not connected, therefore we'll use the ArduCopter shutter instead for other types of cameras
+            logger.log("[gopro]: GoPro is not connected, firing ArduCopter shutter instead")
+            shutterMsg = self.shotMgr.vehicle.message_factory.command_long_encode(
+                            0, 1,                                          # target system, target component
+                            mavutil.mavlink.MAV_CMD_DO_DIGICAM_CONTROL,    # command
+                            0,          # confirmation
+                            0,0,0,0,    # param 1-4 not used
+                            1,          # param 5 trigger shutter
+                            0,0         # param 6-7 not used
+                        )
+            self.shotMgr.vehicle.send_mavlink(shutterMsg)
             return
 
         logger.log("[gopro]: handleRecordCommand called with mode %d, command %d"%(mode, command))
