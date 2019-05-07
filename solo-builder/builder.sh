@@ -64,6 +64,15 @@ if ! $SCRIPT_MODE; then
     echo
 fi
 
+## if -a arg is true, build the Artoo STM32 firmware and copy artoo.bin to the build.
+if $ARTOO_BUILD; then
+    /vagrant/solo-builder/build_artoo.sh
+    if [ ! $? -eq 0 ]
+    then
+        exit 1
+    fi
+fi
+
 ## Run source_sync.sh script to pull in build sources
 /vagrant/solo-builder/source_sync.sh
 if [ ! $? -eq 0 ]; then
@@ -122,15 +131,6 @@ if ! $CLEAN_BUILD; then
 
     MACHINE=imx6solo-3dr-artoo bitbake -c clean -f -k sololink sololink-python pymavlink mavproxy artoo-firmware stm32loader 2>&1 > /dev/null
     if [ ! $? -eq 0 ]; then
-        exit 1
-    fi
-fi
-
-## if -a arg is true, build the Artoo STM32 firmware and copy artoo.bin to the build.
-if $ARTOO_BUILD; then
-    /vagrant/solo-builder/build_artoo.sh
-    if [ ! $? -eq 0 ]
-    then
         exit 1
     fi
 fi
