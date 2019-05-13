@@ -104,7 +104,7 @@ private:
     static const Params::sweeptime_t MaxSweepSecDefault = 90;
 
     // tune this to set an overall speed for the camera
-    static constexpr float cameraGain = 45.0f;
+    static constexpr float cameraGain = 30.0f;
 
     static constexpr float defaultCameraAngle = 45.0f;
 
