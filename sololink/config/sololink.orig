@@ -88,7 +88,7 @@ uiUnits=metric
 [pairing]
 user_confirmation_timeout = 30.0
 controller_link_port = 5501
-wifi_connect_timeout = 5.0
+wifi_connect_timeout = 10.0
 connect_request_interval = 1.0
 connect_ack_timeout = 0.5
 solo_address_file = /var/run/solo.ip
