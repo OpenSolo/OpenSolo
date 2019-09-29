@@ -83,7 +83,7 @@ pwmOutMaxThrottle=1900
 rcTimeoutUS=400000
 
 # Telemetry display units (metric or imperial)
-uiUnits=metric
+uiUnits=imperial
 
 [pairing]
 user_confirmation_timeout = 30.0
