@@ -4,4 +4,4 @@ The controller's STM32 is the hardware behind the buttons, sticks, and display. 
 
 Some compiled versions of the Artoo STM32 firmware can be found in the [/Firmware/Artoo STM32](/Firmware/Artoo) directory.
 
-[Go to the Open Solo github Wiki for Open Solo documentation and instructions](https://github.com/Pedals2Paddles/OpenSolo/wiki/Artoo-STM32)
+[Go to the Open Solo github Wiki for Open Solo documentation and instructions](https://github.com/OpenSolo/OpenSolo/wiki/Artoo-STM32)
