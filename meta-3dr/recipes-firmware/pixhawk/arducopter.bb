@@ -1,4 +1,4 @@
-SUMMARY = "ArduCopter 3.7 firmware for cube"
+SUMMARY = "ArduCopter firmware for cube"
 
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://${THISDIR}/files/COPYING.txt;md5=d32239bcb673463ab874e80d47fae504"

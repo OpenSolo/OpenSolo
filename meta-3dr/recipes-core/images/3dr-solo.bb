@@ -47,7 +47,7 @@ IMAGE_INSTALL += " \
     shotmanager \
     rpm \
     util-linux \
-    cubeBlack-solo \
+    arducopter \
     gimbal-firmware \
     e2fsprogs-e2fsck \
     dosfstools \

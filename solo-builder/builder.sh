@@ -124,7 +124,7 @@ fi
 
 # clean the solo specific recipies, even with -c true to ensure local changes are picked up
 if ! $CLEAN_BUILD; then
-    MACHINE=imx6solo-3dr-1080p bitbake -c clean -f -k sololink shotmanager sololink-python pymavlink mavproxy cubeBlack-solo gimbal-firmware 2>&1 > /dev/null
+    MACHINE=imx6solo-3dr-1080p bitbake -c clean -f -k sololink shotmanager sololink-python pymavlink mavproxy arducopter gimbal-firmware 2>&1 > /dev/null
     if [ ! $? -eq 0 ]; then
         exit 1
     fi
