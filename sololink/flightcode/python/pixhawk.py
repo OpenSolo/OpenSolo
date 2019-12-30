@@ -431,6 +431,8 @@ def load(firmware_path):
     else:
         os.system("rm -f /firmware/*.apj")
         os.system("rm -f /firmware/*.px4")
+        os.system("rm -f /firmware/resetParams")
+        rebootPixhawk
 
     time.sleep(5)
     return loaded

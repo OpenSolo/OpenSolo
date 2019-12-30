@@ -916,10 +916,11 @@ def main():
                 except RuntimeError as ex:
                     # print the error
                     print("\nERROR: %s" % ex.args)
+                    sys.exit(1)
 
                 except IOError:
                     up.close()
-                    continue
+                    sys.exit(1)
 
                 finally:
                     # always close the port
