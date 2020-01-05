@@ -209,6 +209,7 @@ void ButtonManager::dispatchEvt(Button *b, Button::Event evt)
         break;
 
     case Io::ButtonRTL:
+        ButtonFunction::onButtonExtEvent(b, evt);
         FlightManager::instance.onRtlButtonEvt(b, evt);
         break;
 
