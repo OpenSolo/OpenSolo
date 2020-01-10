@@ -68,7 +68,7 @@ def glob_file(pattern):
     return files[0]
 
 
-dev_pattern_usb = "/dev/serial/by-id/usb-3D_Robotics*"
+dev_pattern_usb = "/dev/serial/by-id/usb*"
 
 # return device name or None
 def create_usb_serial(timeout=2):
