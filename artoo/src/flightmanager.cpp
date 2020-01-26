@@ -263,7 +263,7 @@ void FlightManager::onRtlButtonEvt(Button *b, Button::Event evt)
 
             Haptic::startPattern(Haptic::SingleMedium);
         }
-    } else if (evt == Button::HoldRelease) {
+    } else if (evt == Button::HoldRelease || evt == Button::LongHold) {
         if (inFlight()) {
             requestFlightModeChange(SMART_RTL);
 
