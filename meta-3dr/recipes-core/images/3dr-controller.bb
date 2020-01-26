@@ -3,8 +3,8 @@ include recipes-core/images/core-image-base.bb
 # created from image_types_fsl; creates additional logging partition
 inherit image_types_3dr
 
-PV = "4-DEV"
-VER_NAME = "Open Solo 4-DEV"
+PV = "4.0.0"
+VER_NAME = "Open Solo 4.0.0"
 BUILD_DATE = "Build Date: $(date "+%Y%m%d%H%M%S")"
 
 do_rootfs[depends] += "virtual/kernel:do_bundle_initramfs"
