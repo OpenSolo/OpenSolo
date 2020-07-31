@@ -19,8 +19,9 @@ outdir=`pwd`/c_library
 
 pushd ${1}
 
-python -m pymavlink.tools.mavgen --lang C -o ${outdir} \
-    message_definitions/v1.0/ardupilotmega.xml
+python -m pymavlink.tools.mavgen --lang C --wire-protocol=2.0 \
+       -o ${outdir} \
+       message_definitions/v1.0/ardupilotmega.xml
 
 if which git; then
   git log --oneline > ${outdir}/.generate
