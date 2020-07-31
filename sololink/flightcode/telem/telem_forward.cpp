@@ -564,18 +564,32 @@ void *upstream_task(void *)
         if (recvlen > 0) {
 
             // check that datagram can be a valid mavlink message
-            if (recvlen < 8) {
-                // too short - need enough for 6-byte header and 2-byte crc
-                pthread_mutex_lock(&mutex_upStats);
-                upBadShort++;
-                pthread_mutex_unlock(&mutex_upStats);
-            } else if (buf[0] != 254) {
-                // bad magic - first byte should always be 254
+            bool good_stx = false;
+            uint8_t framing_bytecount;
+            switch (buf[0]) {
+            case MAVLINK_STX:
+                good_stx = true;
+                framing_bytecount = MAVLINK_CORE_HEADER_LEN + MAVLINK_NUM_CHECKSUM_BYTES + 1;
+                break;
+            case MAVLINK_STX_MAVLINK1:
+                good_stx = true;
+                framing_bytecount = MAVLINK_CORE_HEADER_MAVLINK1_LEN + MAVLINK_NUM_CHECKSUM_BYTES + 1;
+                break;
+            default:
+                break;
+            }
+            if (!good_stx) {
+                // bad magic - first byte should always be a magic value
                 pthread_mutex_lock(&mutex_upStats);
                 upBadMagic++;
                 pthread_mutex_unlock(&mutex_upStats);
-            } else if (recvlen != (buf[1] + 8)) {
-                // bad length - total packet length is header(6) + len(buf[1]) + crc(2)
+            } else if (recvlen < framing_bytecount) {
+                // too short - need enough for header and crc
+                pthread_mutex_lock(&mutex_upStats);
+                upBadShort++;
+                pthread_mutex_unlock(&mutex_upStats);
+            } else if (recvlen != (buf[1] + framing_bytecount)) {
+                // bad length
                 pthread_mutex_lock(&mutex_upStats);
                 upBadLength++;
                 pthread_mutex_unlock(&mutex_upStats);
@@ -587,20 +601,35 @@ void *upstream_task(void *)
                 upBytes += recvlen;
                 pthread_mutex_unlock(&mutex_upStats);
 
+                uint32_t message_id;
+                uint8_t source_system;
+                uint8_t source_component;
+                uint8_t payload_offset;
+                if (buf[0] == MAVLINK_STX_MAVLINK1) {
+                    message_id = buf[5];
+                    source_system = buf[3];
+                    source_component = buf[4];
+                    payload_offset = 6;
+                } else {
+                    message_id = (p_payload[7]) | (p_payload[8]<<8) | p_payload[9]<<16;
+                    source_system = buf[5];
+                    source_component = buf[6];
+                    payload_offset = 10;
+                }
 #if 1 // debug
 
-                if (buf[5] == MAVLINK_MSG_ID_SET_MODE) {
+                if (message_id == MAVLINK_MSG_ID_SET_MODE) {
                     syslog(LOG_INFO, "SET_MODE: from %s:%d", inet_ntoa(remaddr.sin_addr),
                            ntohs(remaddr.sin_port));
                     // we don't have a mav_msg to use for unpacking
                     // custom_mode is the first four bytes, little endian
                     syslog(LOG_INFO, "SET_MODE: len=%u src_sys=%u src_comp=%u", unsigned(buf[1]),
-                           unsigned(buf[3]), unsigned(buf[4]));
+                           unsigned(source_system), unsigned(source_component));
                     if (unsigned(buf[1]) == MAVLINK_MSG_ID_SET_MODE_LEN)
                         syslog(LOG_INFO,
                                "SET_MODE: custom_mode=%u.%u.%u.%u target_system=%u base_mode=%u",
-                               unsigned(buf[9]), unsigned(buf[8]), unsigned(buf[7]),
-                               unsigned(buf[6]), unsigned(buf[10]), unsigned(buf[11]));
+                               unsigned(buf[payload_offset+3]), unsigned(buf[payload_offset+2]), unsigned(buf[payload_offset+1]),
+                               unsigned(buf[payload_offset]), unsigned(buf[payload_offset+4]), unsigned(buf[payload_offset+5]));
                 }
 
 #endif // debug
@@ -667,7 +696,7 @@ void *upstream_task(void *)
                 discard = false;
 
                 if (rc_locked) {
-                    if (buf[5] == MAVLINK_MSG_ID_COMMAND_LONG) {
+                    if (message_id == MAVLINK_MSG_ID_COMMAND_LONG) {
                         for (i = 0; i < recvlen; ++i) {
                             if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &mav_msg, &mav_status)) {
                                 mavlink_msg_command_long_decode(&mav_msg, &mav_cmd_long);
@@ -694,7 +723,7 @@ void *upstream_task(void *)
                 }
 
                 if (client != NULL) {
-                    set_seen_sysid_compid_from_client(buf[3], buf[4], client);
+                    set_seen_sysid_compid_from_client(source_system, source_component, client);
                 }
             } // sanity checked as possibly good mavlink message
 

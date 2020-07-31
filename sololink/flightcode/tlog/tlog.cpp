@@ -180,7 +180,7 @@ void dump_versions(void)
     memcpy(stringbuf, s_all_vers.c_str(), len);
 
     // Pack into a statustext message
-    mavlink_msg_statustext_pack(0, 0, &mav_msg, MAV_SEVERITY_INFO, stringbuf);
+    mavlink_msg_statustext_pack(0, 0, &mav_msg, MAV_SEVERITY_INFO, stringbuf, 0, 0);
 
     // Pull the char buffer out of the mavlink message (len reused here)
     len = mavlink_msg_to_send_buffer((uint8_t *)buf, &mav_msg);
