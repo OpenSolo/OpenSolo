@@ -21,7 +21,7 @@ sudo wget "http://stedolan.github.io/jq/download/linux64/jq" -O "/usr/local/bin/
 sudo chmod 0755 /usr/local/bin/jq
 
 sudo wget "https://storage.googleapis.com/git-repo-downloads/repo" -O "/usr/local/bin/repo"
-sudo chmod 0755 /usr/local/bin/rep
+sudo chmod 0755 /usr/local/bin/repo
 
 ssh-keyscan -t rsa github.com
 ssh-keyscan -t rsa bitbucket.org
