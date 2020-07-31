@@ -1,0 +1,2775 @@
+fe0d6e4b CMakeLists: Allow mavlink v2.0 build and installation
+c9e955ce ardupilot: added MAV_CMD_FIXED_MAG_CAL_YAW
+8312c35b ArduPilot: Add EFI_STATUS
+50740f53 Add Pairing Manager component id (#1283)
+16964e77 common: SCALLED_PRESURE: add press diff temperature
+bff79582 Add IDLE and WARMING_UP generator status flags
+70a188e1 Add runtime and time_until_maintenance to GENERATOR_STATUS
+b899467a mavlink: Update version of pymavlink
+37675292 Fix missing ArduPilot flight modes
+5bb3107f Travis CI: set virtual build environment to Ubuntu Focal 20.04 (#1407)
+d557d553 common.xml: add several MAV_GENERATOR_STATUS_FLAG enumeration entries
+43da556e common.xml: prefix generator message entries with MAV_
+c6353823 common: added generator status message [WIP] (#1352)
+ae662ef3 pymavlink: update to origin master commit
+59ccf285 ardupilotmega: remove PID_TUNING units
+c6fb878b bugfix in last commit, Scripting commands SCRIPTING_CMD are not part of MAV_CMD enum
+61f6f32e Improve description/s of the MAV_CMD_GUIDED_*  commands.
+6e08c075 ardupilotmega.xml: Improve Magnetometers Bitmask description
+9f7a6daa ardupilotmega.xml: Address review comments from Peter Barker
+79e8b01f ardupilotmega.xml: capitalize first letter of each word in MAV_CMD parameter label attributes
+1492f277 ardupilotmega.xml: improvements from Hamish's review
+ec6d3488 ardupilotmega.xml: Add MAV_CMD parameters (label, units, enum, minValue, maxValue) docuemntation (NFC).
+4e01f2a2 ardupilotmega.xml: remove ancient, commented out message definitions
+eff9d95e pymavlink: update
+469cc12f common: add AIS message
+f875542f adupilotmega: add MAV_CMD_DO_SET_RESUME_REPEAT_DIST
+417b7c6d Message Definitions ardupilotmega.xml
+45b61f59 Add scripting MAVLink commands
+fa5ce823 ArduPilot: add initalized bit to EKF_STATUS_FLAGS
+2a8ee81a ardupilotmega: add MAV_CMD_DEBUG_TRAP
+ba0a698d common.xml: add chunks for statustext
+7b9c3356 common.xml: use https url for ardupilot.org
+33ad4fec common: extend fence status msg to report mitigation action
+5687d8ca ardupilot: added more EFI status variables
+23c978ed pymavlink: fixed JS test for GPS_RAW_INT
+7ffc6131 common: added extension for GPS_RAW_INT and GPS2_RAW for yaw
+ff8ada06 Add MAV_MOUNT_MODE_SYSID_TARGET and MAV_CMD_DO_SET_ROI_SYSID (#1267)
+d12c25ba MAV_CMD_REQUEST_MESSAGE: Define that parameters can be used (#1276)
+beca9438 Remove the mentioning of 1E7 scaling
+0d107022 Update ADSB flags (#1277)
+4adf9bf8 examples: Update linux example README.md
+ea0b2d64 Upstream changes from the reviews of some patches the we sent them
+ba89eeb5 Clarify target address for requested message/stream (#1249)
+8585d8c6 MAV_RESULT: Clarify exactly what the possible results mean (#1253)
+7e01a27c ATTITUDE_QUATERNION: add optional representation offset (for tailsitter attitude display) (#1247)
+e0d52e99 common:ACTUATOR_OUTPUT_STATUS: Clarify is PWM outputs (#1252)
+5334684a VISION_POSITION_ESTIMATE is local estimate (#1246)
+c8455117 MAV_COMPONENT: Clarify broadcast ID only used for targets (#1245)
+5999addf common: added MAV_SYS_STATUS_PREARM_CHECK
+d2cc7dbf pymavlink: update
+fc02af92 ardupilot: added MAV_CMD_FIXED_MAG_CAL_YAW
+828bb39d pymavlink: submodule update
+25853bc9 ardupilot: added scale factor to MAG_CAL_REPORT
+1a0cb341 ardupilot: added SERIAL_CONTROL_SERIALn enums
+dc754f36 pymavlink update
+d08182b8 ArduPilot: Add EFI_STATUS
+cc3272e4 Add MAV_MOUNT_MODE_SYSID_TARGET and MAV_CMD_DO_SET_ROI_SYSID
+eba3a31e APM: added plane takeoff mode
+f93b316a Pymavlink submodule update to latest master
+053502ca MAV_CMD_COMPONENT_ARM_DISARM: Clarify forced arm/disarm
+ea84581c removed 0.9 messages from cmake (#1241)
+41a041e9 common.xml - move proposed location of defn files (#1236)
+32450163 SYS_STATUS - clarify value invalid voltage (#1229)
+ade28433 common.xml: Tidy IMU temp description (#1227)
+9f780573 Allow IMU's to convey their temperature (#1205)
+66b8190c V2_EXTENSION: Correct payload length determination (#1226)
+573aeda8 Gimbal Component IDs for Gimbal #2 to #6 (#1223)
+d127e948 Add extension to OBSTACLE_DISTANCE specifying MAV_FRAME (#1214)
+dde5437f CAMERA_INFORMATION - url must support mavftp
+6b5a6f4a Correct MAV_TYPE entry for servo (#1204)
+efa7be40 common.xml:GPS_GLOBAL_ORIGIN clarclarify when emitted (#1201)
+edeed68d OBSTACLE_DISTANCE.distances relative to local not body (#1213)
+951b6c01 msg_obstacle_distance: increment_f allows negative values (#1211)
+96cf83c4 Add non NED/ENU frames for external position (#1207)
+d2afc372 RAW_IMU/HIGHRES_IMU : Add id extension to support multiple IMU (#1200)
+fb89e321 Clarify MAV_TYPE usage (#1188)
+4f32f71c Add highlighting of item type
+8c00b163 OPTICAL_FLOW.flow_comp_m_(x/y) units to m/s (#1189)
+65a85838 SCALED_IMUn: x,y,zmag units from mT to mgauss
+b3654ded Add private component ID range (#1184)
+a1b1d602 MESSAGE_INTERVAL interface, improve description of its usage (#1196)
+fd906643 MAV_CMDs - put param labels next to index (#1192)
+b943ff0d common.xml: Set MAV_AUTOPILOT_INVALID for non-autopilots (#1193)
+b1178440 common.xml camera_information flags: display=bitmask
+5d01ea44 Add PROTOCOL_VERSION and friends to minimal.xml (#1178)
+7ea85e4c Sync minimal.xml to changes in common - docs only (#1177)
+69c71e89 Move FENCE_STATUS to common
+1e00e1ae common.xml: Fix typo in MAV_CMD_DO_FOLLOW description (#1163)
+1255c63f common: improve label description for arm in-air
+adfe965b Fixes #519. PX4 and Arducopter support disarm in flight with magic number in param 2
+6d3a9bff Update the description of the ISBD_LINK_STATUS message
+557224a6 Rename SATCOM_LINK_STATUS to ISBD_LINK_STATUS and move to common
+d4d398f8 Common.xml: Clarify MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES
+5136d811 Add Actuator output message (#1148)
+5700c647 common: added GPS yaw to GPS_INPUT as an extension
+4e566bba ardupilot: moved BATT_RESET to ardupilot xml
+cd75dc42 common.xml: added MAV_CMD_BATTERY_RESET
+9522f753 updated pymavlink
+a94f8462 Replicate description to all affected fields.
+d542db20 Update descriptions.
+c0eca5fe Adding an enum to storage info.
+7209ab78 SYSTEM_STATUS.onboard_control_sensors_health typo (#1128)
+a3ba348a common.xml: Fix typo "sixth bit" (#1131)
+f445b735 common.xml: change NAV_SET_YAW_SPEED parameter attributes (#1120)
+dc5886a3 common.xml:Loiter* MAV_CMD set NaN for unchanged yaw (#1108)
+213572e3 Script: remove useless pymavlink test
+887c1d63 Travis: cache pip
+c608509f script: skip pymavlink install
+aefaf643 common.xml: added new parameter to NAV_SET_YAW_SPEED
+f7f4d02e common.xml: add links to the microservices documentation to the message descriptions
+6c2a80f0 common.xml: Add missing units to MAV_CMD_NAV_WAYPOINT
+905698f1 common.xml: document the MAV_CMD enums by explaining which messages use them and add a link to the schema documentation
+c482dda8 common.xml: Simple MAV_CMD parameter attributes fixes.
+25406b1f scripts: remove bash dependency on test.sh
+0e2d734f common.xml: MAV_CMD fixes suggested by Hamish Willee's review
+5a4c50a3 common.xml: capitalize first letter of each word in MAV_CMD parameter label attributes
+d35ad56a common.xml: MAV_CMD_DO_MOUNT_CONTROL is very broken
+fc6a0946 common.xml: Add "hasLocation" and "isDestination" to all MAV_CMDs
+849e24c5 common.xml: Add attributes to MAV_CMD parameters
+c95f1e06 common : Add reset counter to external estimation messages (#1089)
+10b91df4 Add SATCOM_LINK_STATUS status to ASLUAV (#1106)
+bd0d8c2e Move PARACHUTE_ACTION enum from ardupilotmega.xml to common.xml (NFC the description was already there) (#1104)
+60c9516e common.xml: remove stale comment (#1102)
+e3d408a1 Add attributes to MAV_CMD_OVERRIDE_GOTO (#1103)
+7e346cda DISTANCE_SENSOR: covariance field invalid unused value (#1093)
+6a94652d pymavlink: submodule update
+3198f78a OBSTACLE_DISTANCE: add higher angle resolution and angle offset (#1142)
+24c1ed34 pymavlink: update submodule
+2536f7f6 pymavlink: submodule update
+a735c451 pymavlink: update to master
+789a6d17 Update pymavlink submodule upto 2019-02-25
+3c303945 Update RSSI values to 0-254, 255=not used (#1083)
+4dfffcc2 Fixed typo (#1087)
+4b9e3bef RADIO_STATUS: Add range for noise values (#1081)
+50784b74 Add MAV_CMD_REQUEST_MESSAGE
+76428d45 Improve common/dialect intro (#1082)
+e9a440cc DISTANCE_SENSOR message: Fix covariance field (#1047)
+454328ab Revert DISTANCE_SENSOR.covarience (#1075)
+6fcbb218 common: update covariances descriptions (#917)
+81fa5310 Use of uninitialised memory (#1049)
+258d7d10 common.xml: MAV_CMD_NAV_PAYLOAD_PLACE param metadata (#1061)
+980508aa Add MAV_BATTERY_CHARGE_STATE_CHARGING (#1068)
+58c93017 SERVO_OUTPUT_RAW et al port mapping clarification (#1070)
+4a4626ac MAV_CMD_NAV_VTOL_TAKEOFF: Param metadata (#1071)
+4b97fa23 Mode field of HIL_ACTUATOR_CONTROLS is commonly used as a bitmask by eg px4_sitl.
+84104a68 common: improve description of VTOL_TAKEOFF cmd
+326d1a8b common.xml:Clarify MAV_CMD_NAV_LAND (#1054)
+a9da2d2e pymavlink: update to 2.3.4
+45c267e7 Common.xml:Add STATUSTEXT_LONG message (#1058)
+a6471158 Storage messages are no longer WIP (#1062)
+179a9bc0 Fixes following discussion on Github.
+fab287f1 Replacing all instances of NAN with NaN for consistency.
+34ecd09e Documenting (or correcting documentation)
+56ca8b1b Make video streaming as part of the camera API.
+afe02ed9 travis.yml: Add python 3.6 and 3.7 to CI (#1059)
+48ccdc93 Add MAV_MISSION_OPERATION_CANCELLED (#1044)
+1072aaf2 Remove tests on Python 3.3
+d504662c Add rover WHEEL_DISTANCE message to common.xml
+cea7f388 common: Add targeted jumps
+83301413 extend distance_sensor message with fov quaternion  (#1034)
+249f59c5 common.xml: Correct types for geofence and rally points (#1042)
+d7e01e5f Common.xml: Partial upload/download remove default start_index
+4b344c56 Common.xml:Partial mission read/write startindex=1
+f34a7740 Clarify VFR_HUD.airspeed is IAS (#1041)
+237a028e fix (message definitions): rename DATA_TYPES enum to MAVLINK_DATA_STREAM_TYPE
+89ef04e2 vcs (git): ignore IDEA project folder
+7011e13a Clarify global frames (#1012)
+5e6622e9 Fix up links to protocol/microservices URLs
+1bee85c6 Clarify MAV_COMP_ID_MISSIONPLANNER description
+67bd58da Update minimal.xml to match common.xml
+cd0b9b5d Remove MAV_COMP_ID_MAPPER and tidy description
+3ad5e83e Add VIO MAV_COMPONENT description
+f8107a7d Clarifications to MAV_COMPONENT enum
+0846b16e Deprecate MAV_COMP_ID_QX1_GIMBAL and make gimbal type standalone
+6fa7faa1 Add draft docs to MAV_COMPONENT
+80e6c9a1 applying review comments
+d05032ee add timestamp to the SENS_ATMOS message
+42267f6c scripts: test.sh : add a generic CI variable to for other CI
+e90b980c scripts: test.sh : dont try to update the submodule, lets the CI do it
+585e698a scripts: reformat travis_update_generated_repos.sh
+524ef581 scripts: reformat format_xml.sh
+41e970e0 Some cameras allow setting Focus and/or Zoom but don't provide an API to tell you where within their range it currently is.
+324672c6 One more place describing range
+34a68924 add additional component_id fields for obstacle avoidance and VIO
+1d26ca8f Clarify that param_set is a permanent write
+4e56ba9c Redefine MAV_TYPE_ FLARM CAMERA and ADSB as standalone
+40930168 Update HEARTBEAT to clarify usage for components
+36fe2374 Clarify how MAV_TYPE should be used.
+aa2de185 Add units into param info
+98fa3ade Add information about param attributes
+edcb6154 Output: Param #, rather than: Mission Param #
+953b8388 Fix up linking to sub_html
+ff3bbc83 MAV_CMDs as separate tables
+59e7325f Add units into param info
+b32a3cdf Add information about param attributes
+b9556410 Add wip and deprecated to docs output
+1f539f50 Output: Param #, rather than: Mission Param #
+66857f9f Specify that both MAV_CMD_SET_CAMERA_ZOOM and MAV_CMD_SET_CAMERA_FOCUS commands will return a CAMERA_SETTINGS message, which now includes the current value for both. Added current focus and zoom values (as an extension) to the CAMERA_SETTINGS message. Made MAV_CMD_SET_CAMERA_FOCUS consistent with MAV_CMD_SET_CAMERA_ZOOM, also using an enum for the different types. Removed a few spurious full stop periods.
+eeec3442 Updated WIP comment throughout. Renamed STREAM_STATUS_FLAGS to VIDEO_STREAM_STATUS_FLAGS as it is specific to Video Streaming. Flagged VIDEO_STREAM_STATUS_FLAGS as WIP
+e8853081 Fix typo in Ping protocol definition
+13028c1d Scripts: make a function to test generation and separate generation for protocol v2
+e45a510e Scripts: run test on all message definitions xml
+1ce750e6 Scripts: update test.sh syntax
+c99d007e Change commanded altitude for slugs to MSL
+ea8b7db5 Altitude clarifications for slugs.xml
+f42cee37 Dialect altitude updates
+787b3c4b Fix up Ardupilot altitude defn's
+6f8bac72 Remove missed "Absolute" text
+265b308a Minor frame information tidy
+710785cc Simplify frame text
+d1f53276 More MSL fixes
+1b5a89f7 Make terrain frames clearly AGL
+b5e822cd Clarify horizontal move limit
+e212aee6 Use consistent altitude references
+313f7fe2 add GSM_LINK message
+3597036e Add a MAV_CMD version of MISSION_SET_CURRENT
+fcd2855c pymavlink: update to 2.3.2
+e46c2e97 ardupilot: added QAUTOTUNE mode
+14912f62 common.xml: In POSITION_TARGET_TYPEMASK remove redundant information from the description
+7fb89b19 common.xml: In POSITION_TARGET_TYPEMASK start the bitcount as 0 like everywhere else
+0b43e643 common: support changing vertical speed in DO_CHANGE_SPEED
+abbf6cb0 Update message_definitions/v1.0/common.xml
+06cdf8a4 Clarify LANDING_TARGET description
+3a2871ba pymavlink: update to 2.2.20
+01ada651 Update to pymavlink from 2018-10-21
+d7d2c6ce Fix up link to Pixhawk autopilot - moved from pixhawk.org
+57682631 ASLUAV: Add stamped commands (#939)
+daf8e10d Common: remove trailing whitespaces in description
+05ae8793 common: update PX4 link
+fd4feafc Add missing message descriptions
+e07195f2 Common: add enum="POSITION_TARGET_TYPEMASK" to Position_Target messages
+a41e7457 common.xml: add enum for position target mask
+e90148d8 common.xml: add DEBUG_FLOAT_ARRAY message
+afa452f2 Doc tool include common.xml in index
+9bcd95b1 Update mavlink_to_html_table.xsl
+57d02a3a Update mavlink_to_html_table.xsl
+28c8c22c Remove all unnecessary html/classes from output
+035cb406 RC_CHANNELS_OVERRIDE: ignore value fix
+84ac16da pymavlink: update
+37f6e1b8 pymavlink: update to master
+f6dc1bc4 Deprecate SET_MAG_OFFSETS and BATTERY2 using the .xml deprecated tag
+08dcfb15 Merge upstream changes from messages that are no longer WIP
+0ab4ec26 Update some descriptions from upstream (NFC)
+f9ba837c MAV_DATA_STREAM, REQUEST_DATA_STREAM and DATA_STREAM are actively used by ArduPilot
+270c98a3 Add missing descriptions, correct spelling
+e19f2572 Remove 0.9 messages
+312a9ace Update mavlink_gitboot to remove APM reference
+13ef0804 Delete missionlib (#956)
+ca9ef03e Update MAV_SENSOR_ORIENTATION for more entries
+3147052f Remove redundant enum information from descriptions
+10384a9d Reformat ardupilotmega.xml - Capitalize first letter of description - Add . at the end of each sentence - Remove enums in description
+764b1557 ardupilotmega.xml: remove redundant units information
+812c2c88 Fixes suggested by Amilcar
+bf5fcbde Standardise descripiton of old-style and new-style timestamps
+e67ff6e6 Remove enum mentions in descriptions
+033b2861 Standardise presentation of percentrage ranges
+33160826 Standardise wording for mentioning Altitude (AMSL).
+135b0b4f Fix errors from amilcarlucas feedback
+f75769c0 Remove units from message descriptions
+eeabf4e7 Fix typos in message definitions
+380ac66d COMMAND_INT: fix typo close parenthesis
+23b432a7 Update Doxyfile to remove build warnings
+09faf73c Add units and value (enum) columns for messages
+eccaa1d0 Enum column label from CommandID to Value
+da8aa05a Add the MAV_SYS_STATUS_SENSOR_SATCOM flag to MAV_SYS_STATUS_SENSOR
+32dcfd43 Improve descriptions of MAV_CMD_SET_MESSAGE_INTERVAL and MESSAGE_INTERVAL
+e10a2a4a Tag MAG_CAL_REPORT orientation values
+f7620073 Update common.xml
+057fa0ee pymavlink: updated module
+c76636f2 Fix the mebibytes unit abreviation
+f3bc33c9 common.xml: replace the non readable WIP information, with information that pymavlink and documentation generator can use.
+ceb1c40c Use dpix instead of dpixels to be consistent with the existing "pix" unit abreviation
+c85ea2ee Adapt to new pymavlink tests
+23750ab6 pymavlink: update
+690a0b79 pymavlink: submodule update
+36432124 common: allow for longer tunes in PLAY_TUNE
+535f2656 ardupilot: extend MAG_CAL_REPORT for orientation check result
+c6ae41e6 pymavlink: update
+ad8b04aa common: add MAV_CMD_FLASH_BOOTLOADER
+31c1fb51 ardupilot: added ESC_TELEMETRY_* messages
+9121fd7d ASLUAV.xml: Add machine parseable units information
+15a4de3a Allow external CMakeLists to define mavlink dir
+4ff9b58d slugs.xml: Add machine parseable units information
+bbc1efb5 Make README a markdown file so renders better
+2839e22f Add deep nesting clarification to docs generator
+483c49c4 Mark up the code lines in code
+fa0d16da Rename example README so it gets rendered as markdown
+be13d125 Drop level of heading for vendor extensions
+bfc55bf5 Improve doc output for messages
+3270760c Non-common message XML files are called dialects
+ff7ef8ec common.xml: Add COMP_ID and MAV_TYPE for FLARM collision avoidance system
+6ca6778c Improve Py 2/3 compatibility to fix #893
+70c61c1c common: add MAV_SYS_STATUS_SENSOR_PROXIMITY
+e8ae38e7 Clarify in auto-generated doc that custom messages can either replace or extend the common set
+f7348be6 common: remove comments about GPS frame
+1ab080f0 common.xml: only use capture sequence param >= 1
+319eaad1 common.xml: add capture sequence to START_CAPTURE
+32b4bbd2 Common: Add an enum for RC reciever types (#863)
+77a71c93 Fixing typos and clarifying descriptions. (#879)
+80049bef Revert "Merge pull request #873 from TSC21/est_msgs"
+f9e72c7f common: add time_usec to odometry message
+cfb85257 common: add covariance to estimation msgs
+2c92935e common: describe the MAV_FIELD_BIAS fields as normalized values
+e19b6618 common: extend MAV_SENSOR_TYPE with more options
+be5636c5 Increase state size to 30 to give room for growth.
+a43ce9c7 Remove covariance msgs, too large.
+5d341546 Added generic estimator messages.
+3f5d1150 common: switch battery remaining time undefined to 0
+c1716b85 common: rename and clarify battery (low/)charge state
+f801fd37 common: extend BATTERY_STATUS w/ low state
+8116f991 common: extend BATTERY_STATUS w/ remaining time
+9ebea5e5 common: add ODOMETRY msg and Odometry related MAV_FRAMEs
+60f705fd common: remove references to mavlink_types.h
+597157c0 common: fix MAV_FRAME_LOCAL_NED and MAV_FRAME_LOCAL_ENU definitions
+f0a721ef Add MAV_TYPE_CHARGING_STATION
+54459a48 [ASLUAV msg subset] update battery management system messages (#860)
+eaf0d780 common: ignore 0 or UINT16_MAX in RC_OVERRIDE
+e0382ff7 common: use 0 as unused.
+1349989f common: extend RC_CHANNELS_OVERRIDE to 18 channels
+a7db2af4 update power board messages
+7f9ae52a common: clarify the field description in obstacle_distance message
+d1860432 Fix docs readme link to point to new site
+3ab0112b Fix links to old mavlink site in common messages
+de1327cf Remove link to non-existent example
+0120db56 ESTIMATOR_STATUS_FLAGS add accel_error (#844)
+c5676648 common.xml: add global yaw angle, clarify comments (#839)
+4f07f435 Simplify readme
+97ac4123 Add MAV_CMD for starting/stopping high latency telemetry
+64f0ca40 MAV_AUTOPILOT: added AirRails autopilot entry
+1566be02 Point CONTRIBUTING.md to MAVLink Devguide
+da1cdc5f Create CONTRIBUTING.md
+059b9ba2 Add camera Mavlink type
+7766ea24 pymavlink: submodule update
+21f349d9 pymavlink: submodule update
+cf9c9120 ardupilotmega: add rover loiter mode
+fc385756 pymavlink: submodule update
+1c8f59fb pymavlink: submodule update
+2a6ea6f6 Add option to validate units
+3c562d7e Run format_xml.sh to correct the format
+7e2db9a9 ArduPilot: Add airspeed variance to EKF_STATUS_REPORT
+c9836e20 ArduPilot: Add camera feedback extension
+452e1d28 pymavlink: submodule update
+a7cbde7f pymavlink: submodule update
+ee4e7aa9 Replacement ROI commands
+be9f4269 Add a mapping of ArduPilot custom flight modes
+d8f87083 pymavlink: submodule update
+41994390 pymavlink: submodule update
+17d591ce Added missing units="deg"
+66450119 Again, more units
+ee641658 More unit fixes
+2cfa07f8 Create icarous.xml
+5de84bb1 pymavlink: submodule update
+41ae5430 Update HTML table template
+36d95158 Add link to official docs into generated pages
+60fc32e5 MAVLink PHP template: Link to official docs
+91019afc HTML generator: Clarify protocol sub-version
+1e3213a6 Gitbook generator: Clarify protocol sub-version
+06f66669 common: change units from meters to centimeters in obstacle_distance message
+4e3d6d64 common: increse precision of field distances in obstacle_distance message
+58ca6b94 common: add min and max distance field in obstacle_distance message
+6a3c66a4 common: change field name from estimator_type to sensor_type in obstacle_distance message
+4c36c4c7 Remove ENUM_ prefix on enum types generated. Not useful
+0d182184 Tidy scripts in line with feedback
+441918f2 Update scripts to generate markdown message definitions
+15c11ecb common: add obstacle distance message
+94fd156b Generate markdown to messages/common.md
+50646df0 Enhance description of mavgen.py, paths, and channel metaphor
+114be490 Add MAV_TYPE_PARAFOIL
+c0ac9df3 mavlink_autopilot_version_t: add extended uid2 hardware identifier
+899f0acf Revert incorrect substitution of 'waypoint' to 'MISSION' in messages definitions
+08660b92 add distance sensor orientation convention
+1d3b9cf3 travis: don't do submodules manually
+af146d67 travis: install xmllint
+10bd4962 Fix typos in some descriptions
+7a8c0ddb scripts: disabled format_xml call
+3ab040c7 travis: install libxml2-utils for xmllint
+0d7d1f6a Common: Ability to specify the direction of the VTOL forwards transition (#750)
+416eef62 Update MAVLink2.md
+4e1b5786 Clarify altitude for landing field and add option to specify approach altitude for VTOL transition and land command
+03c1a407 Landing mission items: use param3 to specify ground altitude below waypoint
+f6ebda29 v1.0: common: Add command to handle arm authorization
+a897409d Add image survey mode.
+b8da19f2 Add a terminating flight state
+fc5833e9 Set WiFi SSID and/or password.
+e87c8388 MAVLink: Fix camera image captured message
+8c3e6173 Update README
+d93ae10b Formatting script: Add clear instructions to fix issues
+0abe3437 Update common.xml
+40378979 Common: Add GPS_FIX_TYPE_PPP
+364a8cdb Support trigger before/after distance trigger start/stop
+268621d2 common: add full pose to LANDING_TARGET; add LANDING_TARGET_TYPE enum
+924cce7d Fix typo: wether to whether
+8ec730e9 UAVCAN_NODE_INFO_REQUEST turned into a command
+a5167078 Moved the UAVCAN messages into the v2.0 message space; added UAVCAN_NODE_INFO_REQUEST
+b9f82f68 Added the UAVCAN_NODE_INFO message
+1bc1be27 Explicit units for the uptime field
+275ff71b UAVCAN_NODE_STATUS timestamp field
+f10b90b9 Added the UAVCAN node status message
+e835306a Update mavlink_gitbook.py
+fe49246d common: gps_global_origin: add time in usec (#719)
+2778bda5 common: home_position: add timestamp
+cc6cda85 Update readme with notes about what new (and old) files are for
+724d2caf Fix script to look for XSL file in its final destination
+d65e4080 Add script and xsl file to create gitbook compatible version of the common message specification
+8fc9e9f0 common.xml: add circular area to geofence
+bd60ca09 Extend camera trigger specs. From @mhkabir
+032270d9 Add protocol capability bit for flight information
+c4f132e4 Drop Python 2.6 from validation
+5e885fcf Clarify MAV_CMD_DO_TRIGGER_CONTROL parameters, currently only used by PX4
+7b88cb3e Sort component IDs and add autopilot ID
+a8bb1bf5 ardupilot: add DO_WINCH command
+d0eb2816 ardupilot: swap order of GIMBAL_RESET and SET_FACTORY_TEST_MODE
+a722c139 pymavlink: submodule update
+10b815d3 ardupilotmega: added FIXED_MAG_CAL_FIELD
+dcde2f38 Defined dgps_age units
+dbede4f3 Added RTK_BASELINE_COORDINATE_SYSTEM enum
+915ec7a0 pymavlink: submodule update
+11044da0 updated doc links
+8d8c3b10 ardupilotmega: added MAV_CMD_FIXED_MAG_CAL
+dc349481 common.xml: added MOTOR_TEST_COMPASS_CAL
+27e40d19 common.xml: added simple accel cal
+466e69b5 common: MAV_DISTANCE_SENSOR_RADAR & MAV_DISTANCE_SENSOR_UNKNOWN
+acc19b49 ArduPilot: Correct an off by 1 error on accel cal reporting
+852b628c ArduPilot: Add success/failure states to accel cal reporting
+19e3a464 pymavlink: submodule update
+f4ef4fb7 Add a rotor type for the dodeca rotor.
+a17e3747 Add missing units
+dcf2183e pymavlink: submodule update
+bd59b392 pymavlink: submodule update
+eeee93ca ArduPlane: Add deepstall status reporting
+c4511ff0 pymavlink: submodule update
+4d7d9c72 Add MOTOR_TEST_ORDER enum and update DO_MOTOR_TEST params
+c1ebdfe7 add MAV_LANDED_STATE_LANDING
+508c40d2 Fix the name of the script at the comment on the script header
+ca7cc325 Fixes MAVLink UDP example to compile on Ubuntu 14.04.  Also updates the README file to remind the user to reference version 1.0 of the MAVLink header files in the include path.
+ba213ba9 PREFLIGHT_CALIBRATION: deconflict APM/PX4 param def for airspeed calibration
+7d79b12b SmartAP Autopilot added to MAV_AUTOPILOT enum
+0e976891 Remove WIP label from GPS_RTCM_DATA
+e81b77c7 pymavlink: submodule update
+b97052b7 AOA and SSA message definitions
+e8af6159 pymavlink: added quat view functions
+8c63f976 Add SI units using pure ascii characters (no UTF-8 symbols allowed) to message fields
+9dbef278 Enforce the (most commom) xml attributes order from commom.xml into the other xml files
+bbd1ac83 ArduPilot: Deprecated battery2 message
+ddbe6905 Added bitmask attributes
+9dfaa248 Add missing explicit enum declaration to make it explicit to the ground stations how to decode/display the information. This should allow to remove a lot of hardcoded code from the groundstations
+16f3f270 pymavlink: submodule update
+98c4ce33 Fix copy paste error (s/roll/pitch/ s/roll/yaw/)
+10065829 ardupilot: add VISION_POSITION_DELTA message definition
+1cfd9e87 Add spec for NaN on yaw angle
+4436a8b5 geofence: use single fence type for MAV_MISSION_TYPE_FENCE
+22c64bb9 Definitions for new GeoFence, Rally Point spec
+8cb05864 common.xml: hotfix for overflowing message
+de0176c8 Better explaining image_index for CAMERA_IMAGE_CAPTURED
+6a21737f Set recording time in milliseconds.
+8ac2fbbc Adding this image index and result boolean. Total count expected is better computed at the GCS end.
+26375d8f Some tweaks and additions to Video/Photo capture.
+0f095d57 PREFLIGHT_CALIBRATION: update descriptions & add temperature calibration
+da7a6094 Video: Add -1 for max frame rate
+598968a4 Photos/Videos: use -1 for max resolution
+dc415938 pymavlink: added C++11 generator
+35e24825 pymavlink: submodule update
+d6a031b0 Common: Update the RTCM flags documentation
+ffc478c7 pymavlink: submodule update
+44dcae89 pymavlink: submodule update
+83a4ece6 Ooops, missing whitespace
+cf8d1eeb Add missing enum attributes
+32eb9c13 pymavlink: submodule update
+5c358499 pymavlink: submodule update
+2460eb01 ArduPilot: Add PID_TUNING_LANDING
+e08439ef pymavlink: raise version
+8e35778b pymavlink: submodule update
+e32b1ffc Format message definitions with xmllint.
+05370236 Add xmllint check to travis.
+11750db3 common.xml: simplify mount status
+215bdda7 Common: Add MAV_SYS_STATUS_BATTERY for reporting the health of the battery
+2d24de02 pymavlink: submodule update
+12cba5fb Support for NAV_CMD_PAYLOAD_PLACE
+fd0b3686 pymavlink: submodule update
+9f5524e7 common.xml: extend OPTICAL_FLOW with flow rates in rad/sec
+9d2b2e02 common.xml: rename MOUNT_STATUS to MOUNT_STATUS2
+6feb2438 pymavlink: submodule update
+3e66f0d2 Merge remote-tracking branch 'ardupilot/master'
+32f51f59 pymavlink: submodule update
+db34fb49 fix some spelling errors and bad copy-paste in spec
+e4693257 HIGH_LATENCY reduce size
+e444bc79 Update common.xml
+6af57d39 Timestamps for offboard state sharing
+606e970c Add command for accel calibration vehicle position (#21)
+27394648 Camera and gimbal improvements (#635)
+43228d5b pymavlink: submodule update
+1a6495e8 ardupilot: adaptive control tuning message
+96ad3dd2 ardupilot: added messages for remote device read/write
+b1294dc7 pymavlink: submodule update
+d1923992 Changed DO_SET_POSITION_YAW_THRUST to NAV_SET_YAW_SPEED
+14d1a74e Add empty enum and message fields for standard dialect
+1183bc26 Create default dialect "standard"
+44133b94 Fix message generation by only generating dialects and not common standalone. Fixes #639.
+92bdcffd Update of matrixpilot specific message definitions.
+fdb0c2a4 common.xml: ignore FLAG_SAFETY_ARMED in DO_SET_MODE
+62f449cb common: add messages & commands for streaming a log file over mavlink
+57c0e6bc common.xml: call it AIRFRAME_CONFIGURATION instead
+0331cc5f common.xml: Added landing gear command
+51190c94 common.xml: whitespace only
+f4c955af HIGH_LATENCY message for Iridium connections
+64848349 travis: test up to python 3.5
+060a20ae travis: install pymavlink requirements
+2552caa1 pymavlink: submodule update
+4e086b51 pymavlink: submodule update
+7554eced pymavlink: submodule update
+e1668e31 update MAVLink2 docs
+6103d354 pymavlink: submodule update
+a287f765 pymavlink: submodule update
+b0065b24 pymavlink: submodule update
+a332332d pymavlink: submodule update
+8e1b8146 pymavlink: submodule update
+dbecfa37 Add GPS_FIX_TYPE enum
+170be75f Add GPS_FIX_TYPE enum
+c4445b30 Update README.md w/ steps for pymavlink submodule (#622)
+ab26ea51 pymavlink update
+dc5b9a18 pymavlink: update submodule
+27f2a203 Update README.md w/ steps for pymavlink submodule (#622)
+0835c0c9 Adding DO_SET_POSITION_YAW_THRUST
+d3e9e584 Adding DO_SET_POSITION_YAW_THRUST
+73685519 pymavlink update
+004bbb2c pymavlink: added submodule
+0a907768 Merge remote-tracking branch 'upstream/master' into pymavlink-update
+727ef8e7 Merge pull request #616 from vooon/fix_mav_type_enum_desc
+06bd5f4e Merge branch 'master' into fix_mav_type_enum_desc
+fb4c2bf4 pymavlink: move maintainence to submodule
+593fa431 mavlogdump: added --show-seq
+c842aa7b fix MAV_TYPE enum descriptions.
+260c843b Remove recently added but unused landing field message
+218496ca commons.xml: add HIL_ACTUATOR_CONTROLS with id=93
+46e96dbe MAVLink 2: Add discovery flag to AUTOPILOT_VERSION field
+381586ce pymavlink: correct mavtcp final-retry case
+918d936b fix relative import with Python 3 (#607)
+ec58f8e6 serial to tcp tool
+e67f707c pymavlink: support px4 modes in mode_mapping
+b9b4ec97 pymavlink: set px4 modes
+b50ef391 pymavlink: interpret px4 modes
+e409dc58 Fix the get proto version function signature
+d60d0d58 mavgen_cs: Generate C sharp code even without a .Net Assembler.
+cabf4e0d Fixed an array size miscalculation in generated deserialization methods.
+5d8cefba Fixed a misinterpretation of array types in ByteArrayUtil.
+20c884c0 pymavlink: fixed flightmode for DF files in mavextract.py
+6769532d Revert "Px4 modes (#603)"
+06bbda88 Px4 modes (#603)
+dc446f35 Add MAV_SYS_STATUS_LOGGING to indicate logging health
+3effb803 Add MAV_SYS_STATUS_LOGGING to indicate logging health
+fee53706 Fix LANDING_TARGET message to fit MAVLink 1.0 spec
+2051bc29 Fix line endings to UNIX and add description explaiing where the name originated.
+ac29acf0 Adding land map to allow landing quality sensors to report field properties (#602)
+1d8edfd7 ignore *.cproject for eclipse (#590)
+b4f718cc mavgen_cs: C sharp had been generating enums as shorts, need ints. (#588)
+5513e9af pymavlink: raise version
+12cb4d4d pymavlink: don't allow payload trimming to reduce payload to size zero
+c062dad5 pymavlink: fixed test suite with vendor XML
+653e0e9f common.xml: added MAV_CMD_DO_ENGINE_CONTROL
+b180fcaf common.xml: extend SERVO_OUTPUT_RAW to 16 channels
+5c60ba4a pymavlink: raise version
+d526edd5 pymavlink: don't allow payload trimming to reduce payload to size zero
+dfd3b7e3 pymavlink: fixed test suite with vendor XML
+44b68be5 pymavlink: raise version
+0205b501 mavlogdump: added --link option
+146b32ee pymavlink: put _link in messages
+7dfefaa3 pymavlink: added --link option to mavextract.py
+d13fba38 Common: add new COLLISION message and associated enums
+fe1ea41d pymavlink: add names of new flight modes
+f8918ce3 pymavlink: raise version
+ee526a9a mavlogdump: added --link option
+cd57a5a8 pymavlink: put _link in messages
+946c49b8 pymavlink: added --link option to mavextract.py
+3f6606e4 Common: add new COLLISION message and associated enums
+893249c1 pymavlink: add names of new flight modes
+1a0f01e2 add vendor includes list to project
+b8fc21fc Add vendor - uAvionix
+24a8745d common.xml: added MAV_CMD_DO_ENGINE_CONTROL
+e4f5706c common.xml: extend SERVO_OUTPUT_RAW to 16 channels
+5566769c add vendor includes list to project
+fcb6b074 Add vendor - uAvionix
+db237e82 common.xml: added PLAY_TUNE message
+43a339f3 common.xml: added PLAY_TUNE message
+7be373c9 common.xml: added BUTTON_CHANGE message
+8bd2915a common.xml: added BUTTON_CHANGE message
+7253e152 APMRover: added new MAV_CMD_DO_SET_REVERSE for reverse control
+f1853e51 APMRover: added new MAV_CMD_DO_SET_REVERSE for reverse control
+e0f56de3 pymavlink: raise version
+314c0de1 pymavlink: allow for multiple include lines in an xml file
+5aa27363 move MAV_CMD_DO_MOTOR_TEST to common (#580)
+a3ac4d89 add MAV_CMD_DO_CHANGE_ALTITUDE (#587)
+a7256841 pymavlink: added filtering by source sysid and component ID for tlogs
+86829447 ASLUAV: Removed unnecessary variables from SENS_POWER_BOARD message, renamed added one each in FW_SOARING_DATA message to five more flexibility
+63914ad5 pymavlink: raise version
+e4adb812 pymavlink: allow for multiple include lines in an xml file
+e2f87ed7 Adding the MAV_GPS message (from allanm84) (#589)
+a66830af Adding the MAV_GPS message (from allanm84) (#589)
+454c28fb move MAV_CMD_DO_MOTOR_TEST to common (#580)
+0417c0a0 add MAV_CMD_DO_CHANGE_ALTITUDE (#587)
+dfd42129 pymavlink: added filtering by source sysid and component ID for tlogs
+30aac951 Merge pull request #582 from philipoe/master
+a80c3c5d ASLUAV: Removed unnecessary variables from SENS_POWER_BOARD message, renamed added one each in FW_SOARING_DATA message to five more flexibility
+ee5d0733 ASLUAV: Extensions to FW_SOARING message
+8c78ce90 ASLUAV: Renamed variable in ASLCTRL_DATA message, added SENS_POWER_BOARD message
+ef17ada5 pymavlink: fixed mavlogdump for DF file breakage
+3ce0124d pymavlink: fixed multilink handling for summary tools
+55d160da Fix packing for non-GNU (windows) compilers
+b783de97 Fix typo in URL
+72ee850d Manage compiler warning on unused variables for V1
+4a7aeb7a autogenerated headers for rev https://github.com/mavlink/mavlink/tree/89d76a4f5755cbb1d10d7a86cd3c24af1438dbbf
+c40eb408 Fix protocol generation and GIT upload
+c7f991b3 autogenerated headers for rev https://github.com/mavlink/mavlink/tree/e7e7e40ddf2ca8f0a3c07a6046a101a109fc9382
+7ca21d3a autogenerated headers for rev https://github.com/mavlink/mavlink/tree/0d19edb5e28496660dc9b1b5b76c550626ca2970
+61a5dea8 Fix generator
+c75c2c60 Fix generator syntax
+6a519d90 Work towards fixing the generator
+b51aba19 Fix liks
+9c0bc5aa Update protocol generators
+e7491c6a msg 'ALTITUDE.time_usec' comment said milliseconds (#572)
+c3b13396 added vehicle command for position control submodes (#574)
+d8e37000 Update MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS  for 3rd compass (#562)
+9e7f7e56 Merge pull request #576 from philipoe/master
+f5645b61 ASLUAV: Extensions to FW_SOARING message
+1763a661 ASLUAV: Renamed variable in ASLCTRL_DATA message, added SENS_POWER_BOARD message
+baccb3b1 pymavlink: fixed mavlogdump for DF file breakage
+91334773 pymavlink: fixed multilink handling for summary tools
+9d37d9cb Merge pull request #575 from NaterGator/packfix
+36fad147 Fix packing for non-GNU (windows) compilers
+50ab73ab Fix typo in URL
+a267bd63 Manage compiler warning on unused variables for V1
+5333afcb autogenerated headers for rev https://github.com/mavlink/mavlink/tree/89d76a4f5755cbb1d10d7a86cd3c24af1438dbbf
+89d76a4f Fix protocol generation and GIT upload
+0ba611cb autogenerated headers for rev https://github.com/mavlink/mavlink/tree/e7e7e40ddf2ca8f0a3c07a6046a101a109fc9382
+e7e7e40d autogenerated headers for rev https://github.com/mavlink/mavlink/tree/0d19edb5e28496660dc9b1b5b76c550626ca2970
+0d19edb5 Fix generator
+6d7072f0 Fix generator syntax
+474e6b86 Work towards fixing the generator
+498fae6a Fix liks
+f7e38f9e Update protocol generators
+ceafff7e msg 'ALTITUDE.time_usec' comment said milliseconds (#572)
+d48d3d05 added vehicle command for position control submodes (#574)
+2d065791 Update MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS  for 3rd compass (#562)
+5215fe50 mavlogdump: added --show-source option
+75ffa66a pymavlink: improve mavsummarize tool
+6e55dfd1 Java: track the stats per system, and allow ignoring the radio status
+e70c24fd magfit: added 3D plotting
+5dad8778 pymavlink: removed "Using mavlink x.x" messages
+a6e1e470 Offer method to get and set proto version
+8813d3d9 message_definition: Add component id for QX1 Gimbal
+5dac31c4 mavlogdump: added --show-source option
+902edda2 pymavlink: improve mavsummarize tool
+752640f1 Java: track the stats per system, and allow ignoring the radio status
+4e543e81 magfit: added 3D plotting
+d1d68a2a pymavlink: removed "Using mavlink x.x" messages
+d602e021 message_definition: Add component id for QX1 Gimbal
+46bf21a9 Offer method to get and set proto version
+4f5bcc03 pymavlink: raise version
+af0f269f pymavlink: added support for coaxial vehicles
+3c46fa19 java: fixed generation of CRCs
+33c109c8 added simple java test
+1da7a82d common.xml: Added FENCE_ACTION_RTL as a possible fence breach action.
+430351ac Fix typo in common.xml (#559)
+8d172185 common.xml: Added FENCE_ACTION_RTL as a possible fence breach action.
+a5b708c1 java: fixed generation of CRCs
+7fe4acef added simple java test
+a7c00130 mavlink2: _mavlink_resend_uart() for MAVLink1
+c4c806c8 mavlink2: _mavlink_resend_uart() for MAVLink1
+e07c82ff pymavlink: raise version
+8e86aa8b pymavlink: added support for coaxial vehicles
+db6899f3 Fix typo in common.xml (#559)
+ec30e9dd pymavlink: raise version
+cdce1f4d pymavlink: keep signing statistics
+e4bd7526 pymavlink: raise version
+1a91bce0 pymavlink: keep signing statistics
+a5a81767 mavlink2: check for NULL ptr in zero fill
+5f88758e mavlink2: check for NULL ptr in zero fill
+870e9eb8 pymavlink: raise version
+56532dc4 pymavlink: strip trailing zeros in MAVLink2 python generator
+43c569c3 pymavlink: raise version
+369b96c6 pymavlink: strip trailing zeros in MAVLink2 python generator
+aa3ff3f5 mavlink2: zero-fill incoming packets to allow for trimmed packets
+db810c93 mavlink2: zero-fill incoming packets to allow for trimmed packets
+ab1e3511 mavlink2: fixed test suite for trimmed packets
+2f08efe8 mavlink2: auto-trim payloads in MAVLink2
+b856c258 generator: cope with extended packets in C test suite
+1eb65591 mavlink2: fixed test suite for trimmed packets
+7467a630 mavlink2: auto-trim payloads in MAVLink2
+fcb200ed generator: cope with extended packets in C test suite
+bfee4aed pymavlink: raise version to 2.0.0
+edd478c6 pymavlink: allow forcing a send as MAVLink1 in python API
+8533f637 pymavlink: always allow smaller packets
+65adfff7 pymavlink: cope with new pySerial and RTSCTS
+80eff2b1 pymavlink: raise version to 2.0.0
+3c3a69a5 mavlink2: fixed _mavlink_resend_uart() for signed packets
+7bfcb9c7 mavlink2: allow sha256 to build with cast-align
+c98267cd pymavlink: allow forcing a send as MAVLink1 in python API
+feda4432 pymavlink: always allow smaller packets
+b97a2d8f pymavlink: cope with new pySerial and RTSCTS
+af89cba9 mavlink2: fixed _mavlink_resend_uart() for signed packets
+a2fe4fe5 mavlink2: allow sha256 to build with cast-align
+d90332db Merge remote-tracking branch 'upstream/master' into pr-mavlink2
+cbe3a536 ardupilot: extend MEMINFO with freemem32
+4aebf30a pymavlink: auto-generate target_system and target_component offsets
+42f8327a pymavlink: fixed merge errors in python mavlink2 support
+0540936d Make send_struct more efficient on typical systems
+e9ae9877 Add convenience function generation
+5054476c GUI: Support MAVLink 2.0 generation
+220eb37e Code style fixes
+52273473 mavlink2: fixed build error on px4
+d35a17c0 docs: update MAVLink2 doc
+537c6c96 mavlink1: adjust API to match mavlink2 with min_length
+4efd2d7d mavlink2: allow for extensions of messages with new fields
+2d7ffaa5 generator: fixed errors in 24 bit ID support in python mavlink2
+05c7e870 mavlink2: fixed test suite for mavlink1 send of high msgid
+d2b4a315 mavlink2: continue adapting to 24 bit msgid length
+55e90b6e MAVLink2: updated docs for 24 bit
+51f8ffc9 fixup 24 bit
+ad651a69 generator: change C headers for 24 bit ID and no dialect
+2ee6ece7 generator: change python generator for 24 bit IDs and no dialect
+244c77f4 generator: change to 24 bit IDs and no dialect in header
+03868644 pymavlink: fill in flags field from mavlink_parse_char() status
+baa5a37c pymavlink: fixed mixed mavlink1/mavlink2 packets in python
+57cb2b1e doc: added link ID info to MAVLink2.md
+2c7c3691 pymavlink: fixed handling of link IDs
+dc0953d3 pymavlink: added some debug code to python genarator
+7fd1372c doc: initial MAVLink2 guide
+e1ec8e12 pymavlink: added disable_signing() method to mavutil
+e836ffc8 common.xml: document how to disable signing
+08f7ca20 pymavlink: auto-update link_id
+3d4c4217 pymavlink: added get_link_id() and get_signed() methods on all messages
+06fe7764 pymavlink: reject unsigned packets if signing is setup
+b80f0e69 pymavlink: check for incompat_flags in python generator
+3cf09a67 pymavlink: check for incompat flags and reject
+1faa52e2 pymavlink: remove MAVLink2 messages when building for MAVLink1
+d2c8af84 pymavlink: implement signing streams and timestamp rules for python
+f8e18d89 pymavlink: implement signing streams and timestamp rules
+3dc7c071 pymavlink: fixed 10us resolution of initial timestamp
+bb46f266 pymavlink: start with signing disabled
+bc3f308c pymavlink: changed msgId to be 16 bit in schema
+fcc6a5ab common.xml: added SETUP_SIGNING message
+d179121e pymavlink: added setup_signing() to mavutil
+57761b20 pymavlink: fixed handling of msgbuf as an array for signing
+6e4ce373 pymavlink: cleanup mavlink_signature_check
+c3b98f40 pymavlink: added allow_unsigned_callback to python signature handling
+d9cc30d1 pymavlink: added simple signing test to mavtest.py
+8c6b8e16 pymavlink: initial support for signing in python generator
+de13ef0c pymavlink: added sha256 test code
+8e6b8c7d pymavlink: fixed linkid and timestamp in signature
+1d30bf62 pymavlink: removed unusued extended message support
+fc2c8bae pymavlink: install mavlink_sha256.h
+8ecb514e pymavlink: added C implementation of sha256
+8a3b0663 pymavlink: added signing tests to testmav
+719949a4 pymavlink: fixed the remaining APIs for mavlink2
+1d1fada2 pymavlink: initial support for packet signing in MAVLink2
+858c79dc pymavlink: fixed seq handling for mavlink2
+072fd928 pymavlink: fixed auto-dialect for mavlink2
+d2e99b20 pymavlink: support mavlink2 in mavutil
+564cbd0d pymavlink: fixed mixed mavlink1/mavlink2 python parsing
+cf11ef1f pymavlink: fixed copying headers for different protocols
+d67c4bdd pymavlink2: fixed finalize_send mavlink2 message
+1e3b6a9b pymavlink: fixed generator for BAD_DATA packet
+bc5cee4f pymavlink: use ardupilotmega for mavtest
+d74867d2 pymavlink: initial support for mavlink2 protocol
+ce34f1e8 pymavlink: updated mavtest.py for mavlink2 testing
+259e8ac9 pymavlink: start on python generation for mavlink2
+71bbba40 generator: cope with sparse message info and lengths arrays
+64202176 pymavlink: prevent overwriting same file in test suite
+7983a5fc pymavlink: update crcs array to allow for multiple dialects
+3838279d generator: test sending as both MAVLink2 and MAVLink1
+c1ca02bb generator: always enable CRC_EXTRA in MAVLink2
+45959064 generator: added flags for mavlink1 vs mavlink2 generation and parsing
+78f4ca2c pymavlink: test both APM and common
+ced57c93 pymavlink: added APM targets to test makefile
+ae7fb893 pymavlink: mavlink2 will sort fields
+404a8755 pymavlink: switch to new header format
+0fe5c911 pymavlink: fixed decoding of non-aligned structures
+5985d136 pymavlink: added test script to help with development
+1bf0cf2f pymavlink: initial version of mavlink2 headers
+edd26c5a pymavlink: first steps towards mavlink2
+d8eee709 tools: support mavlink2 in mavgen.py tool
+3640927a pymavlink: install mavlink2 headers
+5cf27ff7 mavlink2: added dialect markers to support mavlink2
+eeb4e0ce mavgraph: avoid exception on corrupt log
+9108253b mavlogdump: support wildcard for message types
+f59d5640 Add RTCM injection message
+0fc3eb16 update NAV_CONTROLLER_OUTPUT comment (#546)
+d4027b1c Add support for MAV_CMD_NAV_DELAY in common.xml (#543)
+864af317 update copying file per community / developer discussion
+057c3abc ardupilot: extend MEMINFO with freemem32
+4e6e2a0f pymavlink: auto-generate target_system and target_component offsets
+e68c0d11 pymavlink: fixed merge errors in python mavlink2 support
+322aaf13 Make send_struct more efficient on typical systems
+fc7df8d7 Add convenience function generation
+f2fca760 GUI: Support MAVLink 2.0 generation
+57bc3cfc Code style fixes
+135fb88e mavlink2: fixed build error on px4
+fd4876df docs: update MAVLink2 doc
+8aa95957 mavlink1: adjust API to match mavlink2 with min_length
+d9212924 mavlink2: allow for extensions of messages with new fields
+ec15b9fd generator: fixed errors in 24 bit ID support in python mavlink2
+fa7a412a mavlink2: fixed test suite for mavlink1 send of high msgid
+cf68a47f mavlink2: continue adapting to 24 bit msgid length
+56f454e4 MAVLink2: updated docs for 24 bit
+b970e5aa fixup 24 bit
+e4d18df9 generator: change C headers for 24 bit ID and no dialect
+56a880ca generator: change python generator for 24 bit IDs and no dialect
+75b98d18 generator: change to 24 bit IDs and no dialect in header
+14d1339a pymavlink: fill in flags field from mavlink_parse_char() status
+2baa870f pymavlink: fixed mixed mavlink1/mavlink2 packets in python
+71aad598 doc: added link ID info to MAVLink2.md
+d33dfc1f pymavlink: fixed handling of link IDs
+4b50ee2c pymavlink: added some debug code to python genarator
+14dc1af3 doc: initial MAVLink2 guide
+cf4307e6 pymavlink: added disable_signing() method to mavutil
+e72d6058 common.xml: document how to disable signing
+85a049ba pymavlink: auto-update link_id
+0ff862b1 pymavlink: added get_link_id() and get_signed() methods on all messages
+a80945b2 pymavlink: reject unsigned packets if signing is setup
+8667d14b pymavlink: check for incompat_flags in python generator
+4fcad84c pymavlink: check for incompat flags and reject
+ddbd447d pymavlink: remove MAVLink2 messages when building for MAVLink1
+0ebb28a9 pymavlink: implement signing streams and timestamp rules for python
+1849ba5d pymavlink: implement signing streams and timestamp rules
+e5a40080 pymavlink: fixed 10us resolution of initial timestamp
+49136e9f pymavlink: start with signing disabled
+72581042 pymavlink: changed msgId to be 16 bit in schema
+184893c0 common.xml: added SETUP_SIGNING message
+62b08c79 pymavlink: added setup_signing() to mavutil
+9e10fc45 pymavlink: fixed handling of msgbuf as an array for signing
+c5301977 pymavlink: cleanup mavlink_signature_check
+cc8a1dae pymavlink: added allow_unsigned_callback to python signature handling
+78cc4228 pymavlink: added simple signing test to mavtest.py
+161a5c99 pymavlink: initial support for signing in python generator
+6b8d7909 pymavlink: added sha256 test code
+cb5a69e0 pymavlink: fixed linkid and timestamp in signature
+12d4c45a pymavlink: removed unusued extended message support
+4cc834d1 pymavlink: install mavlink_sha256.h
+205773e1 pymavlink: added C implementation of sha256
+f3311be7 pymavlink: added signing tests to testmav
+276b0a46 pymavlink: fixed the remaining APIs for mavlink2
+f69bd5f4 pymavlink: initial support for packet signing in MAVLink2
+ea4a348c pymavlink: fixed seq handling for mavlink2
+b5b7862d pymavlink: fixed auto-dialect for mavlink2
+f28e66e6 pymavlink: support mavlink2 in mavutil
+ba08b634 pymavlink: fixed mixed mavlink1/mavlink2 python parsing
+d1039787 pymavlink: fixed copying headers for different protocols
+c859ffe2 pymavlink2: fixed finalize_send mavlink2 message
+5325e681 pymavlink: fixed generator for BAD_DATA packet
+99765ed7 pymavlink: use ardupilotmega for mavtest
+4af2afd5 pymavlink: initial support for mavlink2 protocol
+980aa490 pymavlink: updated mavtest.py for mavlink2 testing
+824b1418 pymavlink: start on python generation for mavlink2
+b6414ac2 generator: cope with sparse message info and lengths arrays
+6770e95f pymavlink: prevent overwriting same file in test suite
+600b888f pymavlink: update crcs array to allow for multiple dialects
+d010bd68 generator: test sending as both MAVLink2 and MAVLink1
+56f4dab1 generator: always enable CRC_EXTRA in MAVLink2
+9b2fd8ee generator: added flags for mavlink1 vs mavlink2 generation and parsing
+9b0b0967 pymavlink: test both APM and common
+d3161cdb pymavlink: added APM targets to test makefile
+4c5140eb pymavlink: mavlink2 will sort fields
+4ce789a4 pymavlink: switch to new header format
+0c647fe8 pymavlink: fixed decoding of non-aligned structures
+9f2f0125 pymavlink: added test script to help with development
+ca26c7c1 pymavlink: initial version of mavlink2 headers
+893b6b08 pymavlink: first steps towards mavlink2
+e4aa0414 tools: support mavlink2 in mavgen.py tool
+0480b1e2 pymavlink: install mavlink2 headers
+744875fb mavlink2: added dialect markers to support mavlink2
+e225ad11 mavgraph: avoid exception on corrupt log
+436ec3f8 mavlogdump: support wildcard for message types
+d9dc398f Add RTCM injection message
+c5699fed update NAV_CONTROLLER_OUTPUT comment (#546)
+5d315ff4 Add support for MAV_CMD_NAV_DELAY in common.xml (#543)
+ba2dd74d add new msg MISSION_REQUEST_INT
+652c0481 pymavlink: raise version
+5efcc182 pymavlink: added QRTL mode
+325d82ea MAV_CMD_DO_CHANGE_SPEED relative change
+acddb37c fixed nasty performance issue in pymavlink
+11c7c884 Update wind estimate message name
+3662e4c1 Fix wind est field
+95021aaa More descriptive wind information
+f33d1423 Added estimator and wind reports to generic message set
+bbff0e17 java: fix bad mask applied on longs
+78846c73 loiter commands param4 to offer flexible exit xtrack option for fixed wing
+b217db05 add new msg MISSION_REQUEST_INT
+136ab738 pymavlink: raise version
+1309a13d pymavlink: added QRTL mode
+320f6161 MAV_CMD_DO_CHANGE_SPEED relative change
+ac2ba9d8 fixed nasty performance issue in pymavlink
+a22437b6 Update wind estimate message name
+78590c85 Fix wind est field
+62beae13 More descriptive wind information
+35b745fe Added estimator and wind reports to generic message set
+37db4aab Update flags for DO_REPOSITION
+51e0e97f java: fix bad mask applied on longs
+3573d55e loiter commands param4 to offer flexible exit xtrack option for fixed wing
+61cdd6b4 Update flags for DO_REPOSITION
+ae1a1448 Add new reset bit definition to HIL_SENSOR.
+a34fac16 Update AutoQuad definitions (update custom mode flags, add orbit wpt, remove unused follow msg).
+73dcd3aa Add user defined commands
+77460daa removing extra space in common.xml
+c75fc9d5 updating tracker bit positions
+07a95e27 updating some comments
+8c285234 adding follow target messages
+3a9202b1 pymavlink: added tcpin mavlink sockets
+935ebc87 pymavlink: raise version
+81db81a2 pymavlink: fixed expression evaluation with mavextra and math
+a0ed95c3 pymavlink: added QLAND mode for APM:Plane
+4a858839 Fix comment
+5108ff41 Add reposition command
+87a05997 common.xml: added MAV_COMP_ID_OSD and MAV_COMP_ID_PERIPHERAL
+b3670bfd pymavlink: raise version
+62c26d59 pymavlink: implement udpbcast destination option
+2fd2d207 Java: only allocate the payload space required for a message
+8db2b51b Fix battery status docs
+0798eed8 add reverse motor status to SYS_STATUS
+b276143b pymavlink/generator: Only report final auto-assigned enum values, consolidated at the end generation. Do not show notices for auto-assigned values in common.xml file (too much noise).  Fix duplicate enum error report to actually indicate both files/lines which contain the conflict (and improve formatting).
+a40f7ef1 pymavlink/generator: Fix extending auto-assigned enum values with more auto-assigned ones. Enums in any included file (eg. common.xml) will always take precedence numerically. Also avoid renumbering enums if there is no actual conflict when minimums don't overlap.
+fb4968e8 pymavlink/generator: Enable extending enum definitions without providing a `value` attribute. The actual value will be calculated based on the common enum being extended (highest value + 1). This prevents possible value conflicts if the common defs change. Note that a manually-assigned value (in the XML) is never automatically modified (this preserves all backwards compatibility). This also ads a notice to the user whenever an enum value is being automatically generated or modified.
+80ddf565 pymavlink: raise version again
+6f45e4b9 pymavlink: raise version
+259b296f ADS-B: vertical velocity should have been signed
+953b3eb9 pymavlink: support pyserial 3.0
+a624c7a5 Merge pull request #495 from Susurrus/clarifications
+ab3601d8 Merge branch 'master' into clarifications
+60af73a1 pymavlink: make build data in version.h only use day
+ca630030 pymavlink: allow running mavgen within tree without installing
+5ffe2881 pymavlink: raise version
+34d16123 Revert "Parachute capability bit"
+d7e65ec7 Merge branch 'master' into clarifications
+d397e0a5 ardupilotmega.xml: merge changes from ardupilot repository
+85135734 ardupilotmega.xml: run xmlpretty.py
+88647d2e scripts: added xmlpretty.py tool
+9254db50 Clarify NULL status for RAW_PRESSURE differential pressure readings.
+75746cd0 Clarify fields in GLOBAL_POSITION_INT.
+763a53c2 Clarify the various setpoint command messages.
+7b072e52 Spelling fixes.
+5c3eb5ee Fix copy/paste error
+e1fbf838 Add message definitions to C library
+9fc1342d Merge pull request #485 from jschall/pr-udp-fix
+86465343 Merge pull request #491 from squilter/add_parachute_capability
+ebaf39ae common.xml: add parachute capability bit
+c81d2fd7 common.xml: added VTOL takeoff and land commands
+cd0f9599 Document MAVLink reboot command
+b0068616 message_definitions: add MAV_CMD_DO_SEND_BANNER to apm cmd defs
+1fc4aef0 pymavlink: added APM QuadPlane modes
+e49d4458 mavutil: fix UDP parsing when there are multiple messages per packet
+8201e5fa Merge pull request #479 from devbharat/master
+a3d4c49c Fixed message definitions
+c071b31d Remove unused pixhawk message set to avoid confusion
+86853f3b [paparazzi] SCRIPT_CURRENT and NULL terminated strings
+af5142aa [paparazzi] Adds paparazzi flightplan-script (called blocks) handling to mavlink.
+e2214937 Add comments on new parameter for CMD_NAV_CONINUTE_AND_CHANGE_ALT
+42d695f6 mavplayback: prevent crash if "" or non-digit vlue
+eb285ed6 Update common.xml
+8895328d [generator_java] Replace  in MAVLinkPacket.java
+5e6dc475 Reword MANUAL_CONTROL MAV_CMD
+2c614f1c Make Numpy support optional.
+c89b121e Increases UDP max packet size to max.
+c0f18504 Deprecate SET_MODE message.
+8bba7506 pymavlink: raise version
+7cd03ef0 adsb_vehicle: add squawk flag, convert floats to ints
+e7fd7b55 pymavlink: raise version
+0ceab91b mavlogdump: check for no types with csv dump
+e19059a5 mavlogdump: csv dump of bin files
+b5797fbe ardupilotmega: remote_log_data_block support
+e0bb4bf0 updated docs for MAV_CMD_DO_SET_MODE on param3
+bae3fbea ADSB_Vehicle: add uint16_t squawk
+226a7e2e Merge pull request #464 from mavlink/ManualControl
+1567c0a9 More detail for MANUAL_CONTROL.z
+6a53d5f5 pymavlink: raise version
+7df9c75a adsb lat/lon to use int*1E7 instead of float
+0e079b9d added timestamp for altitude message
+8598606c Moved an ADSB enum up a line so it comes before the float that it describes
+16be50bc pymavlink: raise version
+794b5956 new message: ADS-B vehicle
+d668a162 pymavlink: changed from distutils to setuptools
+11bcadce Merge pull request #452 from hamishwillee/hamishwillee-improve-linking-to-fields
+73864ede Update mavlink_to_html_table.xsl
+22599fcb Update mavlink_to_html_table.xsl
+fc7ce0d4 pymavlink: fixed assumption that type(x) returns just the type
+8f5b0654 Add swift mavlink code generation
+eea44e7b DFReader: emit last line of .log files
+e6dce6de Merge pull request #446 from davidbuzz/buzz_mavserial_fix
+6c8cd528 pymavlink:  a revised "try" part of the function (mavutil.py, line 761) , where this handles bytearray data correctly, and it didn't before.  fixes issue 445
+63bc9d0c Merge pull request #441 from UAVenture/extended_sys_state
+762da18c redefine vtol message into more general extended status message
+9fff38f4 pymavlink: raise version
+8fe5a046 pymavlink: added get_fieldnames() to DFReader
+3ba366f6 pymavlink: improved mavmemlog
+18aeb1ed common.xml: added Abort Alt to MAV_CMD_NAV_LAND
+a9d528a1 Merge pull request #434 from tcr3dr/patch-1
+6551482c common.xml: added SCALED_PRESSURE3
+b3a94c63 Merge pull request #438 from mantelt/feature/sensorpodStatusMsg
+f6bac2fa ASLUAV: add new MAV_CMD and SENSORPOD_STATUS message
+573ed41c ASLUAV: Add FW_SOARING_DATA message, which transports data for fixed-wing thermal-updraft seeking flight
+1e47af10 Merge pull request #436 from adegroote/python3
+158752f6 mavgraph: added --timeshift option
+efba48c6 pymavlink: added mavfft to install
+2aeef06f mavfft: added gyro fft
+bed8940b [python3] try to compute properly the crc for python3
+2240bc34 Allows pymavlink to be run without numpy.
+47a67370 Add UAVCAN config command
+797fc35f Common: rename FIRMWARE_VERSION_TYPE and fully qualify items
+a6a2e3d9 common: add firmware_release_type enum
+398bcd1a Merge pull request #423 from UAVenture/vtol
+96589baa Merge pull request #424 from ptsneves/master
+2957e156 Common: Add MAV_CMD_NAV_FOLLOW (vehicle following waypoint command)
+78389263 Merge pull request #425 from squilter/remove_21196
+80b5c28b Common: remove 21196
+87cdf931 Corrected situation where the messages' field description with a newline caused the generation of corrupt headers.
+a616555c added vtol transition command and vtol state message
+74c7c0f8 pymavlink: raise version
+20ebbabd ardupilotmega: added RPM message for RPM sensors
+f3a8f547 mavmission: reject guided commands as mission items
+25eccb1b Replace awkward data stream interface with a message ID based API and rely on commands to get and set message rates.
+ef7dc0df Merge pull request #406 from sjwilks/more_colours
+0c16a384 Add commands and message to handle home position. Clarify parameter storage message / use
+e0622e88 Add system state used for the onboard controllers
+7a001c95 Add request for an online resource.
+60c1f83c Altitude report including all the various estimates used in the system.
+fda1ff16 Merge pull request #421 from squilter/new_capabilities
+24987fdf Common: add two new capabilities
+fd7fe8fb Common: Add 21196 for emergency disarm
+cd887f03 pymavlink: raise version
+363317ca mavextra: added elevon de-mixing
+1125a715 Fixes a typo in the gimbal report description
+96181846 pymavlink: Do not raise exception on failure to unpack a message in DFReader
+e283ccc2 pymavlink: fix json format output for mavlogdump
+77a13142 common: Add a comment about fence floor.
+91c90c4f added new mav type for tilt-rotors
+7b7b20a3 java: Added more information to the exception message.
+4412c47e java: Fixed casting issues.
+6e59f1d2 java: Fixed precision loss for the unsigned max value for the primitive types.
+df3a1733 java: Updated generated code indentation settings.
+88c648ef java: Added auto generated notice to the generated files.
+5b904c7d java: Prettification of the generated java code.
+89511a32 java: Made `CRC#MAVLINK_MESSAGE_CRCS` static to reduce memory usage.
+80598732 [cmake] Fix cmake build
+c62147a5 Clarify GPS error.
+19c5b8ba Output the approximate time that the log started.
+f91f5f3f Make the output a little more clear.
+0fbd9ede Remove vestigial debugging code.
+aa95e600 Add an option to ignore BAD_DATA messages to mavlogdump.py
+03fe8ed7 DFReader: increment remaining when bad bytes are skipped
+25875e1e Add support for ArduPilot dataflash files
+47931b61 pymavlink: Catch index out-of-bounds exception when retreiving a wp
+e5f60d00 pymavlink: added --sample-length option to mavfft.py
+e562bb59 pymavlink: added mavfft.py tool
+0d6c67c0 pymavlink: correct interpretation of logs with no GPS messages
+1c8e28b0 mavextra: make distance_two() default to horizontal distance
+378cd337 Retire confusing PIXHAWK type
+5528027e ardupilotmega: merged camera and PID message changes
+6c2e54d2 Merge pull request #408 from AndreasAntener/remove_jspack
+6f6bc277 adding jspack deps
+2b6a14ea noted new dependency
+99472838 removing jspack submodule, the version we require is available through npm now
+32fd16aa Merge pull request #400 from TSC21/landing_target_update
+047b6fbb Merge pull request #401 from TSC21/mav_tol_local_cmd
+59ddd8a3 Merge pull request #403 from phamelin/master
+1d3af366 mav_cmd_tol_local: added commands to takeoff and land in local position
+1f2e1525 PX4 now has more mainstate modes than colours available in mavkml.
+109711ad cmake: fix broken CMake build by calling the module with python -m.
+e6f785ad Make sure to update the common library last, as we are missing the right enums else
+f1fd4cba mavlogdump: cope with bad msgs in conversion
+6634482c Merge pull request #399 from modnovolyk/inherit-enums-description
+5bad810c landing_target: added timestamp and target size fields to msg
+678b2a7e pymavlink: raise version
+4d9f7645 mavextra: take into account height difference in distance_two()
+172e2c64 common.xml: added SERIAL_CONTROL_DEV_SHELL
+98304670 ardupilotmega: added ALTITUDE_WAIT and AUTOTUNE_ENABLE
+74b29df6 mavlogdump: added --nottypes option
+5af3baba ASLUAV: Added <enums> tag
+109a2caf ASLUAV: Added command (MAV_CMD) to reset Maximum Power Point Trackers
+ad938c9e Add enums description from parent definitions file while merging two enums
+fda33552 Merge pull request #398 from rmackay9/vibe-msg1
+654649d3 common.xml: add VIBRATION msg
+1d9da406 pymavlink: make sequence numbers depend on (sysid,compid) tuple
+d546467f common: simplified LANDING_TARGET message
+5b39ef23 common: added LANDING_TARGET message
+daae22e5 pymavlink: raise version
+6a9c349a pymavlink: fixed issue with None as timestamp
+5c3b9807 pymavlink: raise version
+e3afb762 DFReader: avoid using TimeMS from ACCx and GYRx fields
+e60868e8 DFReader: also use GPS2 to update clock
+dd94b656 DFReader: use TimeMS if no TimeUS found
+fc6ad9f7 DFReader: break out a DFReaderClock class and subclasses
+3123dac0 generator: added mavlink_frame_char_buffer() method
+f6e4de5b ardupilot: fixed enum values for PID_TUNING
+4c840d07 ardupilot: added PID_TUNING message
+770afdf3 pymavlink: fixed spelling error
+d707c6d9 pymavlink: make mavgps.py executable
+a4399d5a pymavlink: added --tcpaddr option to mavgps.py
+910ab65c pymavlink: raise version
+6726451d pymavlink: allow FMT to change during DF log read
+6a6c780a pymavlink: fixed handling of STAT message in ArduPilot
+f76b6acc Merge pull request #387 from TSC21/distance_sensor_typo
+5fcd5d76 MAV_SENSOR_ORIENTATION: changed MAX for ROTATION_ROLL_315_PITCH_315_YAW_315
+5030068f Merge pull request #384 from TSC21/distance_sensor_typo
+fc2df2e5 updated DISTANCE_SENSOR info; fixed typo
+8f06164a Merge pull request #383 from TSC21/MAV_SENSOR_ORIENTATION_enum
+0155a883 added MAV_SENSOR_ORIENTATION enum
+9169a1f0 Merge pull request #381 from TSC21/MAV_DISTANCE_SENSOR_INFRARED
+20d0a694 added MAV_DISTANCE_SENSOR_INFRARED to MAV_DISTANCE_SENSOR enum
+2f18d541 pymavlink: fixed DFReader variable init error for DF logs
+df1bcab8 Logging: Clarify logging params
+c2c22d64 DFReader: understand usec timestamps
+919a5775 pymavlink: raise version
+3b19e70a pymavlink: support double precision logs
+71632b0e pymavlink: Adde MAV_CMD_NAV_LOITER_TO_ALT as a loiter wp.
+9b885358 common: merge new MAV_CMD_NAV_LOITER_TO_ALT command from ardupilot
+e485a67e generator: added mavlink_frame_char() interface
+e1048ab1 pymavlink: fixed recognition of 3.3 dev copter
+a7cbb07b pymavlink: raise version
+e42d4d1c ASLUAV: Change ° to deg in SENS_BATMON message
+61542bf8 ASLUAV: Update SENS_BATMON message
+c6b5a128 Resolve GCC 4.8 compile error in new-style param union
+bbf75d8c Merge pull request #367 from mhkabir/mhkabir-patch-1
+81c642c9 Merge pull request #368 from mhkabir/patch-1
+81a8976d Add integration time to TRIGGER_CONTROL command
+94fd5250 Add camera trigger command and messages
+2d5c318f Add covariance description
+8ed58bf8 Fix typo
+46b389e9 Correct timestamp typo
+81a8fa69 LOCAL_POSITION_NED_COV : add acceleration fields and covariance
+97903b94 ASLUAV: Added SENS_BATMON message
+19d965c1 pymavlink: Add wp_is_loiter method to mavwp to identify loiter WPs
+3cc380c6 ardupilotmega: add gimbal messages
+6365256d ardupilotmega: merge changes from ArduPilot code
+54e826fb pymavlink: raise version
+73821c1f ardupilotmega: merged EKF status message
+ed2f3e44 mavnative: fix an assertion failure when faced with an empty string
+e3d7104c mavnative: Fix conversion of 64 bit ints when running on 32 bit arches
+7a7ce336 Merge pull request #352 from matt-beall/namedUnnamedStruct
+6df5ec84 Named an unnamed struct
+b0a85a75 pymavlink: raise version
+ce2d5d83 pymavlink: raise version
+45cd8e80 pymavlink: prevent long sleeps on connections with no fd
+d89a2c10 pymavlink: use select instead of sleep when possible
+092342a0 pymavlink: fixed typo
+7219ca0d pymavlink: added mavnative headers to package data
+2ac288c8 pymavlink: raise version
+e56e26a2 pymavlink: try to fix mavnative build with pip
+ddcd4a9c pymavlink: raise version
+b160f0e3 ardupilotmega.xml: updates from latest ArduPilot XML
+01f0b084 common.xml: added SCALED_IMU3
+447b2e07 pymavlink: fixed mavgraph with python3
+62c9b9f1 pymavlink: Always return from recv_msg if we fail to parse
+df057a85 pymavlink: cope with time moving backwards (again)
+2b1096a2 mavnative: Native extractor now works nicely in python3 and 2.x
+4aaa2967 mavnative: disable native code on windows (user might be missing compiler)
+a72f8ef3 mavnative: don't use bytearrays with struct.unpack
+b92a26fc profile: remove unneeded call to pack() for a 10% speedup in...
+652ecd76 Fix doubled characters when showing wire_noise
+22390433 mavnative: MAVNATIVE_TESTING proves compliace with legacy version
+0685f8ad mavnative: fix segfault due to incorrect refcounts
+62b9fadf mavnative: move metadata into python, to support any dialect
+04289f1a mavnative: version.h was removed upstream, so don't use it
+b40a1d3e Remove dead code (after a break, can not be executed)
+d64285bd mavnative: Optionally use C code for mavlink message parsing (see below)
+88edd139 pymavlink: fixed reference copy of dcm in quaternion
+a581f0ba headers: fixed dependency on C99
+81512655 release 1.1.44
+814b9654 pymavlink: display helicopter modes correctly
+5470db21 pymavlink: Just moved the check for end of file up a couple of lines
+de22c72f Update mavlink link to qgroundcontrol website
+8781fca3 Add/update AutoQuad definitions:   Add new stream and message types for ESC telemetry;   Document DatasetID parameter in MAV_CMD_AQ_TELEMETRY.
+6e51562c Fix compilation of checksum.h by itself.
+078353e5 Correct comment.
+f8c2c09d improve mavlink_dcm_to_quaternion
+75f4879a Added reserved entries to make MAV_TYPE consecutive again
+f707c32f Remove unused and broken generation scripts.
+dc3c4a96 pymavlink: raise version
+bcbc4499 Add .mavlink as a valid extension for mavlink files.
+d93446c2 Use <stdint.h> instead of <inttypes.h> to be more compatible.
+221786da Update example code to be more correct.
+733703f3 common.xml: added MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES
+b6ad131b pymavlink: Bring the mode list up to date with apm's.
+4228349f pymavlink: Fix auto_detect_serial_unix description
+837eb2db Add support for the new PX4 log file extension.
+87f912d4 pymavlink: Removed invalid constant rate for ATT
+c1e6045c pymavlink: use python3 compatible print
+176fa04f pymavlink: Cope with the system time moving backwards
+1014f7e2 ardupilotmega: added AUTOPILOT_VERSION_REQUEST
+b32a42b1 pymavlink: cope better with APM2 df logs with trailing garbage
+52fb8c10 pymavlink: added mavmemlog()
+18c7c679 Fix documentation of radio status
+7a638010 Merge pull request #332 from Susurrus/importfix
+254c10df Fix failing import statement.
+91fa6673 Fix duplicate field
+ff802100 Updated common.xml to support MOCAP setups and actuator control access
+983f4b58 ASLUAV: Correct message description to avoid degree-symbol
+706c05e9 ASLUAV: Added SENS_ATMOS message
+542ef9b2 ASLUAV: Correct spacing
+3cbdda5c Merge pull request #320 from tstastny/master
+76a2d91b pymavlink: raise version
+f057d511 ardupilotmega: changed to a delta_time instead of a counter in GIMBAL_REPORT
+e38c089f ardupilotmega: added target_system/target_component to GIMBAL_REPORT
+4f44e479 pymavlink: fixed inconsistent tabs/spaces for python3
+32379d5b pymavlink: try to cope with gimbal messages
+b838bf7f pymavlink: added euler312 conversion functions
+f64fd765 pymavlink: removed unnecessary sleep calls
+f080166c pymavlink: fixed retry handling in mav_tcp()
+780a37b9 common.xml: added gimbal MAV_TYPE and MAV_COMP_ID
+c9b68d28 ardupilotmega: added GIMBAL_REPORT and GIMBAL_CONTROL messages
+26e8c956 Merge branch 'master' of https://github.com/tstastny/mavlink
+c87889f9 message_definitions/v1.0: added EKF_EXT and ASL_OBCTRL messages to ASLUAV.xml
+43a7fd8e Add missing entries to MAV_FRAME
+22ab243c Readme: Updated Mavgen Command line
+bb81de90 common.xml: added SCALED_PRESSURE2
+bf50a9b2 pymavlink: fixed 1D accel calibration
+83b3c233 Travis CI:GIT credentials handling.
+bdd28610 Travis CI: Always build messages
+17b741cc Travis CI: Fix generation Python version, fancy status printing
+28567818 Travis CI: Only generate files for one Python version
+cbff0164 Travis CI: Force exit on error, fix repo URL
+1073f99e Update binary generator
+e251b290 Merge pull request #309 from thomasgubler/rcparamtune
+8f892635 add param_map_rc message
+c8f83bec travis: try to fix the travis tests to use installed package
+d99666b6 pymavlink: moved quaterniontest to tools
+7de8cb7f pymavlink: fixed package imports
+c03e92b4 Merge pull request #307 from mavlink/quaternion
+cb3a4c68 add quaternion test to travis
+b00fb41b mavextra: quaternion helpers
+18f8f858 quaternion module
+6ffeb7fe Matrix3/Vector3: introduce close function (for testing)
+dbfbd91b mavgen_wlua: Update the instructions
+9f70e52d Merge branch 'wlua_fixes' of github.com:michaeldove/mavlink
+cfe65604 pymavlink: prevent duplicate ports on Linux
+a3b1f594 pymavlink: raise version
+1b3951c1 mavlogdump: don't print warnings on unknown msgs
+5037ffb7 pymavlink: use new pyserial port lister
+e97456e4 pymavlink: MPU6KSearch: fixed noise handling and dup filenames
+810dc1a9 pymavlink: skip uncalibrated logs
+d2c82e15 pymavlink: added MPU6KSearch to installed tools
+60fd7c0f pymavlink: tool to look for MPU6K errors
+195916d9 Merge pull request #298 from mavlink/wgs84_cleanup
+8d07eff1 pymavlink: handle empty fieldnames in DFReader
+08d4119a pymavlink: raise version
+403c45e7 pymavlink: fixed arm/disarm target_component
+f51fa795 Pimped autopilot version fields
+395f1f3f Fixed issue where wire-protocol field sort order differed from generated field order. Removed erroneous CRC and length checking.
+14e34493 Fixed WLua payload parser function lookup. Bind WLua dissector to UDP port 14550. Add MAVLink message name to wireshark info column.
+f41ab9fe Fixed altitude comments to AMSL, as that is what all adopting projects
+4da94239 Merge pull request #297 from mavlink/clibscriptfix
+ef80b7d3 gen sh scripts: use mavgen.py from tools directory
+0656d4db travis: set pythonpath
+846ac908 make tools/mavgen.py executable
+8cadf1e1 travis: use new mavgen wrapper
+3ff2f0fc c library update script: use new mavgen wrapper
+736b9b17 ardupilotmega: added AHRS3 message
+dcbcdb9f pymavlink: removed debug print
+37111ccd pymavlink: raise version
+69d79ee8 pymavlink: move generator defaults back to mavgen module
+86c9f5e6 pymavlink: DFReader: handle corrupt text logs
+3a089c65 CMakeLists.txt: Remove NONE from project name, which invalidates cmake ability to check arch CMakeLists.txt: Proper use LIB_SUFFIX and LIB_INSTALL_DIR enable some 64 bit Linux distros find pkgconfig file CmakeLists.txt: Install python on default site_packages instead of pyshared. Most Linux distros already made the transition,         for referennce Debian statement https://wiki.debian.org/Python/TransitionToDHPython2?action=show&redirect=Python%2FPyCentral2DhPython2 pc.in: Use correct package version and add proper description.
+7e248d61 mavparse.py: append ENUM_END only after merging/sorting to allow extending enum values in custom message definitions.
+aa320246 pymavlink: added mavsummarize.py to installed tools
+4c7f51b1 pymavlink: Added a script for summarizing MAVLink logs.
+3a07ba7b pymavlink: avoid error is ardupilotmega dialect is not installed
+a2c2b35f pymavlink: Make timestamp usage more consistent in JSON output
+31ac7d53 pymavlink: Fix broken mavutil.py.
+b75451b7 pymavlink: Spelling fix.
+f71d9ccd pymavlink: Move scripting code to the top of mavutil.py.
+615b436c pymavlink: Add comments for global variable.
+e577f7bb pymavlink: Move global variable declaration to the top and add comments.
+d428be43 pymavlink: Fix warnings with global variables.
+21904d04 Improve naming of struct fields in generated m-files.
+01955847 mavparse.py: fixed crc inconsistency between python2 and python3
+8eb6635a pymavlink: provide a wrapper script in tools for mavgen.py
+e07ac967 Improve documentation for how to run included Python scripts.
+60c513ff Remove no-longer-needed sys.path modifications.
+4df88966 All internal library includes are now relative.
+911c4082 Make scripts outside of the library include path use 'pymavlink' directly.
+d3905f1b Add dialect option to mavloss.py.
+f115f777 mavlink_types.h: use MAVPACKED instead of PACKED
+b6a4a69b Fix warning about structure packing when using GCC
+b040b851 Update setup.py
+5afc5d6f mavgen_python: revert crcbuf change
+d00170d4 Correct all print statements to now be print function calls.
+7609b542 Handle any failures in the MAVLink validation libraries.
+a91b07de Handle cases where ord() fails.
+cd71de3d Correct to-byte numeric conversions
+0de66ca8 Remove use of Long integer types.
+d4c3ec51 Fix import handling.
+4d98b301 Support new exception syntax.
+8bcc8cb7 Most functions return iterators instead of lists now.
+828809e0 mavlink_conversions.h. Fixed GCC warnings.
+1685cbd2 pymavlink: sped up the x25 CRC a bit
+b20f826a speed up DFReader a lot by delaying msg parsing
+0c708ba9 Merge pull request #295 from CarlLusty/patch-1
+c59ff19c Corrected unit conversion (seconds to microseconds)
+0debc491 Merge pull request #290 from blutack/master
+543b7656 Merge pull request #285 from DroidPlanner/javaUpdate
+5b6bccb1 pymavlink: raise version
+60ee9630 Add basic sniffer to detect PX4 & APM logs
+b07f3344 common.xml: added CONTINUE_AND_CHANGE_ALT
+1a35250e ardupilotmega: updates from APM repo
+c4344ce7 mavutil: Add support for udpin and udpout style addresses.
+5790f571 pymavlink: speed up parser a bit by running CRC less often
+c7c3d21d Java: Removed unused methods on the java_gen
+33e2c815 Java: Fix package names and imports
+bd779dc7 Java: Install java files with the pymavlink package
+2908d5bd Java: Remove android logging methods
+3eef24a1 Java: fix some confusion about java fields and method parameters
+a62f5a5a prepare for 1.1.37
+5b846cb7 pymavlink: cope with missing mission items in mavmission.py
+b9d431df pymavlink: allow plotting of EAS2TAS and airspeed with offset
+6f15a81d Generator fixes
+7b27543a Fix generator script
+b3ef8b69 Updated readme
+0b28fcca Updated README
+1bfb70ba Merge branch 'master' of github.com:mavlink/mavlink
+bd59c31e Removed sensesoar, added ASLUAV
+306333f7 Merge pull request #282 from jschall/pullrequest-zero-columns
+876c7680 pymavlink: DFReader: handle zero-length columns field
+6732a51a Added new time sync message
+07657672 Merge pull request #280 from cgudrian/master
+c64620f6 removed sensesoar.xml from CMakeLists.txt
+2da188b4 Merge pull request #279 from AndreasAntener/travis-npm-install-fix
+41f24eba trying to fix random npm install errors on Travis
+cbe049b5 Merge pull request #278 from philipoe/master
+9fb0c7aa Deleted senseSoar message set (.xml), was unused in any case.
+97518bc9 Added ASLUAV autopilot message set (http://www.asl.ethz.ch), added autopilot type to common.xml, too.
+86df15d0 Merge pull request #274 from Susurrus/mavlogdump_fix
+74fe28f3 Merge pull request #259 from AndreasAntener/js_message_header_fix
+d4b0a047 Merge pull request #273 from Susurrus/mavgraph_dialects
+1336bd43 Merge pull request #265 from mavlink/cleanup_system_t
+c4ef7d96 Merge pull request #264 from mavlink/protobuf_cleanup
+199909a0 Update flow HIL message to match OPTICAL_FLOW_RAD message.
+bb248996 Add gyro and temperature, fix comments.
+dd51e14b Fix docs
+52f2d7a1 Fixed instructions
+15e35fa8 Fixed script
+d4708c94 autogenerated headers for rev https://github.com/mavlink/mavlink/tree/30f1f307917d3728502b88f105b98dff26f72e11
+30f1f307 Fix optical flow comment
+b1e6527d Build fix
+b48d8048 Propose new optical flow message
+d925debd Merge pull request #277 from mday299/mav_to_m_file_precision
+640e448f mavtomfile: avoid loss of precision in data fields.
+729b645f pymavlink: cope with empty DF messages
+e102d92c ardupilotmega: added gripper command and enum
+de29a2e9 Merge pull request #275 from mday299/do_land_start
+f0e2fbee Add MAV_CMD_DO_LAND_START for marking where landings start in missions.
+207cffb6 Support other dialects for mavgraph.py.
+9059f1ff Fixed CSV extraction bug in mavlogdump.py.
+34b9ebbd Add warnings for ignored message types to mavlogdump.
+68ed4bb2 Added VTOL types
+3f47c7c7 Merge pull request #267 from mday299/mavtomfile_fix
+35390ac3 mavtomfile: Now can handle array fields.
+38f54ded Merge pull request #266 from mavlink/javagen_merge
+f052864b Merged Java generator
+10ebcf42 Remove old, unmaintained files
+5ca86e7d Clean up mavlink system struct. Fixes #238
+4a71e082 Removed protobuf hacks. Fixes #22
+14f704e2 pymavlink: raise version
+e1da3ba2 pymavlink: make serial autoreconnect work asynchronously
+4213f05a pymavlink: add tcp prefix to connection address
+e165fadb pymavlink: added baudrate support in mavlink URLs
+57c27001 updated readme
+fbfc8d05 pass MAVLink instance to packing functions, consider system, component and sequence for packing, update tests
+4e31ef0f Merge branch 'master' of github.com:mavlink/mavlink
+a2305d75 Update pano docs
+4408bcee Merge pull request #254 from AndreasAntener/js-int64
+03f37a8b adding encode/decode tests for gps_raw_int which uses int64
+f7dc79f6 fixing link
+a59b5c0e matching readme to current setup
+f1cac535 removing unnecessary (and invalid?) statement
+ffde81f0 fix format string in test to match new mavlink.js
+23f5f245 trying to integrate node tests with travis
+45ecee27 updating jspack
+ecafe46d use q/Q format instruction and copy jspack module along the generated mavlink.js
+37057e0b updating to latest jspack
+e38e7343 Merge branch 'master' into js-int64
+a2627bb0 Merge pull request #253 from AndreasAntener/js-error-handling
+c37e6bdf adding jspack with int64 support as submodule
+e39493cc adding example test cases for the use with Long.js
+90e83c71 update included jspack lib with q/Q (signed and unsigned int64) support
+5f0e5e28 updated test setup (more npm like)
+b640c985 Merge branch 'master' into js-error-handling
+a6ae7ee2 adding new tests including message with uint64, fixing old tests
+bbb3ac6b Merge pull request #252 from AndreasAntener/js-invalid-fieldnames
+eb1eeea4 add readmy with lower-case file ending
+235e1694 remove readme
+5ea5ad05 renaming incompatibl field in battery_status message
+7ab34cef adding name restriction for JavaScript reserved keywords (ECMAScript 6 including future and strict for older standards)
+7f819402 implement robust parsing, update tests
+cef32090 log errors
+2a565650 also emit bad_data messages, slice off complete expected length on error if header could be parsed, do not trigger error for subsequent prefix errors
+9663c6f4 do length parsing in the right moment
+cf84184a set msgbuf also for bad_data messages
+accaecc2 Generator fix
+b4c25874 Fix test suite headers
+1b11c355 Merge pull request #250 from mavlink/altitudecomment
+4e00f88c GLOBAL_POSITION_INT: altitude is WGS84
+26ebec00 Merge pull request #249 from mavlink/postargetyaw
+cab736a5 yaw and yaw rate fields for position target msgs
+0f91a0f0 Merge pull request #248 from julianoes/obcadditions3
+f77e19dc pixhawk.xml: fixed altitude type in detection_stats
+533bde14 travis-ci: Added java to the build matrix of the continuous integration server
+73709e7a Added JAVA generator from Arthur Beneman (with slight fixes to help generality
+ba0e287c Merge pull request #245 from julianoes/obcadditions2
+4993db2b Merge pull request #243 from liamstask/c-header-warning-cleanup
+f305db8c Merge pull request #239 from vooon/mavschema-install-fix
+c34cfdd1 Merge pull request #237 from Susurrus/modules
+b71a2424 README.md
+c55489dc Merge pull request #229 from DroidPlanner/travis-ci
+2682b0e9 pixhawk.xml: moved to uint32_t for the ids
+5a2448d6 pixhawk.xml: got rid of the complicated chosen fields
+e3f64814 pixhawk.xml: specify detection id or cluster_id and cluster_iter_id
+b5c9512d pixhawk.xml: changed the detection_stats message, added fields for the chosen location and cluster iterations
+ff750a12 Extended color map - but really we should be using the default features built into matplotlib
+a1e674e0 Fix commandline handling
+8b115188 better resolution and legends for figure saving
+1ad8e44e Merged master
+7e78aef2 Fixed KML python call
+30124149 Merge branch 'master' of github.com:mavlink/mavlink
+686dcc86 KML hotfix: Limit rate to 10 Hz
+73a553d3 protocol.h: avoid redundant declaration of mavlink_helpers
+7a3754ef mavlink_helpers.h: check for #ifdef preprocessor conditions instead of #if where appropriate, to avoid undef warnings
+496022b7 Merge pull request #242 from liamstask/header-namespace
+05310309 mavgen_c.py: prefix header guards with ‘MAVLINK_’ to namespace them from other application code
+ff8a9f24 Replace optparse with argparse: tools/mavparam
+ea6b9410 Replace optparse with argparse: tools/mavmission
+5dec1d68 Replace optparse with argparse: tools/mavsearch
+0f917b8b Replace optparse with argparse: tools/mavto gpx & mfile
+33d7bf6f Replace optparse with argparse: tools/mavloss & sigloss
+e93e77c5 Replace optparse with argparse: tools/mavplayback
+e652e018 Replace optparse with argparse: tools/mavlogdump
+f16b9d0a Replace optparse with argparse: tools/mavkml
+2d8c51b6 Replace optparse with argparse: tools/mavgps lag & lock
+cd2ac628 Replace optparse with argparse: tools/mavflight mode & time
+d6e56932 Replace optparse with argparse: tools/mavgraph
+7b61433d Replace optparse with argparse: tools/mavextract
+fbadbbbc Replace optparse with argparse: tools/AccelSearch
+ac84e691 Replace optparse with argparse: tools/magfit
+b08f9220 Replace optparse with argparse: examples
+5308ec5f Replace optparse with argparse: mavgen
+d4e4dc54 Remove unneeded INT frames
+57e1733c Fix mavschema.xsd installation
+66f205e6 Update README.md
+be64296d Merge pull request #236 from liamstask/mavlink_types-typo
+beeb7a92 mavlink_types.h: fix a few more incorrect bitwise preprocessor ops
+d96896e3 README improvements.
+359a2461 mavlink_types.h: fix typo introduced in d41fe510d8cd
+4077cc96 build fixes
+87c00b0e Build fix
+62c8071d Add file transfer message
+ef98c8c6 Add support for ignoring throttle on incoming setpoints
+adb5bbfc Fix coordinate frame documentation and add missing coordinate frame field where needed
+93dc9987 Define the fields for payload deployment more concise
+4fd6af58 Add additional command to control payload deployment from GCS
+aadcdf0e Added command to deploy payload
+acb2eb3d Merge pull request #230 from mavlink/mission_fixes
+5443285a Merge pull request #234 from vooon/rel4_param_fix
+bdf0ff98 Fix #233: lost braket in mavlink_param_union_double_t.
+9df3ac3e Fix break line breakage
+d7dd2980 Fix a number of fields based on a discussion with Andrew Tridgell. Not using float in them would make handling of existing commands essentially undefined
+3d50fa95 generator: check for invalid arrays in field names
+f48c8065 common.xml: fixed syntax for ATTITUDE_QUATERNION_COV
+e86294f5 ardupilotmega: added BATTERY2 message
+d3cf0565 Added travis-ci  build status to README
+a6dac2bc Support for Travis-ci (Continuous Integration Server)
+5a06b3da Merge pull request #217 from mavlink/rev4_update
+ae100e4f Fix XML typos, remove param message so this PR can go in
+0723cd01 pymavlink: raise version
+b5c9d9d7 pymavlink: added DF log support to magfit.py
+4874b626 pymavlink: added offset support to mag_field_df()
+f37fb0ae Fix APM camera status enum
+b6c639b2 Set correct type for param union
+299a26c5 Merged master
+34bbfaef Merge pull request #198 from Susurrus/mavgen
+a94dc1fb Merge pull request #224 from wiml/master
+eeb7bbf8 Merge branch 'master' of https://github.com/mavlink/mavlink into mavgen
+4005268d Updated doc comment for mavlink_parse_char()
+3688f8f3 Merge pull request #220 from Susurrus/master
+d90d73c4 Merge branch 'master' of https://github.com/mavlink/mavlink
+f9562ec5 Merge branch 'master' of github.com:Susurrus/mavlink
+0fe6228a mavlogdump.py tool now outputs more decimal places. This fixes a bug where the script would label two timestamps as distinct, but then output them rounded to 2 decimal places, and the timestamps would then be identical. This is a problem for much of my data analysis tools that require unique timestamps.
+54c6e9bc pymavlink: added MAVLINK_DIALECT environment variable
+324cb6f2 mavwp: use enum information to display all location waypoints
+c5fc80bf mavgen: generate full enum information
+fd9d08c5 Merge pull request #222 from swissfang/obcadditions2
+32e7bd26 pymavlink: added insert() method to mavwp
+851c5e3c pixhawk:xml: adapted stats and health messages after discussion
+5e5d5dd7 Merge pull request #221 from swissfang/obcadditions
+efae9100 Removed protobuf hack
+eb99c20f pixhawk.xml: added a health message for the onboard computer
+14bf6b08 pixhawk.xml: added detection stats message
+0ccb2a1e pymavlink: raise version
+c3e98e2d common.xml: added current height above the location to TERRAIN_REPORT
+98af1db4 pymavlink: raise version
+ecdaefd0 pymavlink: added support for terrain altitude mission creation
+8fedf043 common.xml: added MAV_FRAME_GLOBAL_TERRAIN_ALT
+b905617f Fix conversion docs in C
+cd7bcb5c Fix docs in XML on quaternions
+4d9dfa8a XML: resolved conflicts between APM and PX4 MAV_CMD_* messages
+025633e8 ardupilotmega.xml: merged latest changes from ardupilot git
+14ad0e55 common.xml: added MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS for 2nd magnetometer
+f9e6d82e common.xml: added MAV_SYS_STATUS_TERRAIN
+70b99694 pymavlink: raise version
+f464db99 pymavlink: added --condition to magfit_gps.py
+41071794 common.xml: added TERRAIN_* messages
+4b00ebea pymavlink: raise version
+af2871c6 Merge pull request #219 from mavlink/flightterminationcommand
+d5d3b9a4 add flighttermination command
+cf5a0d1e Add estimator type enum draft - needs work
+348c0e05 Updated global pose with covariance message based on discussion
+ae5019ab Make enum consistent
+554be22b Merged master
+8a67618e More whitespace fixes
+798e2053 Fix whitespace
+00b315d3 Add param comment
+c1d2e417 C: added missing cast to silence compile warnings
+6a3b0b69 Merge pull request #218 from mday299/rally_alt_change
+782ac5a9 pymavlink: added set_alt method to MAVRallyLoader.
+f7638900 Merge pull request #214 from JoonasMelin/master
+75487fec Augment and consolidate common.xml for robotic applications
+0719e3e5 Add param struct
+5a30dbf2 Merge pull request #216 from mavlink/controlhandover
+26e23a85 offboard control handover commands
+76430ef1 Merge pull request #207 from mavlink/externalsetpoints
+2f14f247 Merge pull request #180 from mday299/ral_landing
+b456a980 Added MAV_CMD_DO_GO_AROUND to abort rally landings safely.
+51d1600d Added MAV_CMD_DO_RALLY_LAND for rally landings
+db623a40 ATTITUDE_SETPOINT_EXTERNAL: updated to specs
+a14cb031 Merge remote-tracking branch 'upstream/master' into externalsetpoints
+48a37fa3 pymavlink: avoid shell to reduce buffering for child exec
+0c5982f8 pymavlink: support DF log in magfit_rotation_gyro.py
+78a63416 Merge remote-tracking branch 'upstream/master' into externalsetpoints
+39abac19 Merge pull request #145 from johnboiles/johnb_objc
+428e7e8e More efficient object parsing by making ID to class mapping static
+4c682dcb Small fixes to ObjectiveC generator post-rebase
+baef3848 Objective-C generator for Mavlink.
+0fe8e04b update ATTITUDE_SETPOINT_EXTERNAL Update to reflect the latest state in the proposal document
+9754b469 Merge remote-tracking branch 'upstream/master' into externalsetpoints
+1943f327 Fixed the imports for the python generator. Dont know the original idea of the original import formatting, but now it at least generates the messages.
+8364b7c2 Merge pull request #186 from ryancu7/master
+c84af71f Updated preferred shell
+2630edd9 Merge pull request #213 from mavlink/updateclibraryall
+0d55cc7e Merge remote-tracking branch 'upstream/master' into externalsetpoints
+91db6423 update c library script: generate all message sets
+90de3b4f Merge pull request #169 from jonomillin/enable_set_relay
+62595456 Merge pull request #190 from mday299/mavflightmodes
+dc617181 Merge pull request #175 from dagoodma/slugs_update
+feb34155 Merge pull request #203 from Susurrus/mavloss2
+84f2c95b Updated readme
+a406e192 Merge pull request #212 from mavlink/clibraryupdatescript
+8db19ccb bail out if nothing changed
+197e919d Added URL to origin repo
+11662c3b Fixed rev parse argument
+a1ebb590 Fix instructions
+d9a639b8 c_library update script: add example usage
+6623faf4 c_library update script: first version
+e21db3e4 add include folder to gitignore
+95bb0630 update GLOBAL_POSITION_SETPOINT_EXTERNAL_INT made consistent with specification document
+6398eb59 update LOCAL_NED_POSITION_SETPOINT_EXTERNAL made consistent with specification document
+fdbf8979 Merge remote-tracking branch 'upstream/master' into externalsetpoints
+d42ab930 APM: merged latest changes from Andrew Chapman
+4eaf0c8f Merge pull request #193 from njoubert/master
+ceb2687d Merge pull request #210 from simonlynen/fix/cmake
+7909c35f common.xml: Correct GPS fix types
+f75ecb12 minor adaptions for cmake
+ef82cd76 Fix for mavgen import
+a1bdcdaf Merge pull request #209 from thomasgubler/ropeproject
+0254b50c ATTITUDE_SETPOINT_EXTERNAL: fix array definition
+3d0938de Merge remote-tracking branch 'upstream/master' into ropeproject
+32152936 ignore ropeproject
+88daf42b Merge pull request #205 from thomasgubler/mavkmlstyle
+7ba6bc5d extended enum MAV_FRAME
+76de4428 GLOBAL_POSITION_SETPOINT_EXTERNAL_INT message
+92dc4ab7 LOCAL_NED_POSITION_SETPOINT_EXTERNAL message
+d0297ea9 ATTITUDE_SETPOINT_EXTERNAL message
+82194d73 mavkml: more colors
+55663d1f ardupilot: merge camera messages from Andrew Chapman
+8df4198f pymavlink: support .log files in mavmission.py
+ff904093 Document custom mode field
+3bee95f0 Merge pull request #195 from mavlink/packed_structs
+d1704ac2 Expanded the output of mavloss.py to include reasons why packets were lost.
+2483730a Merge pull request #197 from Susurrus/distance
+7228310a Corrected XML for new MAV_DISTANCE_SENSOR message
+e8aecd3f Added generation option to disable XML validation. Useful when generating a lot of code and the XML files are known to be good, but it's still left on by default. Extended support for disabling validation to the mavgenerate GUI. Removed some redundant code from mavgenerate and made more code from mavgen reusable.
+a3d9e58d Removed unnecessary debugging code from mavgenerate.py
+e28c4231 Corrected XML for new MAV_DISTANCE_SENSOR message
+26a07183 force all structs to be packed
+ff049806 Fix message packing issues that prevent the checksum from being properly added to the packet
+027bb714 Add general distance sensor message
+9b933f3c common.xml: Added GPS_RTK and GPS2_RTK
+e715917d Force people to use the right header with an #error.
+4444fb21 mavkml style fix
+a5a073cf common.xml: added MAV_CMD_DO_INVERTED_FLIGHT
+3bb21358 ardupilotmega: merged in motor test command from ardupilot
+bd303e18 pymavlink: Allow headless operation in mavgraph by providing an output file name.
+788c8120 pymavlink: fixed X range calculation for multiple data files
+4acd7678 pymavlink: added gains to demix functions
+01814e3b pymavlink: raise version for release
+b3ca74e0 pymavlink: extract separate missions in mavextract
+1eb17c57 mavflightmodes: Print a summary of time spent in each mode.
+d56b0678 MAVExtra: Teach distance_home to deal with DF GPS messages
+d4a7d564 MAVExtra: Add a version of mag_field that works for Dataflash messages
+e8972a28 pymavlink: closer to supporting python3
+98609224 pymavlink: workaround a kernel baudrate set bug
+21c936dd pymavlink: fixed SERIAL_CONTROL support for new python array semantics
+90d9ed01 MAVUtil: Recognize Tri, Hexa, Octa and Tradheli as using the ACM Mode Map
+66c4190b common.xml: added AHRS health status bit
+d41fe510 Allow compiling on Visual Studio 2012 and earlier.
+0393af3e pymavlink: calculate distance as well as time in mavflighttime.py
+b3a004f1 pymavlink: fixed mavflighttime for DF logs
+942d8e6f pymavlink: fixed waypoint saving
+c8abab39 pymavlink: fixed mode mapping for copter/rover
+22042aab pymavlink: cope with bad data at and of log
+ff5b92ef Merge pull request #128 from johnboiles/johnb_enum
+d50ebf65 Python decoder. Added array support.
+1a86b063 Updated .gitignore.
+6558f1b9 Tools: Added CSV and JSON output to mavlogdump.py.
+0416839b Added __init__.py files for the tools and examples folders. This means that  can now be run if pymavlink is on the system path.
+6783d6aa Corrected indentation in mavwp.py.
+d09ad49e mavgraph: add pylab.draw()
+590f65a8 Plot PX4 flight modes as background colors
+c44d2ae2 pymavlink: support param() method for .bin and .log files
+198849ff pymavlink: added fence point remove()
+762bea09 pymavlink: enable moving of fence points
+b6b9dfa8 pymavlink: added support for index numbers and remove in mavwp
+5a91fcb7 pymavlink: added rally point move and remove support
+f919d11f Merge pull request #178 from benizl/flightmode
+acdc4e0b MAVGraph: Add option to choose plot bg from active flight mode
+e8c735d6 pymavlink: fixed autoreconnect with rtscts
+f14263a6 pymavlink: print skipped message header in DFReader
+fca18b25 pymavlink: raise version
+22ebd69c pymavlink: added AUTOTUNE mode for planes
+7437ff2b pymavlink: raise version
+21537ad2 mavparm: added check option to load()
+e61000e0 mavtomfile: Make sure m filename is compatible with MATLAB / octave.
+fbdd41a8 pymavlink: raise version
+c9e796f4 pymavlink: added SCAN mode for tracker
+8458b6ce Generalize a number of MAV_CMD entries to common message set after discussion with APM developers - no IDs or funcationality changes with already used messages. MAV_CMD_DO_MOUNT_CONTROL updated after discussion, this message is not in use (yet)
+4f403b87 Merge pull request #176 from matthewlloyd/mavgps
+444139fc Script to connect u-Center directly to PX4/Pixhawk GPS via Mavlink serial control
+898880f7 APM: added MAV_CMD_DO_PARACHUTE
+6188781b Added two new frames to avoid floating point resolution becoming a critical limit
+7d527ff4 Added quaternion based gimbal control message
+cfa37cd5 pymavlink: raise version
+81e75915 pymavlink: added MavlinkSerialPort class
+f92fca59 common.xml: added SERIAL_CONTROL message
+ffe0736d pymavlink: draw spline waypoints on map
+1ac71d55 pymavlink: raise version
+5e0e8dc3 XML: added MAV_CMD_NAV_SPLINE_WAYPOINT
+655cbd5f common: added MAV_SYS_STATUS_GEOFENCE to MAV_STATUS_SENSOR field
+3a1b00f6 ardupilotmega: added MAV_CMD_DO_FENCE_ENABLE
+36d5195c pymavlink: raise version
+19e400f6 pymavlink: fixed sequence number handling
+51653a6d pymavlink: fixed sleep time in blocking recv handling
+5a00cec9 pymavlink: raise version
+3909ff75 common.xml: added RC_CHANNELS message with 18 channels
+6f447f84 pymavlink: fixed time handling in mavgraph
+2bf2f4e4 pymavlink: reduced CPU usage on failed reads looping
+c1f6c2f5 pymavlink: allow conditionals on parameters in DF logs
+54e18ef9 Updated SLUGS message definitions to work with current version.
+332524ae message_definitions: added MAV_TYPE for onboard (companion) controller
+40c028ec mavgen: add _send_buf() varient of convenience MAVLink send() function
+666af377 pymavlink: allow calculation of EKF position in mavextra
+9fced226 pymavlink: recognise an antenna tracker
+d323648f pymavlink: added distance_gps2() function
+2ca525c7 pymavlink: raise version
+55fbb6d8 pymavlink: fixed mavextract to allow replay of logs with vehicle detection
+f4a3b64b pymavlink: raise version
+5f2c3396 pymavlink: allow mavextract.py and mavlogdump to create binary log files
+dfb3fc5e pymavlink: try to cope with corrupt DF logs
+54ed528b pymavlink: added some useful 2nd IMU df functions
+74226050 pymavlink: raise version
+614597f8 Merged data transmission packets
+283ca825 Merge pull request #172 from thomasgubler/dfreader_timebase
+11592d1e DFReader: add rewinds in _find_time_base
+2db277e8 fix DFReader timebase calculation from GPSTime
+7f39df88 Merge pull request #171 from thomasgubler/dfreader
+90837ca4 dfreader: remove print
+0ac62936 Moved data transmission and encapsulated data messages to common message set
+1311db73 pymavlink: added --zero-time-base option to mavlogdump and mavgraph
+6f9d97fd pymavlink: added zero_time_base
+b6c6c5d6 pymavlink: make mavtomfile use a lot less ram
+2b64c3df Merge branch 'master' into enable_set_relay
+6d05e70b mavutil: prevent GCS HEARTBEAT messages from breaking mavgraph
+12a64b20 make dfreader more robust against corrupt log files
+6f24a810 Added the ability to set the digital relays on the APM
+856f81c2 common: added POWER_STATUS message
+3e6e248c pymavlink: raise version
+727af540 pymavlink: added armed() function for mavextra
+5d8a868b pymavlink: added rtscts handling for mavproxy
+fb98a279 APM: added COMPASSMOT_STATUS message
+b3179ba2 pymavlink: try to cope with old copter logs
+ab2623e6 pymavlink: raise version
+9228d717 pymavlink: fixed bug in rally loader
+d6337dc6 Merge pull request #164 from thomasgubler/PKGBUILD
+d3b4e0da changed archlinux package name
+fde2029e Merge pull request #163 from thomasgubler/kml
+c6ec54e4 make mavkml.py shebang compatible to other pymavlink code
+4cb54c38 Merge pull request #162 from thomasgubler/kml
+e4a3ec30 fix print syntax
+abad3fb0 Merge pull request #148 from qtonthat/write_log_bugfix
+3a8e1bc3 Merge pull request #161 from thomasgubler/gitignore
+b87b5aa7 mavkml.py: remove unnecessary comment
+8c3b39e1 mavkml.py: improve help messages
+04ce0fb8 add tools/mavkml.py to setup.py
+abd21830 kml: colored plots based on state working, not using multigeometry anymore (does not allow individual styles for sum-elements)
+c55a30df kml: gps as linestring works
+2ed81e43 add .project and .pydevproject to .gitignore
+8669c9db 2D KML gps export working
+962dac9b pymavlinkL raise version
+73d3dbef pymavlink: support uppercase bin log files
+d813ab91 pymavlink: fixed reopen of serial ports
+be801db7 pymavlink: raise version
+894c3e36 pymavlink: handle missing Columns column
+62f10216 APM: rename EKF to AHRS2
+18cfe8aa pymavlink: raise version
+32d93241 apm: added EKF message
+1b2b2274 pymavlink: fixed timestamps for GPS2 messages
+93557219 pymavlink: mavtomfile.py generates more MATLAB-friendly m files
+c719eeb8 pymavlink: added mavgpslag.py
+540a96ca pymavlink: fixed text parsing of log file headers
+c3a11c26 pymavlink: support DF logs for mavparms.py
+44d15d46 added support for DGPS update messages and a 2nd GPS
+eefea170 Merge pull request #158 from AutoQuad/upstream
+feaae20d Match mavlink_system_t.nav_mode size to allowed size in heartbeat msg (32bits).
+136aa5d4 Merge pull request #157 from thomasgubler/archlinux
+13e97fa8 PKGBUILD for archlinux AUR
+db8c7d93 Fix detection of PX4 timestamps, increase logdump resolution to milliseconds
+001b7a83 raise version
+c7130666 pymavlink: fixed DF reading null termination
+fd1ca848 pymavlink: added downsample(N) conditional
+1ea44172 pymavlink: fixed ArduPlane time base
+651380fb Hotfix: Fixed typo in last change
+7e340fe0 Added log transfer functions from Andrew Tridgell
+e69f0ac9 Merge branch 'master' of github.com:mavlink/mavlink
+f73cf01c pymavlink: fixed mavgraph for msg types ending in a digit
+5c6af376 common: added health bits for secondary sensors
+4828733b common: added SCALED_IMU2 message
+63031a09 pymavlink: cope with no GPSTime attrib on GPS messages
+7eb2b203 pymavlink: added mode_string_acm()
+4a3f50a7 pymavlink: cope with APM:Copter Mode log entry
+b23216d3 pymavlink: raise version
+3af74d6e pymavlink: added PX4 native gyro propogation code
+d15a7da8 pymavlink: added support for PX4 native SD log format
+866c626e pymavlink: cope with empty STRT message in APM:Copter dataflash logs
+3a58a065 pymavlink: raise version number
+140694e3 pymavlink: fixes for timestamp handling for dataflash files
+251be2db pymavlink: added support for new TimeMS based timestamps
+45b5ebb2 pymavlink: add _fieldnames in DFReader
+90ac58b5 pymavlink: fixed mavflightmodes with dataflash logs
+6d80fd6d mavgraph: removed pytz dependency
+d48e3833 mavutil: removed dependency on pytz
+b328ec38 pymavlink: install mavtomfile.py
+df9e25cf pymavlink: added mavtomfile.py tool
+01e957b4 pymavlink: dict comprehension syntax not supported in python2.6 :(
+da9c5c7c pymavlink: add -c option to mavparms.py to show changed params.
+a8f17499 AccelSearch: added --post-boot and --init-only
+13832b91 improved AccelSearch for single axis
+29bbe6bf update version
+4dcf785e pymavlink: support $HOME/.pymavlink/mavextra.py
+996b3f70 pymavlink: added AccelSearch.py
+5f5b3c3a release pymavlink 1.1.8
+7b8ac4d7 pymavlink: support flightmode in DFReader
+7693c634 pymavlink: added support for text dataflash logs
+2332a8d0 mavextra: added a simple DCM gyro propogator
+ff379bde rotmat: added support for equality testing to Vector3()
+99a6db52 pymavlink: initial support for parsing dataflash logs
+84409a0b message_definitions: added health sensor bits as enum
+845980bb pymavlink: fixed modes on hexa, octa etc
+2d735205 bug fix - mavutil forgot to write its timestamped log.
+1da32725 Merge pull request #147 from rmackay9/sys-status-enum
+44a7929c message definition: add SYS_STATUS enum to common.xml
+f09401d0 Merge pull request #146 from barthess/patch-1
+688c10b8 Update mavlink_conversions.h
+8a5ae44f Merge pull request #127 from johnboiles/johnb_template_bug
+67f590af Merge branch 'master' of github.com:mavlink/mavlink
+167d25d4 Adding enum field to int types that are linked with an enum
+104890c9 Fix template bug that occurs when variable is used at the end of a repetition
+a7f4d1dd pymavlink: raise version
+d4793647 mavwp: fixed rally altitudes to be in meters
+f79e6284 Merge pull request #144 from code-lever/master
+8b2a3688 Correcting description of VDOP in common defs
+75e71b0b ardupilotmega: added MAV_CMD_DO_SET_CAM_TRIGG_DIST
+9c155cc0 pymavlink: raise version for release
+64ef9ff6 ardupilotmega: added FENCE_ACTION_GUIDED_THR_PASS
+adf879c3 mavwp: Added a rally point loader.
+761cc007 ardupilotmega: added RALLY_POINT and RALLY_FETCH point msg defs.
+9247e5f7 Clarified documentation
+445d3e34 Added RC receiver status, based on a request from Randy and Kevin
+c9994700 Fix generator name
+820c22a0 Merge pull request #139 from ARMAZILA/patch-1
+beebce44 Merge pull request #116 from MikkoSaarisalo/patch-1
+035fca42 Merge pull request #137 from dagoodma/math_fix
+e1434b4f Merge pull request #140 from mavlink/float-length-py-fix
+a695e2f3 Added fix for python generator for float arrays.
+ec6f07c5 Update common.xml
+3554bc8c Update common.xml
+0fd12745 pymavlink: added mavsearch.py tool
+835b5261 Added M_PI_2 to mavlink_conversions.h if not defined.
+ca2e44a9 mavutil: added hold_in_bootloader support
+05e6ce9e Merge pull request #136 from jean-m-cyr/master
+c2c825f8 Move MAV_CMD_START_RX_PAIR to common COMMAND_LONG messages
+aa60265f Add MAV_CMD_NAV_START_RX_PAIR to COMMAND_LONG enum
+50f19372 magfit_rotations_gyro: fixed bug
+4b9c5ef1 magfit_rotation_gyro: cope with AHRS_ORIENTATION and COMPASS_ORIENT
+91f8d5cd nicer output from magfit_rotation_gyro.py
+8d92d94d added tools to determine compass rotation given GPS or GYRO data
+73efd441 pymavlink: added wrap_360() function
+d82e62e0 pymavlink: added used_ratio to airspeed() function
+32346671 pymavlink: fixed mag_heading() calculation
+0d0cc801 ardupilotmega: added AIRSPEED_AUTOCAL message
+fa93db1a pymavlink: update version
+04466ab2 messages: added MAV_CMD_DO_SET_ROI
+50380ea3 pymavlink: fixed generator to run from installed package
+b2c8face mavextra: added airspeed_ratio() and improved gps velocity
+db9933ca mavutil: changed mavlink_connection() to support open retries on TCP
+94944873 APM: changed SIMSTATE to use int32_t lat/lon
+343845d5 pymavlink: added add_latlonalt() for waypoint map editing
+a09b5294 mavwp: added support functions for fence editing
+6f5b3dd3 Merge pull request #121 from dimasad/msg_encode_chan
+40be0541 Merge pull request #120 from dimasad/master
+1b03a0f1 Merge pull request #123 from AutoQuad/upstream
+ed94efa8 pymavlink: added wildcard support to mavflighttime.py
+0a853fc0 pymavlink: added ACRO and CRUISE modes
+d25c55b3 pymavlink: added more accurate altitude2 function
+33457947 Fixed windows compile errors due to undefined constants
+9a3ba237 Hotfix: Fixed unclear documentation
+9012c50c Merge pull request #125 from mavlink/hil_fixes
+f3cf5272 Added copy step for conversions header, reverted HIL_STATE to original state, marked it as deprecated and added HIL_STATE_QUATERNION for the intended long-term message
+f4eb59c2 Updated HIL message specifications to better meet demand, added helper functions to convert between Euler, Quaternions and rotation matrices (DCM), following NASA rotation standard and originally written (as attributed) by James Goppert.
+e5ddc6ac Merge pull request #124 from Susurrus/override_fix
+1f07516d Replaced all occurances of 32767 & 65535 with INT16_MAX and UINT16_MAX. This makes it more clear that these aren't magic numbers. Additionally implies that the macros INT16_MAX/UINT16_MAX are to be used, which should be available in stdint.h.
+4812e833 Fix for documentation for RC_CHANNELS_OVERRIDE. See Github issue #72.
+38b580f1 pymavlink: raise version
+8c1b87ea Add custom mode enum to AutoQuad definitions.
+2c40ce16 Merge branch 'master' of https://github.com/mavlink/mavlink into upstream
+7393bd04 pymavlink: fixed syntax error
+a634280c pymavlink: added license to README.txt
+e75cc66d pymavlink: added base MAVLink URL
+e3a581d4 pymavlink: update licensing information
+8ec0011f pymavlink: fixed build on windows
+7bdcdf49 pymavlink: update to 1.1.1
+ab749689 pymavlink: allow generation on the fly for mavlink dialects
+808e364c pymavlink: ignore some generated files
+12f520b0 pymavlink: use NOGEN for faster setup.py testing
+f52717d6 pymavlink: added v09 dialects directory
+501b8fad ignore some more files
+79554de8 pymavlink: allow subdirectories as python modules
+4fc17e29 pymavlink: added dialect option to mavlogdump
+1f733b09 pymavlink: fixes to create all dialects
+a2b48ec9 pymavlink: use installed library paths
+72dfc090 pymavlink: added mavlink URL
+bad67a68 pymavlink: added initial setup.py for distutils
+7cefdc26 pymavlink: rename files ready for public packaging
+43954a9e pymavlink: more robust tlog parsing
+0f6b41bd Add AutoQuad to CMakeLists.txt
+1ef0269f pymavlink: regenerate module
+159d83c8 pymavlink: added support for logging sent packets
+7130a627 pymavlink: added some more useful mavextra functions
+707a0b1b pymavlink: fixed default airspeed ratio
+9f658fde pymavlink: added motors_armed_wait() and motors_disarmed_wait()
+19f66467 pymavlink: added code to support mode change by name
+84fdb158 mavextra: use rotmat method of tilt compass calculation
+3a6c7608 mavutil: added MAVLink broadcast support
+03573d55 mavutil: added check_condition() method
+75265fd8 fixed typo in ardupilotmega.xml
+8d8e6450 pymavlink: re-generate python modules
+0255a80f fix gen_all.sh for uppercase Python
+2ac784c1 re-generate for new msgs
+6eb8cfce message_defintions: added RADIO_STATUS, SIM_STATE and HIL_SENSOR
+1d4a8e1e Added a message encoding function that accepts a channel.
+c74698d6 Permits external m_mavlink_status array.
+5469a519 Merge pull request #106 from RFDesign/upstream
+5d04151d Merge pull request #113 from Susurrus/new_issue_92
+fcf765ab Merge pull request #118 from AutoQuad/upstream
+5c83c67b Merge pull request #119 from Susurrus/inv_char_fix
+6d46f763 Merge branch 'master' of https://github.com/mavlink/mavlink into inv_char_fix
+539e374b Fixed error received when running mavlogdump.py when processing invalid messages that contained a non-ASCII value.
+d939bde8 Python generator: allow for hex and binary notation in enum value attributes (and longer ints).
+074fefff Merge pull request #117 from cbumgard/master
+15bcd468 Fixed require statements in test code which incorrectly included ".js" extension to implementation library.
+b72237db Fixed error from gen_js.sh when passing --lang into mavgen.py: switched to "JavaScript" from "javascript". Was breaking when following mavlink/pymavlink/generator/javascript/README.md instructions to build using "make -f javascriptMakefile". The output error was:
+ff1e0f07 1. Fixed field closing tag.  2. Increased current and energy consumption field sizes.
+da62582b Update common.xml
+036946dc Merge pull request #115 from AutoQuad/33d0f4c0900179fbefbd9f5d91ca05d79d2398fe
+33d0f4c0 Added custom AutoQuad definitions and MAV_AUTOPILOT_AUTOQUAD enum; Adding mavlink version # to AQ definitions xml;
+be620af2 Clarified units for latitute/longitude/altitude in various messages.
+1624e279 Merge pull request #110 from Susurrus/mavgen_option_fix
+939786f8 Merge pull request #111 from Susurrus/language_loading
+85d610bf Defer loading all language-specific generators until they are actually chosen. This does a couple of things: 1) Problems with language-specific generators will not break usage for other languages 2) Slight speed up and memory savings as less Python code is included.
+c8347c61 mavgen.py now uses the Choices type for optparse. This allows for more sensible errors. It also moves the language name checking towards the start, speeding up feedback and simplifying later code.
+12d24b48 Added missing languages to GUI
+034ae465 Merge pull request #104 from Susurrus/new_fix_gen
+6783a20d Merge pull request #103 from Susurrus/param_union2
+1b977661 Merge pull request #107 from acuasi/javascript
+ec16b0a5 improves README to show how to send messages
+d8b8487f Generator now creates npm modules for each implementation
+63659982 remove copy of jspack lib, add x25crc to core
+e96b8e5e Improves example code in readme
+14126554 pymavlink: regenerated python classes
+64b9c0fa pymavlink: added rover mode strings
+1aa1ae7d pymavlink: added motors_armed() function
+9edd3792 added RANGEFINDER message for rover/copter
+c7bee82c mavgraph: added more colours
+32cbd2d8 fixed tlog extension
+7b411bf2 cleanup before issuing pull request
+f8240704 adds Javascript MAVLink generator
+d9f79597 Fix errors in generated code when MAVLINK_CRC_EXTRA is disabled
+ddd9fb0a generate.py is now Python 3 compatible. XML validation doesn't work in Python3.
+9d73558d Improved phrasing of notice that validation step is skipped.
+10f40031 Added missing datatypes to param_union in mavlink_types.h for v1.0
+df1bd0aa generator: error_limit is an integer
+4e9cbab1 Fixed bug with packet sequence number incrementing
+8f402cc2 Added new 'CS' option to mavgen.py
+ad6b4b17 Merge pull request #89 from GaloisInc/master
+b02a000d magfit_motors: initial cut at fitting mag field with motor influence
+71c9e3be mavextra: useful functions for motor mag field fitting
+280040b9 flighttime: show percent in log
+ae5fa2f6 magfit: fixed a problem with outliers in data
+eb085f82 Message Definitions: change smaccmpilot description to URL
+a1a30fd1 Message Definitions: add MAV_AUTOPILOT_SMACCMPILOT to MAV_AUTOPILOT enum
+ef5d41f6 pymavlink: show differences between two parameter files
+4a7ff5a8 Mavutil: add ArduCopter arm/disarm commands
+1adda66c Added Omnidirectional flow message
+7500e606 Merge branch 'master' of github.com:mavlink/mavlink
+6eddf09e Added helper functions
+c96be9e7 helpers: fixed a const warning
+02616b77 checksum: make it possible to have a board specific CRC
+16f853e1 APM: make wind direction message clearer
+16ebf4d6 Added set_mode_flag to mavutil.
+3194bc42 mavutil: handle more types of log extensions
+7c641f36 Ensure non-xml but newly generated C header files are also copied across to MatrixPilot
+56e3c394 Update to accommodate changes in directory structures of python mavlink suite since script was created in January 2012.
+587b7b7e Current and well tested version of matrixpilot.xml used in MatrixPilot 3.3 release. Incorporates messages from legacy telemetry format called SERIAL_UDB_EXTRA which includes items like the full matrix values of the Direction Cosine Matrix.
+9b20ffa5 pymavlink: re-generated with SERVO_OUTPUT_RAW fix
+dc870810 common: reverted SERVO_OUTPUT_RAW timestamp change
+1a7e059e mavutil: added training mode for ArduPlane
+739f9790 Merge pull request #82 from hsteinhaus/master
+2aec3561 Extended mavgen.py to generate a MAVLink parser for Wireshark
+6671155c added tool for converting MAVLink streams into a Wireshark-compatible pcap file
+694536af Merge pull request #70 from wiseman/fix_to_json
+da6d6f53 Don't run the app on import (allows for use of a static analyzer like pychecker).
+488dd79b pymavlink: fixed mavtest.py
+02273622 pymavlink: re-generated python interface
+ebf820bb Replaced tabs with spaces in the sensesoar.xml message definition file.
+53686e39 Fixed v0.9 messages and added stuff to schema.
+b2b11bd0 Updated schema, added error limit to generator gui, and fixed bad v1.0 message definitions.
+cede443e Fixed ERROR message formatting.
+bff0e883 Added validator into mavgen. Made some schema elements and attributes optional, and added array support.
+04adddb5 Started XSD file and python class.
+e81c3b54 Merge pull request #69 from wiseman/readme_fix
+d7d5d729 Merge pull request #68 from wiseman/fix_cmakelists
+65c67900 implementation of tcpdump like tool for mavlink over tcp.
+f759d4ad mavextra: improved roll and pitch estimate functions
+945babd3 Merge branch 'master' of github.com:mavlink/mavlink
+cc0ce78a Updated hand-written C-headers, added file transfer to common message set
+88aee8eb pymavlink: avoid range errors on pack to float
+890d3391 mavutil: support relative altitude in location()
+62a0ceea pymavlink: added wildcard support to diff functions
+bf9c3a50 pymavlink: fixed mavmission.py mission extraction for MAVLink 1.0
+aba2edbf mavwp: fixed waypoint load issue for Mission Planner missions
+ee0d383b Merge branch 'master' of github.com:mavlink/mavlink
+d30c255f Added new control packets, fixed code style of helper function
+05156361 mavutil: cope with time_boot_ms
+786cc49c pymavlink: better display of waypoints with jumps
+3fdee8ed pymavlink: added --condition and --types to sigloss tool
+1dc0f77e mavutil: allow fetching of parameters by index
+0fbaf9b2 pymavlink: added diff() method to mavparm
+7533878a pymavlink: added mavparm.py
+00084648 mavextra: added roll_estimate2()
+1bee0fb8 pymavlink: enabled used of rotmat again
+c508bf40 pymavlink: fixed rotmat for python 3.2
+0ed99c15 Merge branch 'master' of github.com:mavlink/mavlink
+77e1f236 Added bitmask for updated fiels
+f0d47719 Merge branch 'master' of github.com:mavlink/mavlink
+9d9674ba Fixed message definitions, typos
+6f88c792 Fixed call to MAVLink_message.to_dict in MAVLink_message.to_json, which fixes issue #65.
+9fde68fe Fixed references to non-existent generator.py.
+a83ba650 Fixed README filename in CMakeLists.txt.
+79cabfe9 pymavlink: added mavextract.py
+3bcf5c34 APM: added DATA96
+77f33819 mavwp: support multiple polygons in mavwp display
+3d61ac97 mavutil: added reboot_autopilot()
+00afee4f mavutil: added set_servo() function
+e90d473e mavextra: added diff() function
+bac5d35f APM: fixed comment on DATA64
+0196688d pymavlink: new version with DATA*
+3f0e5e3d mavutil: calculate packet loss figures separately for each src system
+654a2a67 Implemented channel parse state reset
+4b5a9661 Merge pull request #62 from Susurrus/master
+89c3ba20 Merge pull request #64 from Susurrus/manual_control
+b371e29b Altered MANUAL_CONTROL message (number 69) so that it's more generic, as not just airplanes are using MAVLink now. Also added a field for the buttons so that they can be passed through to the autopilot.
+358ad993 Fixed naming typo in highres IMU packet
+576df3f6 Added highres sensor message for scientific and engineering purposes
+38b07e42 Added calibration param
+332259fe Modified the RC_CHANNELS_* messages to allow for values that specify invalid/unknown for all fields.
+f129eaf4 clarified attitude message specs
+dca59ea5 Merge branch 'master' of github.com:mavlink/mavlink
+bbb6f470 mavutil: added set_mode_manual() and set_mode_fbwa()
+5e411aa9 Merge branch 'master' of github.com:mavlink/mavlink
+21c82cb6 Added PX4 autopilot type
+f042aaaf mavwp: more accurate polygon display of waypoints
+4b132e77 generate.py: change default to protocol 1.0
+7a41def3 Renamed MAV_VAR to MAV_PARAM_TYPE. Fixed a few typos in the process.
+f7fc064a Restored MAV_VAR enum for use in specifying the datatype of a variable within the parameter protocol. It's also been extended and reordered to match the MAVLINK_TYPES enum to maintain backwards compatibility with existing parameter files.
+bb1b4acd Update checklength
+cbf87489 Update checklength
+239443d7 check message length in parser
+da0c5b5b Added a protobuf-based text format for missions/waypoint lists.
+c6c7fdf0 Improved mavgen.py comment above change.
+befd1d4b Made changes to generate.py and made it python3 compatible
+7ac38283 Fixes to README.md formatting.
+5c5714bf Converted README.textile to README.md
+34de5922 Made mavgen.py imports global
+3c8dbb0c Made mavgen.py imports global
+63ec2889 More improvments to generator.py
+4aea0e4a Updated README to mention mavgen GUI.
+ab8fb91a Fixed improper indentation errors from some tabs that shouldn't have been there. Found on Python 3.2.
+8e979ff5 Made mavgen.py lang options work with lower or uppercase values
+d42fc63c Pymavlinks mavgen.py now works under python3.2 and python2
+e1c0d7a5 mavutil: added param_fetch_one() and calibrate_pressure()
+3bc0537d mavwp: support comments in waypoints
+e0067c62 pymavlink: re-generate mavlinkv10.py
+cb720d94 APM: added WIND message
+2a4a3673 mavutil: cope with division by zero in mavgraph expressions
+df5866f5 arudpilot: update SIMSTATE message with lat/lng
+f5628b21 mavgraph: added --xaxis option
+b27e9ed1 mavgen: change default protocol to 1.0
+5ff0fe95 pymavlink: re-generate mavlinkv10.py
+9904b92c mavextra: added in energy error functions
+f85eb907 ArduPilot: added in AP_LIMITS XML from Andreas
+63cb9fda pymavlink: added fcntl wrapper to fix mavutil on windows
+c2e51cf1 pymavlink: fixed missing fcntl import
+c765970d pymavlink: more useful functions in mavextra
+ecc92ba7 common.xml: a 32 bit microsecond timestamp cannot be since unix epoch
+dc75c66f regenerate mavlinkv09 and v10.py
+490f6379 mavgen_python: Proper implementation for MAVLink_message to_json
+fa3fc4c7 Improved XSL
+488c1de1 Improved XSL
+45b3c1e6 Improved XSL
+c7815a5c Merge branch 'master' of github.com:mavlink/mavlink
+a3dbd3d9 Improved XSL
+f0be6af6 Merge pull request #40 from Susurrus/fix_compile
+fb873c81 Merge pull request #41 from Susurrus/fcntl
+f245e52d Accidently left a test function declared. Removing.
+80ff3a13 The function mavlink_uart_resend was added but not properly contained within a check for the MAVLINK_USE_CONVENIENCE_FUNCTIONS constant. It is now only defined/declared when that constant is. It has also been renamed to _mavlink_resend_uart() to match the similar _mavlink_send_uart() function.
+c4d63c77 Merge branch 'master' of github.com:Susurrus/mavlink
+0eea8c23 Merge branch 'master' of https://github.com/mavlink/mavlink into fcntl
+5a2f041c Removed fcntl requirement from mavutil.py. It's unused and breaks compilation on Windows.
+fc1c4c34 pymavlink: added noise robust derivative functions to mavextra
+350965e1 pymavlink: added earth rate conversions and averages
+65f73354 pymavlink: fixed flightmodes script for MAVLink 1.0
+fcc97346 pymavlink: use deltat for slope, and added rate_of_turn
+0ae45522 pymavlink: added timeout support to recv_match()
+43b1999b pymavlink: added magnetometer discrepancy support
+653f8770 pymavlink: regenerated mavlink modules
+f06e7766 fixed comment on time_boot_ms
+fa1f1657 mavgen_python: Add to_json method to MAVLink_message class
+30441d08 pymavlink: merged changes from cuav code
+37b1cc88 pymavlink: fixed mavplayback
+6f8cc6f8 pymavlink: added last_change for wploader and fenceloader
+e83e5d2f pymavlink: prevent conflict with GPS_RAW message type
+bc0bf164 Merge branch 'master' of https://github.com/mavlink/mavlink
+1df20191 pymavlink: make recv_match take a list of types
+11804650 pymavlink: fixed longitude in mavtogpx.py
+1cd92c33 pymavlink: make mavwp module cope with either protocol version
+07d86fc8 pymavlink: added mavutil.mavlink10() to make transition a bit easier
+f43dc462 pymavlink: default to mavlink 1.0 protocol
+3b11ee61 mavutil: switch callbacks along with protocol
+72473fa4 removed --mav10 options
+f07bb868 pymavlink: added automatic protocol version switching
+c3a0e2dc fixed playback for MAVLink 1.0
+fa0fbf4b pymavlink: fixed examples for MAVLink 1.0
+8dbc1457 pymavlink: fixed HOME message for GPS_RAW_INT
+a3cebf3f mavutil: wait for another VFR_HUD to get home altitude
+cff2454b fixed mavlink_uart_resend() build
+d5a4865b pymavlink: fixes for MAVLink 1.0
+87532d6f added mavlink_uart_resend()
+0a8461a1 mavgraph: always display seconds
+a422923e mavgen: added types from mavlink_types.h
+015eceec mavgraph: added --marker option
+266a81b6 mavutil: store the link number in MAV._link
+28801365 mavutil: cope better with serial resets
+965326cb pymavlink: added --condition to a few example scripts
+eb50bcc2 mavserial: use close on exec
+1d94be9f mavutil: set sockets close on exec
+a0dac2cc mavutil: added SO_REUSEADDR
+0644db91 mavextra: tidy up altitude calculation
+f9477b67 mavutil: added field() and param() methods
+fc50d3f2 z accel script
+d08da523 Clarified meaning of param ID fields and lengths and how implementors should handle these
+12ed9dc8 Updated quad swarm messages, fixed bogus comments about MAV_VAR being used for parameter types (MAVLINK_TYPE is the correct value)
+031aa223 Version bump.
+d46a180e Adjusted quadrotor swarm message
+6900a3c0 mavutil: stop reading on EOF in mavlogfile
+ac55fa11 Merge branch 'master' of https://github.com/mavlink/mavlink
+6a0164f9 added mav_loss calculation to mavutil
+926a9bff pymavlink: added mavmission.py
+ffd5a703 mavutil: make it easier to detect MAVLink 1.0
+de5229df mavwp: added set() function
+d802eec6 python: new mavlink python modules
+0f4e411b mavlogdump: cope better with bad packets
+5b45ba5c mavgen_python: ensure msgbuf is always a string
+ef4b5f52 Merge pull request #31 from tridge/master
+1052bd08 mavgen: avoid copying over the same file
+ce732595 pygen: move enums above common.h include
+68d0b1f6 pygen: create python target directory
+f9c50a25 pymavlink: show mavlink loss stats
+21e447bb pymavlink: added mavloss.py utility
+e671cb35 mavutil: updates to support mav10 in autotest
+03499d33 rotmat: added from_axis_angle() and from_two_vectors()
+30e77164 mavutil: make protocol version available on connection
+76224151 pymavlink: update mavlink10 module
+cb66d1fd mavutil: improve MAVLink 1.0 support for mavproxy
+574a0f6a mavutil: allow mavextra to use the MAV object in helpers
+cb36fbb6 mavextra: fixed altitude helper
+4b03fff3 bring 0.9 C headers in line with current 1.0 headers
+1e4f1e90 mavextra: more useful functions
+a6a3093a mavutil: better support for usec time
+eeddf550 mavgen: avoid copying over the same file
+cc9f3b45 pygen: move enums above common.h include
+29d87cdf pygen: create python target directory
+5d524287 pymavlink: show mavlink loss stats
+e0a5b6d0 pymavlink: added mavloss.py utility
+433917b5 mavutil: updates to support mav10 in autotest
+c9f44c7d rotmat: added from_axis_angle() and from_two_vectors()
+3d3501fc mavutil: make protocol version available on connection
+878e0d2f pymavlink: update mavlink10 module
+97ba2b81 mavutil: improve MAVLink 1.0 support for mavproxy
+da5f25a3 mavutil: allow mavextra to use the MAV object in helpers
+c81c085f mavextra: fixed altitude helper
+dadb07f7 bring 0.9 C headers in line with current 1.0 headers
+3951c837 mavextra: more useful functions
+9c02babd mavutil: better support for usec time
+577bcc3c Added new MAV type KITE, added custom MAV_CMDs for PIXHAWK dialect
+11075e6f Fixed generator warning to be more verbose
+48f18433 Merge branch 'master' of https://github.com/mavlink/mavlink
+89024920 Fixed generator to be more polite to small microcontrollers
+d0f39869 Releasing new version.
+44665f75 Limited MAVLINK_MAX_EXTENDED_PACKET_LEN to __WCHAR_MAX__
+c5c5f58c Changed package names.
+140f2714 Merge branch 'master' of github.com:mavlink/mavlink
+34c10502 Added missing PAYLOAD_NON_CONST define to 0.9 mavlink_types.h
+dc553ec5 Merge branch 'master' of github.com:mavlink/mavlink
+9b3bdf33 Added previously ignored header
+22e6d9f4 Merge branch 'master' of github.com:mavlink/mavlink
+f722ca8c Removed dead symbolic link/ added python module to install.
+763b259f Merge branch 'master' of github.com:mavlink/mavlink
+b59b79d9 Finished generator to match packages ZIP file
+30d289e7 Merge branch 'master' of https://github.com/tridge/pymavlink
+8725358f Working on zip structure.
+66bbe1bd Fixed component typo.
+bb7728af make it easy to disable the max diff
+e952583a Merge branch 'master' of https://github.com/mavlink/mavlink
+cf871175 Re-added missing enum and missing fields in PIXHAWK message
+d74558d2 Added sensesoar specs
+7957b735 Fixed merge errors
+05642542 Merge branch 'next' of github.com:mavlink/mavlink into next
+08056236 Removed extended message, adjusted flow messages
+eeaa059b Merge branch 'master' of github.com:mavlink/mavlink into next
+75934ed8 Merge pull request #21 from Susurrus/severity
+f4579eb6 Merge pull request #26 from Susurrus/common_xml_fix
+555f485a Fixed some small styling changes I didn't notice in the last commit.
+499aa92a Reversed some message changes from the pymavlink merge.
+dbd5b140 Merge pull request #25 from Susurrus/next
+6ea447b3 Returned LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET to common.xml after it was accidently removed in the pymavlink merge @ 8e49c9eac661feb43eb567d50bef8e46d2da80da
+48f7d7d9 APM: added local and remote noise figures in RADIO packet
+37f218b5 fixed time_since() handling
+32038e1f fixed notimestamps option
+31f843b0 fixed distance_home()
+16bed78b APM: changed format of RADIO message
+854f3800 added RADIO packet
+023497dc make magfit_gps.py available
+823f8fee added rotmat.py
+e6959610 mavextra: fixed gravity() function
+5f6a2ed6 magfit: added --noise option
+aed73580 mavlogdump: added types option
+a060785d added legend options
+d6829dcc new incremental fit algorithm
+de9222ca first version of magfit_delta.py
+137136ed mavgraph: allow legend position to be specified
+21482ec9 mavextra: added gravity function
+a54aa41f mavutil: added MAV.percent for condition
+2189e32f added wptogpx.py
+d8e57050 added ACM guided mode
+487994fb show percentages in flightmodes
+089c854b examples: added mavparms.py to extract parameters
+7a547bbb magfit: fixed condition support
+112cad9a Added config file with version to install.
+53739fe6 Merge branch 'severity' of github.com:Susurrus/mavlink into severity
+cb14045c Added the MAV_SEVERITY enum for use with the STATUSTEXT message.
+279edec9 Merge branch 'master' of https://github.com/mavlink/mavlink
+d5457c95 Updated documentation, re-introduced quad messages
+153fcbf2 fixed comment
+64f6a1b8 lost lock time is an integer
+95b601b0 report unlocked time
+4e3fa09f added gpslock.py
+b4d57db9 Merge pull request #22 from Susurrus/update_minimal2
+fc02de0f Merge pull request #23 from Susurrus/update_help2
+0d97e6c2 Some cmake cleanup.
+c44fe591 Added the MAV_SEVERITY enum for use with the STATUSTEXT message.
+cd2e6cd9 Updated common.xml so that it follows all the same typing conventions. Also slight edits so some descriptions.
+b4d8bc18 Updated documentation for common:HEARTBEAT following changes to minimal:HEARTBEAT.
+d0a9c5ee Added all necessary enums for minimal.xml to it.
+9dbd445e The custom_mode field no longer has an ENUM for reference.
+7c20161b Updated description of HEARTBEAT:system_status.
+71286a77 Updated heartbeat documentation to refer to MAV_AUTOPILOT instead of non-existent MAV_CLASS.
+174bc711 Added the display of default options to mavtestgen.py
+4f1b9fc4 Added correct path edits so that mavtestgen.py can find mavparse.
+a563d0e0 Fixed improper indentation so now the program actually runs.
+5d3bc9ea Fixed mavgen.py help to display both the possible values for each option and what the default is.
+461d0cd0 Added const fixes to headers and generator
+9615d1a1 magfit: fix field strength readout
+ebf773cb mavextra: added more helper functions
+a58c8e10 added magfit.py tool
+d4886309 APM: rename DCM message to AHRS
+09683902 APM: added HWSTATUS field for MAVLink 1.0
+09c01a6a pymavlink: cope better with raw log files without timestamps
+82d2b768 Added the MAV_SEVERITY enum for use with the STATUSTEXT message.
+68bef8e3 Disabled dependency building, since not currently in use.
+aae32b9c Deleted old sync script for pymavlink.
+8e49c9ea Merge branch 'pymavlink_merge'
+98ca441f Fixed pkgconfig file.
+939c5901 Packaging fixes.
+ba0fab1d Further cmake cleanup.
+ce4ed932 CMake cleanup.
+cac36791 Deleted generated files.
+d36d790e Made mavparse more thread safe.
+d6aa2129 Added component arm / disarm command
+f4450875 Updated generated message
+91758892 Re-generated for sanity
+96376fea Added global offset message
+9f180ccd Added protobuf message definition of GL overlay.
+f3eb010b Modified cpack bmp.
+e1bf363b Modified icon names.
+22646ec4 Added icons.
+47d4275e Added bundle module.
+a6ae8ead Added plist config file.
+1351cf2d Merge branch 'pymavlink_merge' of github.com:mavlink/mavlink into pymavlink_merge
+2e61f830 Fixed package naming.
+0fabecc2 Packaging improvements.
+b2684f5b Merge branch 'pymavlink_merge' of github.com:mavlink/mavlink into pymavlink_merge
+fda81bf7 Fixed wire protocol for cmake generation.
+31b46ddf Fixed wire protocol.
+f5ec13f1 Merge branch 'master' of github.com:mavlink/mavlink into pymavlink_merge
+20c7f9c2 Added building for test program, needs to be updated.
+74828f90 Finished cmake cleanup.
+698e2aa3 Fixed macro error.
+1ab4bb3d Added autobuild script.
+907353cb Added back arkcmake.
+13f56f10 Removing all of arkcmake for test.
+b602a228 Removed extra cmake scripts.
+257e5194 changed optical flow message to flow values
+d3aff62b Re-introduced accidentally deleted file
+3eb931ac Fixed ignores.
+0e11a307 Merge branch 'pymavlink_merge' of github.com:mavlink/mavlink into pymavlink_merge
+7d7ab533 Updated pymavlink.
+9b1bae8a Updated pymavlink.
+5cfd4f68 Changed default install prefix for external projects.
+7d41f0f0 Added missing protoc include file.
+60856ae9 Merge branch 'pymavlink_merge' of github.com:mavlink/mavlink into pymavlink_merge
+e41f62c9 Removed extra message definitions.
+68a41d7f Removed old files.
+c186c179 Fixed version number.
+f535905c Adding pymavlink.
+c8943934 Adding message definitions.
+9087a07d Added bash script to generated based on pymavlink tag.
+3b661743 Added cmake packaging.
+eeb2fcd5 Merge branch 'master' of github.com:mavlink/mavlink into v10release
+f1a74f74 Added header information to protobuf messages.
+57f38ee0 Restored correct README
+3d798713 Merge remote-tracking branch 'upstream/v10release' into v10release
+e9e57e7d Fixed verbose print bug in protobuf manager.
+fded284f Merge branch 'v10release' of https://github.com/hengli/mavlink into v10release
+4ff695bf Added index files to ignore list
+b7757b36 Added protobuf definition of path.
+e92d6962 Updated README
+6f0142b9 Prevented C30 compiler from choking on extended message set
+4e3e429b Added hint to extended message set
+3ba98401 Merge branch 'v10release' of https://github.com/hengli/mavlink into v10release
+1291b6fe Added proto definition of obstacle list.
+c467350c Added sensesoar dialect
+81c2d9bc Fixed error reporting
+650735e0 Merge remote-tracking branch 'upstream/v10release' into v10release
+38853411 Generator update, no actual changes
+6c183cbf Updated/merged
+4c42b029 Updated all generated files, updated APM-specific message sets
+0f899447 fixed files (from old generator)
+c0d4644e Added obstacle map definition to protobuf list, and fixed reassembly bug related to extended MAVLINK messages.
+d6bd6686 Fixed offboard control messages
+05fadf40 Enabled external buffers, cleaned actions (were deprecated)
+a4131177 Added external buffer capability, added motor and swarm messages
+f30efd58 Added RGBD image definition to protobuf list of message definitions.
+e8e37151 Fixed bugs in checksum macros and added checksum padding to end of payload in Protobuf manager.
+8d6303ed Removed further references to pixhawk_extended_message definition from xml.
+82531e8a Limited size of mavlink_extended_message so that it can fit into a standard UDP packet. Added fragmentation and reassembly routines to ProtobufManager.
+ba627b61 Working version of protobuf manager.
+4a24178e Defined mavlink_extended_message_t in mavlink_types.h instead of common.xml.
+a197c293 Added more functionality to protobuf factory.
+6aa18cf2 Removed duplicate extended_message definition.
+bd8a1ef4 Added new definition for mavlink_extended_message.
+c47fbf7c Added skeleton files for fragmentation/reassembly routines for protobuf messages.
+c6a65e4a Added proto message definition.
+45b6cd0a Minor fixes to missionlib, makes it more generic
+20f88fb5 Fixed compile errors and warnings due to incomplete MAVLink msg info initialization
+6258719f Fixed MAVLink param type
+3224dc00 Fixed a number of issues with non-const accessor functions
+acd10a83 message parser now fills complete message struct
+353374a3 Enabled external receive buffers
+384c81bc Merge pull request #24 from tridge/v10release
+34f92d18 added APM specific camera messages
+b91035fc Removed old command short
+1a647939 Fixed duplicate message ids, regenerated all messages
+94634984 Fixed minor issues, added partial list transmission support, added custom mode flag
+71ea87ed Merge pull request #23 from tridge/v10release
+f1ce2542 Pixhawk message fixes
+1d53d394 Cleaned up and updated PIXHAWK message set
+f9cea31c make MAV_GOTO_DO_CONTINUE clearer
+8a467259 fixed custom_mode to be 32 bit in set_mode
+d2efb3aa added MAV_VAR, MAV_RESULT and MAV_MISSION_RESULT enums
+573ce921 fixed duplicate enum values
+b7ab6b27 added APM MEMINFO and ADC messages
+f8401453 Added ALL component ID
+a0742b53 Added hold / goto override action
+627a3b69 Fixed missing inttypes.h include
+e4e06e26 Updated MAVLink
+f5f5eb3d Added example to the distribution. Tested on Mac OS
+9de37602 Added missing inttypes include
+bbdbadce Cleaned up
+af4dd313 Made v10 compat with qgc 1.0 by adding inttypes.h
+e4e3ece5 Updated to most recent draft
+f3d547d7 Removed old messages
+5c0db0af Updated to latest draft
+d06f5763 Changed type to work on VS2008/VS2010
+83deb832 Updated generated files
+78e44ab5 Cleaned up message definitions
+ff099f37 Updated to latest draft
+4741984f Merged
+181c8cdc Updated
+5a5fad63 Fixed bug in union
+17185171 Improved specs, not final
+eda728c5 Debugging param union
+43ded8f9 Upgraded to python generator
+7af53ec4 Ported missionlib to latest draft
+3b604752 More minor cleanups
+65e75bbe Shifted PIXHAWK message range into correct 150+ range
+9f5591ed Shifted PIXHAWK message range into correct 150+ range
+78774c2b Slightly fixed naming, extended descriptions
+a3c860b3 Added ACRO flight mode
+f93e96f7 Added missing mode
+2895bb98 Updated state machine for MAV_MODE and MAV_FLIGHT_MODE
+00cd2974 Further cleanups
+aa667ce2 Updated a few messages
+fd7642c4 Removed old command header
+3b3d0118 Cleaned up / reworked message spec
+98987a2d Cleaned up message spec further
+c91adfbb Updated test lib, working on message specs
+e919c5ed Updated all messages with new generator
+d6c94806 Added / updated HIL messages
+41d935b3 Updated generated MAVLink files
+401e5b00 Updated MAVLink
+3cfb4c7d Minor edits
+b4a5344c Pushed missionlib further, unix version works now
+1d613310 Pushed missionlib one step further
+3821de98 Added messages to output attitude controller setpoints;
+cf2a0fc5 Changed a few messages, fixed minor issues
+fc0acf7e Minor updates to fix protocol errors
+0e2d79b5 Removed bogus project file
+5787f10b Updated strings to use char type, encodes / decodes now without cast
+c46060c2 Re-generated all messages with message hash
+26a84561 Added MAV_ROI_NONE.
+e2656b54 MAV_CMD_DO_SET_ROI and FULL_STATE, regenerated
+7e8cf218 Ran xmlindent -w on message_definitions.
+702b0f65 Working towards abstract library
+a824d0b4 Added mission lib support
+4c20cf38 Merged
+4422fab4 Waypoint management is operational using pure C99, ready for MCU tests
+6502781c Updated comments for video control
+ffc249c7 Added RPY and RPY-speed set messages
+5c68a891 Testing waypoint planner in mission lib
+b41c111c Code is operational, printf needs cleanup and initialization is not yet correct
+150ce766 Waypoint manager almost finished porting, working on last steps
+5c6a0a10 Added RC channels override message
+07ec08c7 Merge pull request #16 from tridge/master
+66d0cb3a add RC_CHANNELS_OVERRIDE message
+133d5984 Added all necessary functions, now time for mass renaming and testing
+f1e019b4 Working towards standalone waypoint manager
+e1b1db7a Moved from MAVLink 0.x to MAVLink v1.0 prototype - YEEHAA!
+19c0a4f3 Moved from MAVLink 0.x to MAVLink v1.0 prototype - YEEHAA!
+aa02c4c1 Merge branch 'master' of github.com:pixhawk/mavlink into v10release
+1730ebca Added ENU coordinate frame
+2a7bcc92 get rid of typeless arrays
+8d85bad3 Merged, re-generated all message sets with current, correct generator
+c69b3ddb Updated generated code
+75684630 added position ground truth fields to image triggered and image available messages
+6ed2d087 Changed message definition to evade generator issues
+a12fc872 Added local frame Z-up support
+927ed52c Merge branch 'master' of github.com:pixhawk/mavlink
+6b8c08e6 Added minimal protocol example
+c0440e72 added VISION_SPEED_ESTIMATE message to pixhawk messages
+9c121f06 Added a few types to mavlink_types.h enums, no ID changes / collisions, code compatible
+70481259 Added data stream types
+ff7cf98d Added ROI cmd.
+648aceca Added more detailed orientation command message.
+9600ca5e re-generate with MAVLINK_MESSAGE_LENGTHS support
+ca8b2541 Regenerated includes.
+d2803c5e Merged
+7e1c2744 Fixed errors in new message format
+b5eafb6a Added experimental ATTITUDE_NEW message containing direct uart sending
+10e9a90b allow applications to choose the number of buffers
+64ecc63a Added authentication scheme draft
+60788c61 Added GLOBAL_RELATIVE_ALT coordinate frame
+757bdece Removed legacy XML files that were no longer being used
+cf5afe11 Merge branch 'experimental' of github.com:malife/mavlink into experimental
+9f7ad6da Added two actions and a state to the ENUMs to be able to put the MAV in Hardware in the loop simulation mode
+08aaa947 Merge branch 'mergeRemote' into experimental
+51515bda Merge branch 'master' of github.com:pixhawk/mavlink into mergeRemote
+0b59af86 Removed SLUGS messages that were now available in the common set. Added scaled pressure and changed raw pressure
+dce708bf Adjusted README
+59af398a Updated documentation, extenden PIXHAWK message set
+2ee9f98f Corrected comments in Slugs Message navCommands
+49db9893 Fixed bogus message comments
+cd17f857 Amended UAS class list, added new COMMAND packet (conformant with mission specs, will supersede ACTION
+3eece4f7 Added additional commands
+50ad6bf2 Corrected naming on home packet
+6e85e935 Fixed message channel enum
+436d02fb Added messages to gain/release operator control
+65f03432 Minor edits
+2cd39bda Added loiter nav type
+0b79399f Cleaned up repo
+b15c9ed7 Updates and minor fixes to messages
+8474c6c3 Merged
+f915f4df Updated protocol version
+e30b3aee Made sure packet IDs stayed the same
+e17b8e9b Made sure packet IDs stayed the same
+e0890428 Rearranged several packets. MAVLink version increased to 2, as this release is not binary compatible - changes and refactoring is however small, only renames
+d614599d moved data_type enum to pixhawk message definitions
+f2d77768 Improved docs
+767f006e Improved docs
+812382db Improved docs
+c48a8a14 Improved docs
+53b60679 Improved docs
+99786aed Improved docs
+70a1ee0b Improved docs
+d2a60fa8 Improved docs
+47f03296 Improved docs
+f1b99ec6 Improved docs
+a242c0e7 Improved docs
+38c54801 Improved docs
+9a2501ef Improved docs
+6f86657a Updated docs
+5d2749d4 Updated docs
+f8951e32 Updated docs
+4d363a9e Updated docs
+a1abf64a Updated docs
+2e77e8db Updated docs
+859e76b8 Updated docs
+9c9f1824 Updated docs
+c98bb301 Updated docs
+f2a61225 Updated docs
+849af7d6 Updated docs
+140b3493 Updated docs
+3de9af7a Updated docs
+5c174464 Updated docs
+63251efa Added new enums to common message set
+99d9c18d Minor changes
+9d0c1594 Cleaned up messages
+d16bb5ea Minor adjustments to messages, documented quite a few messages better, added safety area, system time and servo output messages
+bb4535e3 Minor adjustments to messages, documented quite a few messages better, added safety area, system time and servo output messages
+31b9b9c0 Added license, explained license terms in README
+a87e663f Added license, explained license terms in README
+3ede694b Moved control status message to common message set
+75733b87 Merged
+d846dd22 Added new actions
+46b9ab83 Fixed some missing actions.
+c9650f3a Updated named value packet
+c63ecbaf Added named value messages
+dea2a243 Merged
+58c2eaf5 Added more components
+4ecd2806 Fixed several packet formats
+5181c99a Merge branch 'master' of pixhawk.ethz.ch:mavlink into dev
+1a8309dd Merge branch 'dev' of pixhawk.ethz.ch:mavlink into dev
+46d7cc2f Added action for plan reset.
+8af2a375 Eliminated compile warnings
+23690589 Working on docs
+21f508e8 Working on docs
+3c148e7a Working on docs
+70ad14d0 Working on docs
+2f263170 Working on docs
+472e4cce Working on docs
+1aae5dc7 Working on docs
+da3e4ef7 Merge branch 'dev' of pixhawk.ethz.ch:mavlink
+2a6e81ca Added version field to MAVLink documentation XML table
+a88451ad Added version field to MAVLink documentation XML table
+26f03805 Fixed incorrect numbering of MAV actions.
+8a3b83ab Added ID for mapper component and map reset action.
+b1360f41 regenerated mavlink messages
+48e9310a merged image transmission branch with dev
+9decd5ca added image transmission messages
+0a834dd1 Cleaned up heartbeat message
+d9658343 Merge branch 'master' of github.com:pixhawk/mavlink
+258333b4 Added version function to generator, fixed packet documentation (Doxygen)
+309ab0f9 Merged
+ebd49125 Merge branch 'dev' of github.com:pixhawk/mavlink
+d603a52f Changed GPS position message
+e7d00a6b added mavlink messages for image data transmission
+d6c1b92d Merge branch 'dev' of github.com:pixhawk/mavlink
+7fe99eb3 Added relay actions.
+735bd659 Merge branch 'dev' of github.com:pixhawk/mavlink into dev
+2286be4d Merge branch 'dev' of github.com:pixhawk/mavlink
+c0c9ad46 Merge branch 'dev' of github.com:pixhawk/mavlink into dev
+6b752a40 Added some mavlink channels.
+b773a02b Merge
+eafb3cb3 Merge branch 'dev' of github.com:pixhawk/mavlink
+2dee4dc1 Merge branch 'dev' of git@github.com:pixhawk/mavlink into dev
+a4f13824 added more fields to the image messages
+496cfb32 Merge branch 'dev' of github.com:pixhawk/mavlink
+7ccf6cd0 Added airspeed message.
+c6295cc1 Merge branch 'dev' of github.com:pixhawk/mavlink into dev
+46b7fb8c Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+479c1ee3 Merge branch 'master' of git://github.com/pixhawk/mavlink
+888f735a Getting ready to merge OSG support
+92ddbf9d Added local position origin
+81ae4f62 Moved debug vector to common message set
+d6cfc87c Merge branch 'dev' of github.com:pixhawk/mavlink into dev
+729ce8b6 Merge branch 'dev' of github.com:pixhawk/mavlink
+2a1df470 Merged
+0e3a70c1 Merge branch 'master' of pixhawk.ethz.ch:mavlink into dev
+c4b8673a Merge
+cfa21c80 Fixed wrong loss counting
+3acbb917 Updated MAVLink to current XML revisions
+75a42e59 Updated MAVLink
+b391e01b Removed currently unused messages
+37db8aff Included new enumerations for SLUGS Actions and Waypoint Protocol
+134bad6d Synced common messages from dev.
+a87cdda1 Fixed white space.
+9dda9e71 Changed raw imu to output millirad's instead of adc for gyro
+5e560f7d Added data stream definition from dev branch.
+2e172cc5 Added data stream enum.
+5a5015c9 Removed double-messages
+d16a03f9 Merge branch 'dev' of github.com:pixhawk/mavlink into dev
+0fe1d79a merge
+4e7ba371 Synced new servo messages with dev branch.
+d2f009e8 Servo scaled separated from servo raw, precision now 16 bit
+b14949a2 Added updates to common.
+7485d63c Merged common messages and waypoint struct update.
+2dbbe9d2 Added some messages to common from pixhawk.
+abf98a24 Added frame and action to waypoint struct and added state correction
+c7ffeb95 Merged comman and ardupilotmega with dev branch.
+75d3849a Fixed white space.
+10cf2e57 Added load to system status.
+519ae37c Added ardupilotmega support.
+57a8fce3 Merge branch 'master' of github.com:pixhawk/mavlink into dev
+9c2b9aea Added ardupilot xml specs
+2cb2cf4c Added localization component
+66b48f88 Added point of interest
+589e81c7 Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+20cade3e Added RC training mode
+f9d8ceb5 Added the new generated files for SlUGS
+37a973b6 Changed the message numbers to comply with the new numbering scheme
+5d1a34b1 Major merge from recent changes to Mavlink directory structure
+c1120865 nothing changed
+5dc00157 Minor changes to SLUGS messages
+489823b5 Fixed path of two UAlberta messages
+1c27feae fixed ualberta rc calibration message after merge
+788f5df9 merged pixhawk code
+e2b80a12 Last cleanup step in MAVLink, message IDs do not collide any more, multiple autopilots can be used in parallel in QGroundControl now
+7c2cf0f0 Redesigned MAVLink folder structure to better suit multi-project-use
+543d4918 Changes to the SLUGS comm messages
+8c5e1532 Merge branch 'master' of github.com:pixhawk/mavlink
+205ecaf1 Added recording action
+8a46c1b5 Merged with godbolt
+17633cf9 modified gneration time
+f2228b42 merged upstream
+a400454e Moved position target message to default message set as it is a generic message
+25276365 added messages for sending radio calibration data
+33de9f7f Added position setpoint
+aa24d661 manually merged in latest pixhawk changes
+ee558b15 include generated file for rc request channel data
+d83496cb added messages specific to our setup
+92735f20 Modified in the standard message the data type of the gyros to be signed as the rest of the IMU. This is required for SLUGS
+88edded1 Added vicon position estimate
+6894e528 New message for SLUGS that includes GPS date-time
+25d54476 Reduced by half the amount of bytes required for the RAW_PRESSURE packet, also added a temperature field
+d07d7a23 Merge branch 'master' of git://github.com/pixhawk/mavlink
+39cf871f Modified the minimum standard messages required in the SLUGS autopilot
+7a22d4e2 Added a new subset-file of the standard messages to minimize the space usage in the firmware. This file will be used to generate code for the SLUGS autopilot. On the ground station (QGC) SLUGS will still use the mavlink_standard_messages.xml
+a457b7da Added MAV_COMP_ID_PATHPLANNER to MAV_COMPONENT enumeration --Lionel
+acd8cffb Commit
+1259e16a added generated nav filter packet
+78ce8982 added xml description for ualberta messages
+17357ec1 Merge branch 'master' of http://github.com/pixhawk/mavlink
+2160280d genereated files for ualberta packets
+d094cd24 MODES fixed
+8e090568 Added new actions
+4498d64f Cleaned up packet structure
+0bd913b3 Deleted header files of already removed packets
+519646ab Added support for position control setpoint offset, allows intervention to the path planner output
+451aa39e Merge branch 'master' of git@github.com:pixhawk/mavlink
+cdd5cba4 More bitfield encoding tests
+02bd4d9a Fixed tentative changes back to correct version
+60dc0e5a Cleaned up GPS message
+9aa824d7 Fixed minor compile errors for new function currently in testing
+61ab0768 Merge branch 'master' of github.com:pixhawk/mavlink
+c2d7110e Bitfield encoding
+bff7298d Removed unneeded messages
+c85a7e7a Pulled in latest changes from GitHub
+e39be34c Merge branch 'master' of pixhawk.ethz.ch:mavlink
+2d80a120 Working on bitfield support
+5044815d Made generator --pedantic GCC flag compatible/C89 compatible, cleaned up double functions in checksum.h
+63c3c601 Improving XSLT documentation
+7c233d44 Improving XSLT documentation
+14c68b84 Improving XSLT documentation
+0ee7b911 Improving XSLT documentation
+b87f5666 Added <description> tag to wrap description. Does not affect compilation to C code, but allows better documentation
+399728d2 Documentation tests
+bf432c19 Documentation tests
+05b48a09 Documentation tests
+76597fc0 Reverted change to raw imu package, will need an adjustment to the IMU firmware first to be adopted in PIXHAWK
+aa14ceaa Added index to param
+aaebd5f8 Merge branch 'master' of github.com:pixhawk/mavlink
+07001039 Merge branch 'master' of git@pixhawk.ethz.ch:mavlink into correctInclude
+4bef7a60 Included a proposal XML file to define the new mavlink standard messages. Minor changes to slugs_messages
+3539635f removed target fields from the broadcast message waypoint reached, added new message waypoint current for broadcasting the current waypoint. Renumbered some of the waypoint messages
+4b6fac46 Merge branch 'master' of git@github.com:pixhawk/mavlink
+cbbc8a56 renamed WAYPOINT_ERROR to WAYPOINT_ACK
+1412fafc Adjusted docs
+9f0d31a2 Adjusted docs
+2d9b0b56 Adjusted docs
+4213fcd2 MAVLink cleanup
+d91f223f Merge branch 'master' of pixhawk.ethz.ch:mavlink
+bdfe8708 Commented MAVLink types and messages
+42fed567 Merge branch 'master' of github.com:pixhawk/mavlink
+902d3266 Cleanup commit
+a75a87fd Adjusted to small RAM sizes, merged with Px repo
+4e186c72 Adjusted to MCUs with very little RAM
+4ec835db Merge branch 'master' of git@github.com:pixhawk/mavlink
+50bbd7ed Reverted back to pre-IMAV message definitions
+8b2bc58e Merge branch 'master' of pixhawk.ethz.ch:mavlink
+120c8ef5 Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+aa58d750 removed velocity and confidence fields from position estimate message
+e9725e9d Lower the loss rate by 50% on slightly lossy links
+c734353f Minor change that hopefully resolves compile issues on some platforms
+56f8e35d Modified the gryo data type in the standard messages to be signed. Corrected a bug in Slugs data type definitions
+b7889efb Added new sentences to the SLUGS XML description file
+dd7fcf57 [landauf] added type field to PATTERN_DETECTED message
+be367fd2 velocities replaced by angles in LOCAL_POSITION Message
+84e727a6 Added PWM and Pilot console messages to SLUGS XML file
+08882333 Fixed include headers
+aea1799b Merged MAVLink
+4f78ed1e Added control status packet
+80f6f972 Inclusion of new messages in the SLUGS XML description
+4931fc9f Merge branch 'master' of git@pixhawk.ethz.ch:mavlink into addSlugs
+df4045df Added first message for SLUGS
+518a1a93 storage actions corrected
+c74bb743 storage actions added
+611d6afa component added to action message
+9899edff added hold_time field to waypoint message
+e8505a38 waypoints: changed type of orbit from uint8 to float
+748b2e5b Rearranged folder structure to better support individual project
+66372dc4 Added local position setpoint
+7c206b7a New control messages
+f108bea3 MAVLINK controller output support
+fc85f2c3 Moved MAVLINK IDs
+54253015 Updated mavlink header
+63fe88b9 added target ids to waypoint message
+3856e5d1 Debug vector
+e81bf4b6 Updated GPS messages
+184fe52b Updated header
+7f4c54d5 Added GPS status message
+8e2f5506 Merge branch 'master' of git@github.com:pixhawk/mavlink
+d7278303 Added roll and pitch to image available
+c015e01d Updated vision estimate packet
+91bd29c8 Added roll pitch to attitude
+46691a1b Added roll and pitch to vision data
+f84b74bd Merge branch 'master' of git@github.com:pixhawk/mavlink
+497ab8fe added component ids
+fda84c11 Added PING to MAVLink
+519f6d11 Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+897351c2 debug_vect name = array[10]
+c9493c88 Merge branch 'master' of git@github.com:pixhawk/mavlink
+1fe4d21f Working on more robust MAVLink parsing
+b0e147c2 debug_vect message added
+9be0812d Cleaned up general MAVLink message set, should now be suited better for general use
+d7642be5 Added messages to set RC remote mapping and trim values
+8ea89a23 Fixed drop count calculation
+edd6c54f modified waypoint messages and added new ones
+aa175bef added active field to waypoint messages
+603ea68e Fixed compile error
+b0997775 Added support for MAVLink xml file inclusion
+ac7dce8c Updated MAVLink protocol generator
+f77bf911 use int32_t for the timeout value of a watchdog info message
+b9db05b9 collapsed 6 watchdog messages to 1
+82bc965a added new mavlink messages for watchdog and watchdog control
+b96496c6 Fixed bitfield compile errors
+3117becb Started to implement bitfields
+c5959399 Added PHP file generating HTML documentation out of the mavlink.xml spec
+5ef3b878 Added CSS file for html table xsl
+8fb0aa7d Testing
+87909c44 Testing
+a4e7978f Testing
+5924a888 Testing
+2c873ed8 Testing
+0218aef4 Testing
+f18183c2 Testing
+00949695 Testing
+5a6982a4 Testing
+db2f50d5 Testing
+97a1c511 Testing
+e0176062 Working on doc
+d8efb950 Working on doc
+5eadb7a6 Working on doc
+3a90bbed minor back changes
+8ec70374 Merge branch 'master' of pixhawk.ethz.ch:mavlink
+f75bcc9b minor changes
+20898bea merged and resolved conflict
+447e619d waypoin messages modified, and message ids moved
+d5b79251 IMAGE_AVAILABLE: changed type of "key" back to uint32_t
+17ebd38a name of waypoints removed
+42ceaa28 updated waypoint message
+777b154c Extended system state message
+5e06fa67 Added image sequence
+279e2782 Pushed mavlink
+a6b004a7 Added all waypoint related messages
+53c8878b Readied waypoint interface
+be1ce21c crappy marker message 2
+b0127bf7 crappy marker
+55bbe04f marker message
+7f42d177 new message type for markers, to visualize them
+1b391f79 Merge branch 'master' of pixhawk.ethz.ch:mavlink
+d9e03d8c Added data stream selection
+7cd1ba33 waypoint message changed
+596edcf6 waypoint message updated
+fb575b5c Added waypoint, changed position estimate message
+c04cb680 Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+74b0e288 Added message for vision position estimate
+4957fbf8 new message type
+0c76765a Fixed naming of timestamp in SYS_TIME message
+18ee0e67 Shortened status message
+213ae61d Added messages for image transport
+26d9df49 Updated mavlink
+77db823f Minor changes to protocol
+652c42b6 Cleaned up naming conventions, added parameter packets
+859dc52a Fixed param request messages
+20f51b09 Updated function call names to prevent name conflicts
+3397d916 Improved parameter message
+85e5854f Added new messages needed for calibration
+a34f6981 Added uint64_t and int64_t data types, small bugfixes for int16_t
+c76c52ec Fixed minor ifdef mistake
+67fc682f Merged MAVLink
+20b55a9e Added image buffer messages
+c3852cd0 Improved doxygen documentation
+3953894e Testing email hook
+78426e7c Added doxygen generation files
+6bbd0067 Added CSS class tags for improvements in HTML table
+43bedd46 Updated XSL and doc readme
+562ac341 Added XSL to transform MAVLink to HTML
+22126e0c Updated pattern detection message
+206a00bf Added support for array data types in MAVLink, currently testing
+8f5b4cee Cleaned up MAVLink repository, now include directory holds headers as this is a header-only library
+d14ac903 Fixed signedness of sensor packet
+53a6b58c Added missing new files
+26dbfbff Merge branch 'master' of git@pixhawk.ethz.ch:mavlink
+5681f651 Added new state/mode
+fccde54e debug message added
+00732bf3 Fixed merge conflict
+7561f41a Fixed compile warnings
+a8c4c7c7 Fixed pc compile errors with temporary ifdef switch
+9d5ae84f Updated raw imu packet
+1b6ce0f6 Corrected extern C ifdef
+6edf0007 Minor fixes
+fa320180 Updated MAVLink
+92e5a9f5 Extended MAV states/modes
+3d9e95cf Minor changes
+a087528b Initial commit
