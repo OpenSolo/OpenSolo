@@ -64,7 +64,8 @@ git checkout fc3969f63bda343c38c40a23f746c560c4735f3e
 
 echo "----------------------------------------------------------------------------"
 mkdir -p $source_dir/meta-fsl-bsp-release
-git clone git://git.freescale.com/imx/meta-fsl-bsp-release $source_dir/meta-fsl-bsp-release 2>&1 |  grep -v 'fatal'
+#git clone git://git.freescale.com/imx/meta-fsl-bsp-release $source_dir/meta-fsl-bsp-release 2>&1 |  grep -v 'fatal'
+git clone git://github.com/opensolo/meta-fsl-bsp-release $source_dir/meta-fsl-bsp-release 2>&1 |  grep -v 'fatal'
 cd $source_dir/meta-fsl-bsp-release
 git fetch
 git checkout dora_3.10.17-1.0.0_GA
