@@ -93,12 +93,8 @@ bool Telem_Forwarder_Client::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t 
         la_log(LOG_ERR, "received runt packet (%d bytes)", pktlen);
         return false;
     }
-    if (pkt[0] != 254) {
+    if (pkt[0] != 0xFE && pkt[0] != 0xFD) {
         la_log(LOG_ERR, "received bad magic (0x%02x)", pkt[0]);
-        return false;
-    }
-    if (pkt[1] != (pktlen - 8)) {
-        la_log(LOG_ERR, "inconsistent length (%u, %u)", pkt[1], pktlen);
         return false;
     }
     return true;
