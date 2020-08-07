@@ -655,8 +655,6 @@ static void *tlm_main(void *)
 
                     source_check(sys_id, comp_id, seq);
 
-                    syslog(LOG_INFO, "msg_id=%u msgid2=%u", (unsigned)message_id, (unsigned)message_id2);
-
                     if (!got_gps_time && message_id == MAVLINK_MSG_ID_SYSTEM_TIME) {
                         // XXX hefty magic here
                         //   usec since unix epoch is bytes 6..13, little-endian
