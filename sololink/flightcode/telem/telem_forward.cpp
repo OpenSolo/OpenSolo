@@ -632,6 +632,30 @@ void *upstream_task(void *)
                                unsigned(buf[payload_offset]), unsigned(buf[payload_offset+4]), unsigned(buf[payload_offset+5]));
                 }
 
+                if (message_id == MAVLINK_MSG_ID_COMMAND_LONG) {
+                    syslog(LOG_INFO,
+                           "COMMAND_LONG: from %s:%d",
+                           inet_ntoa(remaddr.sin_addr),
+                           ntohs(remaddr.sin_port));
+                    // these offsets come from mavlink_msg_command_long.h
+                    const uint16_t command = buf[payload_offset+28] | buf[payload_offset+29] << 8;
+                    const uint8_t target_system = buf[payload_offset+30];
+                    const uint8_t target_component = buf[payload_offset+31];
+                    const float p1 = ((float*)buf)[0];
+                    switch (command) {
+                    case MAV_CMD_DO_SET_MODE:
+                        // we don't have a mav_msg to use for unpacking
+                        // custom_mode is the first four bytes, little endian
+                        syslog(LOG_INFO,
+                               "SET_MODE: custom_mode=%u ts=%u tc=%u",
+                               (unsigned)command,
+                               target_system,
+                               target_component);
+                    default:
+                        break;
+                    }
+                }
+
 #endif // debug
 
                 // Check the amount of data in the tx buffer.
