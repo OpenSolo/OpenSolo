@@ -611,7 +611,7 @@ void *upstream_task(void *)
                     source_component = buf[4];
                     payload_offset = 6;
                 } else {
-                    message_id = (p_payload[7]) | (p_payload[8]<<8) | p_payload[9]<<16;
+                    message_id = (buf[7]) | (buf[8]<<8) | buf[9]<<16;
                     source_system = buf[5];
                     source_component = buf[6];
                     payload_offset = 10;
