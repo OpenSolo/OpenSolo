@@ -605,7 +605,7 @@ static void *tlm_main(void *)
                 int skipped;
                 if ((skipped = can_log_error(now_us)) >= 0)
                     syslog(LOG_ERR, "[%u] received runt packet (%d bytes)", skipped, res);
-            } else if (packet.payload[0] != 254) {
+            } else if (packet.payload[0] != 0xFE && packet.payload[0] != 0xFD) {
                 int skipped;
                 if ((skipped = can_log_error(now_us)) >= 0)
                     syslog(LOG_ERR, "[%u] received bad magic (0x%02x)", skipped, packet.payload[0]);
@@ -626,18 +626,43 @@ static void *tlm_main(void *)
                  * Also check for a GPS time that we can set the clock to */
                 uint8_t *p_payload = packet.payload;
                 while (p_payload < ((uint8_t *)&packet + res)) {
-                    uint8_t seq = p_payload[2];
-                    uint8_t sys_id = p_payload[3];
-                    uint8_t comp_id = p_payload[4];
+                    uint32_t message_id;
+                    uint8_t sys_id;
+                    uint8_t comp_id;
+                    uint8_t payload_offset;
+                    uint8_t seq;
+                    uint8_t siglen = 0;
+                    #define MAVLINK_STX_MAVLINK1 254
+                    if (p_payload[0] == MAVLINK_STX_MAVLINK1) {
+                        message_id = p_payload[5];
+                        sys_id = p_payload[3];
+                        comp_id = p_payload[4];
+                        payload_offset = 6;
+                        seq = p_payload[2];
+                    } else {
+                        message_id = (p_payload[7]) | (p_payload[8]<<8) | p_payload[9]<<16;
+                        sys_id = p_payload[5];
+                        comp_id = p_payload[6];
+                        payload_offset = 10;
+                        seq = p_payload[4];
+                        const uint8_t incompat_flags = p_payload[2];
+                        const uint8_t MAVLINK_IFLAG_SIGNED = (1U << 0);
+                        if (incompat_flags & MAVLINK_IFLAG_SIGNED) {
+                            siglen = 13;
+                        }
+                        // FIXME: skip packet if incompat flag not recognised
+                    }
 
                     source_check(sys_id, comp_id, seq);
 
-                    if (!got_gps_time && p_payload[5] == MAVLINK_MSG_ID_SYSTEM_TIME) {
+                    syslog(LOG_INFO, "msg_id=%u msgid2=%u", (unsigned)message_id, (unsigned)message_id2);
+
+                    if (!got_gps_time && message_id == MAVLINK_MSG_ID_SYSTEM_TIME) {
                         // XXX hefty magic here
                         //   usec since unix epoch is bytes 6..13, little-endian
                         int b;
                         uint64_t time_us = 0;
-                        for (b = 13; b >= 6; b--)
+                        for (b = payload_offset+7; b >= payload_offset; b--)
                             time_us = time_us * 256 + p_payload[b];
                         if (time_us != 0) {
                             char buf[32];
@@ -650,7 +675,7 @@ static void *tlm_main(void *)
                         }
                     }
 
-                    p_payload += (8 + p_payload[1]); // Increase by the length of the payload+header
+                    p_payload += (payload_offset + p_payload[1] + 2 + siglen); // Increase by the length of the header+payload+checksum+signature
                 }
 
                 /* check source port */
