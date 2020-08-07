@@ -2,6 +2,9 @@
 
 # Forward telemetry to everyone attached to the AP.
 
+# NOTE: this has been superseded by telem_ctrl.cpp!  This doesn't
+# handle mavlink2!
+
 import ConfigParser
 import datetime
 import logging
