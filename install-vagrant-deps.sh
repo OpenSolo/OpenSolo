@@ -12,7 +12,7 @@ sudo apt-get install -y --assume-yes python2.7 python2.7-dev
 sudo apt-get install -y --assume-yes git python-pip freetype* python-setuptools libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk libffi* ansible libssl-dev gcc-arm-none-eabi gcc-multilib build-essential chrpath socat libsdl1.2-dev xterm texinfo tup gawk wget git-core diffstat unzip curl
 
 # pip packages
-sudo pip install --upgrade pip
+sudo pip install --upgrade "pip < 21.0"
 sudo pip install --upgrade setuptools
 sudo pip install urllib3[secure] bcrypt pynacl cryptography==2.0.3 pillow
 
