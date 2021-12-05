@@ -7,7 +7,9 @@
 # "-m both" will build both the copter and controller IMX.  Default is both if not specified.
 # "-c true" will clean the build recipies prior to beginning the build.  Default is false if not specified.
 # "-n true" nuclear option will delete the entire build directory to start from a totally clean slate.  Default is false if not specified.
-    
+
+git config --global http.sslverify "false"
+
 
 # Defaults if options are not set from command line set
 MACHINE_BUILD='both'
