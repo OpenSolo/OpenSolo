@@ -16,6 +16,15 @@ sudo pip install --upgrade "pip < 21.0"
 sudo pip install --upgrade setuptools
 sudo pip install urllib3[secure] bcrypt pynacl cryptography==2.0.3 pillow
 
+#git-with-openssl as gnutls can't do modern https/tls 
+cd /home/vagrant
+sudo apt-get remove --purge git -y
+wget https://raw.githubusercontent.com/paul-nelson-baker/git-openssl-shellscript/main/compile-git-with-openssl.sh
+chmod 755 ./compile-git-with-openssl.sh
+./compile-git-with-openssl.sh --skip-tests
+git config --global http.sslVerify false
+cd -
+
 #wgets
 sudo wget "http://stedolan.github.io/jq/download/linux64/jq" -O "/usr/local/bin/jq"
 sudo chmod 0755 /usr/local/bin/jq
