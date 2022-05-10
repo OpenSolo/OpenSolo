@@ -1,5 +1,5 @@
 
-SRC_URI = "git://github.com/OpenSolo/imx6-uboot/"
+SRC_URI = "git://github.com/OpenSolo/imx6-uboot/;protocol=http"
 SRCREV = "solo_v1.0.0"
 
 # save UBOOT_CONFIG as separate names

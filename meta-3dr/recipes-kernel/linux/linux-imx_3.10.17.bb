@@ -8,7 +8,7 @@ DEPENDS += "lzop-native bc-native"
 COMPATIBLE_MACHINE = "(mx6)"
 
 SRCREV = "sololink_v1.3.0-5"
-SRC_URI = "git://github.com/OpenSolo/imx6-linux/"
+SRC_URI = "git://github.com/OpenSolo/imx6-linux/;protocol=http"
 
 SRC_URI += "\
     https://www.kernel.org/pub/linux/kernel/projects/rt/3.10/older/patch-3.10.17-rt12.patch.bz2;name=rt-patch1 \

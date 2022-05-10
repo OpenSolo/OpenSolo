@@ -89,7 +89,7 @@ export MACHINE=imx6solo-3dr-1080p
 EULA=1 source ./setup-environment build
 export_return=$?
 if [  $export_return -eq 0 ]; then
-    echo "Build environment ready"
+    echo "Build environment ready, if u were expecting the build to happen, and it hasn't, edit builder.sh and try removing all the '> /dev/null' bits , and re-run, for more info"
 elif [  $export_return -eq 2 ]; then
     # Automatic restart as required
     echo "Restarting setup environment"

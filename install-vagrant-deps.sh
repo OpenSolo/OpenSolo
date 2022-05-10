@@ -18,12 +18,40 @@ sudo pip install urllib3[secure] bcrypt pynacl cryptography==2.0.3 pillow
 
 #git-with-openssl as gnutls can't do modern https/tls 
 cd /home/vagrant
-sudo apt-get remove --purge git -y
-wget https://raw.githubusercontent.com/paul-nelson-baker/git-openssl-shellscript/main/compile-git-with-openssl.sh
-chmod 755 ./compile-git-with-openssl.sh
-./compile-git-with-openssl.sh --skip-tests
+#like https://raw.githubusercontent.com/paul-nelson-baker/git-openssl-shellscript/main/compile-git-with-openssl.sh but simplified and tied to version 2.32.2
+set -x
+BUILDDIR=${BUILDDIR:-$(mktemp -d)}
+mkdir -p "${BUILDDIR}"
+cd "${BUILDDIR}"
+git_tarball_url="https://api.github.com/repos/git/git/tarball/refs/tags/v2.32.2"
+curl -L --retry 5 "${git_tarball_url}" --output "git-source.tar.gz"
+tar -xf "git-source.tar.gz" --strip 1
+# Don't use gnutls, this is the problem package.
+if sudo apt-get remove --purge libcurl4-gnutls-dev -y; then
+  # Using apt-get for these commands, they're not supported with the apt alias on 14.04 (but they may be on later systems)
+  sudo apt-get autoremove -y
+  sudo apt-get autoclean
+fi
+sudo apt-get install build-essential autoconf dh-autoreconf -y
+sudo apt-get install libcurl4-openssl-dev tcl-dev gettext asciidoc libexpat1-dev libz-dev -y
+make configure
+./configure --prefix=/usr --with-openssl
+make 
+# If you have an apt managed version of git, remove it
+if sudo apt-get remove --purge git -y; then
+sudo apt-get autoremove -y
+sudo apt-get autoclean
+fi
+# Install the version we just built
+sudo make install #install-doc install-html install-info
+echo "Make sure to refresh your shell!"
+bash -c 'echo "$(which git) ($(git --version))"'
+
+#chmod 755 ./compile-git-with-openssl.sh
+#./compile-git-with-openssl.sh --skip-tests
 git config --global http.sslVerify false
-cd -
+
+cd /home/vagrant
 
 #wgets
 sudo wget "http://stedolan.github.io/jq/download/linux64/jq" -O "/usr/local/bin/jq"
