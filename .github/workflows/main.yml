@@ -1,0 +1,26 @@
+name: vagrant-up
+
+on: [push]
+
+jobs:
+  vagrant-up:
+    runs-on: macos-10.15
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache Vagrant boxes
+      uses: actions/cache@v2
+      with:
+        path: ~/.vagrant.d/boxes
+        key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+        restore-keys: |
+          ${{ runner.os }}-vagrant-
+    - name: Show Vagrant version
+      run: vagrant --version
+
+    - name: Run vagrant up
+      run: vagrant up
+
+    - name: ssh into box after boot
+      run: vagrant ssh -c "/vagrant/solo-builder/builder-ci.sh"
