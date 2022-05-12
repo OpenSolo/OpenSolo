@@ -6,46 +6,27 @@ if [ ! $? -eq 0 ]; then
     exit 1
 fi
 
+## Export machine twice since it's a clean build
+
 ## Switch to build directory
 cd /solo-build
-
-
-## Export machine twice since it's a clean build
 export MACHINE=imx6solo-3dr-1080p
 EULA=1 source ./setup-environment build
-export_return=$?
-if [  $export_return -eq 0 ]; then
-    echo "Build environment ready"
-elif [  $export_return -eq 2 ]; then
-    # Automatic restart as required
-    echo "Restarting setup environment"
-    export MACHINE=imx6solo-3dr-1080p
-    EULA=1 source ./setup-environment build
-    if [ ! $? -eq 0 ]; then
-        echo "Machine export error."
-        exit 1
-    fi
-else
-    echo "Machine export error."
-    exit 1
-fi
 
-## Build Solo specific recipes.  Dump most of the running output so the travis log doesn't explode
-
-
-
-
+cd /solo-build
+export MACHINE=imx6solo-3dr-1080p
+EULA=1 source ./setup-environment build
 
 
 MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo
 if [ ! $? -eq 0 ]; then
-    exit 1
+    #exit 1
 fi
 
 MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller
 if [ ! $? -eq 0 ]
 then
-    exit 1
+    #exit 1
 fi
 
 
