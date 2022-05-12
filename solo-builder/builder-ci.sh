@@ -19,15 +19,9 @@ EULA=1 source ./setup-environment build
 
 
 MACHINE=imx6solo-3dr-1080p bitbake 3dr-solo
-if [ ! $? -eq 0 ]; then
-    #exit 1
-fi
+
 
 MACHINE=imx6solo-3dr-artoo bitbake 3dr-controller
-if [ ! $? -eq 0 ]
-then
-    #exit 1
-fi
 
 
 # Copy the relevant files to a date/time stamped completed directory in the git repo folder for easy access (on git ignore list).
