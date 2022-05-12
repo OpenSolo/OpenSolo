@@ -24,3 +24,4 @@ jobs:
 
     - name: ssh into box after boot
       run: vagrant ssh -c "/vagrant/solo-builder/builder-ci.sh"
+      run: vagrant ssh -c "/vagrant/solo-builder/builder-ci.sh"
