@@ -63,5 +63,8 @@ sudo chmod 0755 /usr/local/bin/repo
 ssh-keyscan -t rsa github.com
 ssh-keyscan -t rsa bitbucket.org
 
+# as new as we can go with python 2.7
+sudo pip install pymavlink==2.4.20 --force
+
 cp /vagrant/vagrant.gitconfig ~/.gitconfig
 sudo chmod +x /vagrant/solo-builder/builder.sh
