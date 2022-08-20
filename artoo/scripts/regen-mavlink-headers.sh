@@ -8,8 +8,8 @@
 # make note of our current directory so we know where to direct the generator output.
 #
 
-ARTOODIR=`pwd`
-MAVSOLO=../mavlink-solo
+ARTOODIR=/vagrant/artoo
+MAVSOLO=/vagrant/modules/mavlink-solo
 
 echo "Removing old includes"
 rm -rf ARTOODIR/src/mavlink/c_library/
@@ -23,5 +23,5 @@ MAVSOLO=$1
 fi
 
 pushd ${MAVSOLO}
-python -m pymavlink.tools.mavgen --lang C -o ${ARTOODIR}/src/mavlink/c_library message_definitions/v1.0/ardupilotmega.xml
+mavgen.py --lang C --wire-protocol 2.0 -o ${ARTOODIR}/src/mavlink/c_library  message_definitions/v1.0/ardupilotmega.xml
 popd

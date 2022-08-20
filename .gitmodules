@@ -1,9 +1,9 @@
 [submodule "ardupilot-solo"]
 	path = modules/ardupilot-solo
-	url = https://github.com/OpenSolo/ardupilot-solo.git
+	url = https://github.com/davidbuzz/ardupilot-solo.git
 [submodule "mavlink-solo"]
 	path = modules/mavlink-solo
-	url = https://github.com/OpenSolo/mavlink-solo.git
+	url = https://github.com/davidbuzz/mavlink-solo.git
 [submodule "dronekit-python-solo"]
 	path = modules/dronekit-python-solo
 	url = https://github.com/dronekit/dronekit-python-solo.git

@@ -963,7 +963,8 @@ void FlightManager::sendCmd(mavlink_message_t *msg)
     case Command::GetHomeWaypoint:
         mavlink_msg_mission_request_pack(Mavlink::ArtooSysID, Mavlink::ArtooComponentID, msg,
                                          Mavlink::SoloSysID, Mavlink::SoloComponentID,
-                                         command.waypoint);
+                                         command.waypoint,
+                                         MAV_MISSION_TYPE_MISSION);
         break;
 
     default:
