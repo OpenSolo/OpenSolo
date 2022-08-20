@@ -19,7 +19,7 @@ outdir=`pwd`/c_library
 
 pushd ${1}
 
-python -m pymavlink.tools.mavgen --lang C --wire-protocol=2.0 \
+mavgen.py --lang C --wire-protocol=2.0 \
        -o ${outdir} \
        message_definitions/v1.0/ardupilotmega.xml
 
