@@ -9,7 +9,7 @@ typedef struct __mavlink_scaled_pressure2_t {
  float press_abs; /*< [hPa] Absolute pressure*/
  float press_diff; /*< [hPa] Differential pressure*/
  int16_t temperature; /*< [cdegC] Absolute pressure temperature*/
- int16_t temperature_press_diff; /*< [cdegC] Differential pressure temperature*/
+ int16_t temperature_press_diff; /*< [cdegC] Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.*/
 } mavlink_scaled_pressure2_t;
 
 #define MAVLINK_MSG_ID_SCALED_PRESSURE2_LEN 16
@@ -57,7 +57,7 @@ typedef struct __mavlink_scaled_pressure2_t {
  * @param press_abs [hPa] Absolute pressure
  * @param press_diff [hPa] Differential pressure
  * @param temperature [cdegC] Absolute pressure temperature
- * @param temperature_press_diff [cdegC] Differential pressure temperature
+ * @param temperature_press_diff [cdegC] Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_scaled_pressure2_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -97,7 +97,7 @@ static inline uint16_t mavlink_msg_scaled_pressure2_pack(uint8_t system_id, uint
  * @param press_abs [hPa] Absolute pressure
  * @param press_diff [hPa] Differential pressure
  * @param temperature [cdegC] Absolute pressure temperature
- * @param temperature_press_diff [cdegC] Differential pressure temperature
+ * @param temperature_press_diff [cdegC] Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_scaled_pressure2_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -163,7 +163,7 @@ static inline uint16_t mavlink_msg_scaled_pressure2_encode_chan(uint8_t system_i
  * @param press_abs [hPa] Absolute pressure
  * @param press_diff [hPa] Differential pressure
  * @param temperature [cdegC] Absolute pressure temperature
- * @param temperature_press_diff [cdegC] Differential pressure temperature
+ * @param temperature_press_diff [cdegC] Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -206,7 +206,7 @@ static inline void mavlink_msg_scaled_pressure2_send_struct(mavlink_channel_t ch
 
 #if MAVLINK_MSG_ID_SCALED_PRESSURE2_LEN <= MAVLINK_MAX_PAYLOAD_LEN
 /*
-  This varient of _send() can be used to save stack space by re-using
+  This variant of _send() can be used to save stack space by re-using
   memory from the receive buffer.  The caller provides a
   mavlink_message_t which is the size of a full mavlink message. This
   is usually the receive buffer for the channel, and allows a reply to an
@@ -284,7 +284,7 @@ static inline int16_t mavlink_msg_scaled_pressure2_get_temperature(const mavlink
 /**
  * @brief Get field temperature_press_diff from scaled_pressure2 message
  *
- * @return [cdegC] Differential pressure temperature
+ * @return [cdegC] Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.
  */
 static inline int16_t mavlink_msg_scaled_pressure2_get_temperature_press_diff(const mavlink_message_t* msg)
 {
