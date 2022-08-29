@@ -146,12 +146,12 @@ class GeoFenceManager:
                 if len(pair) != 2:
                     # Coord has length of 2
                     logger.error("Coordinate must be of length 2, got: %s" % len(pair))
-                return False
+                    return False
             for pair in subCoordArr[i]:
                 if len(pair) != 2:
                     logger.error("Coordinate must be of length 2, got: %s" % len(pair))
                     # Coord has length of 2
-                return False
+                    return False
         return True
 
     def _handleGeoFenceSetDataMessage(self, coordArr, subCoordArr, fenceTypeArr):
